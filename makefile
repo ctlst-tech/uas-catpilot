@@ -1,14 +1,14 @@
 
 codegen:
 	@echo Generating f_specs
-	@./catpilot/c-atom/tools/fspecgen.py --code --cmake --registry_c ./f_specs_reg.c --f_specs_dirs cube:f_specs catom:catpilot/c-atom/f_specs/
+	@./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --registry_c ./f_specs_reg.c --f_specs_dirs catpilot:catpilot/f_specs catom:catpilot/c-atom/f_specs
 
 prebuild: codegen
 	@echo Inlining XML configs
 	@./catpilot/c-atom/tools/xml2c_inliner.py --cfg_path config/cube/ --out xml_inline_cfgs.c
 
 bblocks:
-	@./catpilot/c-atom/tools/fspecgen.py --code --cmake --bbxml bblocks.xml --f_specs_dirs cube:f_specs catom:catpilot/c-atom/f_specs/
+	@./catpilot/c-atom/tools/fspecgen.py --code --cmake --bbxml bblocks.xml --f_specs_dirs catpilot:catpilot/f_specs/ catom:catpilot/c-atom/f_specs/
 
 clean_build:
 	@echo Building
