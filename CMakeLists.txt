@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-set(PROJ_NAME "catpilot")
+set(PROJ_NAME "uas-catpilot")
 
 if (BOARD STREQUAL "cube")
     set(MCU_FAMILY stm32)
