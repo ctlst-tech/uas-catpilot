@@ -1,0 +1,21 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Flash_Cube",
+            "type": "shell",
+            "command": "openocd -f interface/stlink.cfg -f ./catpilot/bsp/mcu/core/stm32/h753/stm32h753.cfg -c \"init\" -c \"program ./build/firmware/catpilot.elf verify reset exit\"",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Erase",
+            "type": "shell",
+            "command": "st-flash erase",
+            "problemMatcher": []
+        }
+    ]
+}

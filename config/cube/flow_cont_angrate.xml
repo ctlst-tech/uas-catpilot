@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="cont_angrate">
+        <inputs>
+            <i alias="omega" type="core.type.v3f64"/>
+            <i alias="desired_omega" type="core.type.v3f64"/>
+            <i alias="collective" type="core.type.f64"/>
+            <i alias="direct" type="core.type.v3f64"/>
+            <i alias="enable" type="core.type.bool"/>
+            <i alias="arming" type="core.type.bool"/>
+            <i alias="pids_gain" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="m1" type="core.type.f64"/>
+            <o alias="m2" type="core.type.f64"/>
+            <o alias="m3" type="core.type.f64"/>
+            <o alias="m4" type="core.type.f64"/>
+            <o alias="armed" type="core.type.bool"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        
+        <f name="pwm_probing_meander" by_spec="core.source.meander">
+            <param alias="semi_period">20</param>
+        </f>
+        
+        <f name="omega_integral_preset" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+
+        <f name="pid_angrate_x" by_spec="core.cont.pid">
+            <in alias="input">inputs/desired_omega/x</in>
+            <in alias="feedback">inputs/omega/x</in>
+            <in alias="preset">omega_integral_preset/output</in>
+            <in alias="enable">inputs/enable</in>
+
+            <param alias="Kp">1.0</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0.035</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-1.0</param>
+            <param alias="output_max">+1.0</param>
+        </f>
+
+        <f name="pid_angrate_y" by_spec="core.cont.pid">
+            <in alias="input">inputs/desired_omega/y</in>
+            <in alias="feedback">inputs/omega/y</in>
+            <in alias="preset">omega_integral_preset/output</in>
+            <in alias="enable">inputs/enable</in>
+
+            <param alias="Kp">1.0</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0.035</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-1.0</param>
+            <param alias="output_max">+1.0</param>
+        </f>
+
+        <f name="pid_angrate_z" by_spec="core.cont.pid">
+            <in alias="input">inputs/desired_omega/z</in>
+            <in alias="feedback">inputs/omega/z</in>
+            <in alias="preset">omega_integral_preset/output</in>
+            <in alias="enable">inputs/enable</in>
+
+            <param alias="Kp">0.8</param>
+            <param alias="Ki">0.1</param>
+            <param alias="Kd">0.001</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-1.0</param>
+            <param alias="output_max">+1.0</param>
+        </f>
+
+        <f name="cont_idle_position" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+
+        <f name="cont_idle" by_spec="core.math.vector3f64">
+            <in alias="x">cont_idle_position/output</in>
+            <in alias="y">cont_idle_position/output</in>
+            <in alias="z">cont_idle_position/output</in>
+        </f>
+
+        <f name="cont_idle_collective" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+
+        <f name="pid_multed_x" by_spec="core.math.mul">
+            <in alias="input0">pid_angrate_x/output</in>
+            <in alias="input1">inputs/pids_gain</in>
+        </f>
+
+        <f name="pid_multed_y" by_spec="core.math.mul">
+            <in alias="input0">pid_angrate_y/output</in>
+            <in alias="input1">inputs/pids_gain</in>
+        </f>
+
+        <f name="pid_multed_z" by_spec="core.math.mul">
+            <in alias="input0">pid_angrate_z/output</in>
+            <in alias="input1">inputs/pids_gain</in>
+        </f>
+
+        <f name="angrate_cont_auto" by_spec="core.math.vector3f64">
+            <in alias="x">pid_multed_x/output</in>
+            <in alias="y">pid_multed_y/output</in>
+            <in alias="z">pid_multed_z/output</in>
+        </f>
+
+        <f name="att_cont_mode_mux" by_spec="core.cont.mux3f64">
+            <in alias="input0">inputs/direct</in>
+            <in alias="input1">angrate_cont_auto/v</in>
+            <in alias="select">inputs/enable</in>
+        </f>
+
+        <f name="att_arm_mux" by_spec="core.cont.mux3f64">
+            <in alias="input0">cont_idle/v</in>
+            <in alias="input1">att_cont_mode_mux/output</in>
+            <in alias="select">inputs/arming</in>
+        </f>
+
+        <f name="collective_min" by_spec="core.source.constant">
+            <param alias="value">0.15</param>
+        </f>
+
+        <f name="collective_input" by_spec="core.math.gain">
+            <in alias="input">inputs/collective</in>
+            <param alias="gain">0.85</param>
+        </f>
+
+        <f name="collective_sol" by_spec="core.math.add">
+            <in alias="input0">collective_min/output</in>
+            <in alias="input1">collective_input/output</in>
+        </f>
+
+        <f name="collective_arm_mux" by_spec="core.cont.mux">
+            <in alias="input0">cont_idle_collective/output</in>
+            <in alias="input1">collective_sol/output</in>
+            <in alias="select">inputs/enable</in>
+        </f>
+
+        <f name="mixer" by_spec="core.cont.quadrotor_mix">
+            <in alias="transv">att_arm_mux/output/x</in>
+            <in alias="longit">att_arm_mux/output/y</in>
+            <in alias="collective">collective_arm_mux/output</in>
+            <in alias="rudder">att_arm_mux/output/z</in>
+
+            <param alias="Kt_m1">-0.15</param>
+            <param alias="Kt_m2">+0.15</param>
+            <param alias="Kt_m3"> 0.15</param>
+            <param alias="Kt_m4">-0.15</param>
+            <param alias="Kl_m1">+0.15</param>
+            <param alias="Kl_m2">-0.15</param>
+            <param alias="Kl_m3"> 0.15</param>
+            <param alias="Kl_m4">-0.15</param>
+            <param alias="Kc">0.6</param>
+            <param alias="Kr_m1">+0.2</param>
+            <param alias="Kr_m2">+0.2</param>
+            <param alias="Kr_m3">-0.2</param>
+            <param alias="Kr_m4">-0.2</param>
+        </f>
+
+        <f name="pwm_meadner_pin" by_spec="cube.io.gpio">
+            <in alias="input_float">pwm_probing_meander/output</in>
+            <param alias="channel">5</param>
+        </f>
+
+
+        <f name="arming_logic" by_spec="core.logical.and">
+            <in alias="input0">inputs/arming</in>
+            <in alias="input1">inputs/arming</in>
+        </f>
+
+        <f name="io" by_spec="cube.io.pwm">
+            <in alias="ch4">mixer/m4</in>
+            <in alias="ch3">mixer/m3</in>
+            <in alias="ch2">mixer/m2</in>
+            <in alias="ch1">mixer/m1</in>
+            <in alias="arm">arming_logic/output</in>
+            <in alias="ch8">pwm_probing_meander/output</in>
+
+            <param alias="ch1_min">1000</param>
+            <param alias="ch2_min">1000</param>
+            <param alias="ch3_min">1000</param>
+            <param alias="ch4_min">1000</param>
+            <param alias="ch5_min"/>
+            <param alias="ch6_min"/>
+            <param alias="ch7_min"/>
+            <param alias="ch8_min"/>
+            <param alias="ch1_max">2000</param>
+            <param alias="ch2_max">2000</param>
+            <param alias="ch3_max">2000</param>
+            <param alias="ch4_max">2000</param>
+            <param alias="ch5_max"/>
+            <param alias="ch6_max"/>
+            <param alias="ch7_max"/>
+            <param alias="ch8_max"/>
+            <param alias="ch1_bipolar"/>
+            <param alias="ch2_bipolar"/>
+            <param alias="ch3_bipolar"/>
+            <param alias="ch4_bipolar"/>
+            <param alias="ch5_bipolar"/>
+            <param alias="ch6_bipolar"/>
+            <param alias="ch7_bipolar"/>
+            <param alias="ch8_bipolar"/>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="m1">mixer/m1</link>
+        <link alias="m2">mixer/m2</link>
+        <link alias="m3">mixer/m3</link>
+        <link alias="m4">mixer/m4</link>
+        <link alias="armed">arming_logic/output</link>
+    </link_outputs>
+</flow>

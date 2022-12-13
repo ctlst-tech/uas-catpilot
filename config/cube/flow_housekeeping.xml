@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="housekeeping">
+
+        <outputs>
+            <o alias="sine" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="sine" by_spec="core.source.sin">
+            <param alias="period">1.0</param>
+            <param alias="phase"/>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="sine">sine/out</link>
+    </link_outputs>
+</flow>

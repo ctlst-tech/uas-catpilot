@@ -1,0 +1,7 @@
+*.o
+build/
+f_specs_reg.c
+xml_inline_cfgs.c
+fspecs.cmake
+bblocks.xml
+__pycache__

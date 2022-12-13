@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Cube",
+            "request": "launch",
+            "type": "cortex-debug",
+            "cwd": "${workspaceRoot}",
+            "servertype": "openocd",
+            "executable": "build/firmware/catpilot.elf",
+            "svdFile": "catpilot/bsp/mcu/core/stm32/h753/STM32H753.svd",
+            "searchDir": [
+                "/usr/local/share/openocd/scripts",],
+            "configFiles": [
+                "catpilot/bsp/mcu/core/stm32/h753/stm32h753.cfg"
+            ],
+        },
+    ]
+}
