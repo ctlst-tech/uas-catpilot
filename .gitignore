@@ -5,3 +5,7 @@ xml_inline_cfgs.c
 fspecs.cmake
 bblocks.xml
 __pycache__
+.idea/
+cmake-build-debug/
+cmake-build-release/
+
