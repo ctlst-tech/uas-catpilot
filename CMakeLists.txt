@@ -61,8 +61,12 @@ message("   Compiler flags: ${COMMON_FLAGS}")
 message("   Linker flags: ${LINKER_FLAGS}")
 message("   Debug port: ${CLI_PORT} ${CLI_BAUDRATE}\n")
 
-# FIXME
 add_subdirectory(catpilot)
+
+include_directories(
+    ${OS}
+    ${BSP}
+)
 
 include(fspecs.cmake)
 
@@ -98,6 +102,7 @@ add_custom_command(TARGET "${PROJECT_NAME}.elf" POST_BUILD
     COMMAND ${CMAKE_OBJCOPY} -Obinary ${ELF_FILE} ${BIN_FILE}
     COMMAND ${CMAKE_OBJCOPY} -Oihex  ${ELF_FILE} ${HEX_FILE}
 )
+
 add_custom_command(TARGET "${PROJECT_NAME}.elf" POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${HEX_FILE} "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex"
     COMMAND ${CMAKE_COMMAND} -E copy ${BIN_FILE} "${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.bin"
