@@ -67,6 +67,9 @@
             }
         },
         "edges": {
+            "service_consumer_gcu_link-->hw_interface_provider_TLM1": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":529.5593,\"y\":1033.0307,\"side\":\"SOUTH\"},\"bendPoints\":[],\"end\":{\"x\":529.5593,\"y\":1066.8147,\"side\":\"NORTH\"}}],\"labels\":[{\"x\":529.5593,\"y\":1049.9227}]}"
+            },
             "sdtl_consumer_debug_sdtl_channel_1_name-->sdtl_provider_gcu_link_downlink": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":437.119,\"y\":924.4192},\"bendPoints\":[{\"x\":404.0214,\"y\":924.4192},{\"x\":404.0214,\"y\":999.9375}],\"end\":{\"x\":436.0226,\"y\":999.9375},\"adjusted\":true}],\"labels\":[{\"x\":404.0214,\"y\":962.1783}]}"
             },
