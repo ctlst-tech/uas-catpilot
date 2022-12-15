@@ -36,7 +36,7 @@ To build and debug with VS Code you need to set up *.json configuration files in
 # Getting started
 ### 1. Clone repository
 ```bash
-$ git clone --recurse-submodules git@github.com:ctlst-tech/catpilot.git
+$ git clone --recurse-submodules git@github.com:ctlst-tech/uas-catpilot.git
 $ cd catpilot
 ```
 
