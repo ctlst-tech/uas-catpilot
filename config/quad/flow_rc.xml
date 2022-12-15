@@ -18,11 +18,9 @@
 
     <functions>
         <f name="rc" by_spec="cube.io.rc"/>
-
         <f name="arm_activation_threshold" by_spec="core.source.constant">
             <param alias="value">0.5</param>
         </f>
-
 
         <f name="arm_signal" by_spec="core.math.lt">
             <in alias="input0">arm_activation_threshold/output</in>
@@ -45,16 +43,19 @@
 
         <f name="input_manc_angrate_x" by_spec="core.math.gain">
             <in alias="input">direct/v/x</in>
+
             <param alias="gain">0.7</param>
         </f>
 
         <f name="input_manc_angrate_y" by_spec="core.math.gain">
             <in alias="input">direct/v/y</in>
+
             <param alias="gain">0.7</param>
         </f>
 
         <f name="input_manc_angrate_z" by_spec="core.math.gain">
             <in alias="input">direct/v/z</in>
+
             <param alias="gain">0.7</param>
         </f>
 
@@ -66,26 +67,31 @@
 
         <f name="input_roll" by_spec="core.math.gain">
             <in alias="input">direct/v/x</in>
+
             <param alias="gain">0.8</param>
         </f>
 
         <f name="input_pitch" by_spec="core.math.gain">
             <in alias="input">direct/v/y</in>
+
             <param alias="gain">0.8</param>
         </f>
 
         <f name="pids_att_gain_multiplier" by_spec="core.math.gain">
             <in alias="input">rc/rc_channel8</in>
+
             <param alias="gain">1.0</param>
         </f>
 
         <f name="pids_rate_gain_multiplier" by_spec="core.math.gain">
             <in alias="input">rc/rc_channel7</in>
+
             <param alias="gain">2.0</param>
         </f>
 
         <f name="collective_in" by_spec="core.math.gain">
             <in alias="input">rc/rc_channel3</in>
+
             <param alias="gain">1.0</param>
         </f>
 
@@ -98,7 +104,6 @@
             <in alias="input1">collective_in/output</in>
             <in alias="select">arm_signal/output</in>
         </f>
-
     </functions>
 
     <link_outputs>
@@ -113,5 +118,4 @@
         <link alias="pid_gain_angrate">pids_rate_gain_multiplier/output</link>
         <link alias="arming">arm_signal/output</link>
     </link_outputs>
-
 </flow>

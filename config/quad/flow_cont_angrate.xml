@@ -22,11 +22,10 @@
     </spec>
 
     <functions>
-        
         <f name="pwm_probing_meander" by_spec="core.source.meander">
             <param alias="semi_period">20</param>
         </f>
-        
+
         <f name="omega_integral_preset" by_spec="core.source.constant">
             <param alias="value">0.0</param>
         </f>
@@ -129,6 +128,7 @@
 
         <f name="collective_input" by_spec="core.math.gain">
             <in alias="input">inputs/collective</in>
+
             <param alias="gain">0.85</param>
         </f>
 
@@ -166,9 +166,9 @@
 
         <f name="pwm_meadner_pin" by_spec="cube.io.gpio">
             <in alias="input_float">pwm_probing_meander/output</in>
+
             <param alias="channel">5</param>
         </f>
-
 
         <f name="arming_logic" by_spec="core.logical.and">
             <in alias="input0">inputs/arming</in>

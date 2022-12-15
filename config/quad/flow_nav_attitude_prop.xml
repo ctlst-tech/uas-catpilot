@@ -18,7 +18,6 @@
 
     <functions>
         <f name="imu1" by_spec="cube.sensors.icm20649"/>
-
         <f name="omega_x_biased" by_spec="core.math.sub">
             <in alias="input0">imu1/wx</in>
             <in alias="input1">inputs/omega_bias/x</in>
@@ -60,11 +59,9 @@
         </f>
     </functions>
 
-
     <link_outputs>
         <link alias="a">concat_accel/v</link>
         <link alias="omega">concat_omega/v</link>
         <link alias="q">integrate_att/q</link>
     </link_outputs>
-
 </flow>

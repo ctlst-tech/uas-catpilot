@@ -4,14 +4,14 @@
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
     <bus name="nav_bus" eq_channel="1" max_topics="32"/>
-
     <bus name="control_bus" eq_channel="1" max_topics="32">
-        <dir name="rc"/>
-        <dir name="solution"/>
+        <dir name="rc" eq_channel="0"/>
+        <dir name="solution" eq_channel="0"/>
     </bus>
 
     <bus name="gcu_bus" eq_channel="0" max_topics="32">
         <event_queue buffer_size="2000" size="32"/>
+
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
         <dir name="cont" eq_channel="16"/>
@@ -20,6 +20,7 @@
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
         <connect>
             <in alias="omega, a">nav_bus/$alias</in>
+
             <out alias="omega_bias, q0, imu_reset">nav_bus/$alias</out>
         </connect>
     </task>
@@ -28,6 +29,7 @@
         <connect>
             <in alias="omega_bias, q0, q">nav_bus/$alias</in>
             <in alias="reset">nav_bus/imu_reset</in>
+
             <out alias="a, omega, q">nav_bus/$alias</out>
         </connect>
     </task>
@@ -35,6 +37,7 @@
     <task type="flow" config="flow_nav_attitude_filter.xml" name="nav_attitude_filter" priority="7" clk_method="timer" clk_period="20">
         <connect>
             <in alias="q, a">nav_bus/$alias</in>
+
             <out alias="q, roll, pitch, yaw">nav_bus/$alias</out>
         </connect>
     </task>
@@ -55,6 +58,7 @@
             <in alias="rc_desired_omega">control_bus/rc/desired_omega</in>
             <in alias="enable">control_bus/rc/enable_angpos</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angpos</in>
+
             <out alias="desired_omega, enabled">control_bus/$alias</out>
         </connect>
     </task>
@@ -63,11 +67,11 @@
         <connect>
             <in alias="omega">nav_bus/omega</in>
             <in alias="desired_omega">control_bus/desired_omega</in>
-
             <in alias="arming, direct">control_bus/rc/$alias</in>
             <in alias="collective">control_bus/rc/direct_collective</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angrate</in>
             <in alias="enable">control_bus/rc/enable_angrate</in>
+
             <out alias="m1, m2, m3, m4, armed">control_bus/solution/$alias</out>
         </connect>
     </task>

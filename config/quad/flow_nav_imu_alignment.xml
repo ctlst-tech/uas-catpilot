@@ -5,7 +5,6 @@
         <inputs>
             <i alias="omega" type="core.type.v3f64"/>
             <i alias="a" type="core.type.v3f64"/>
-<!--            <i alias="start" type="core.type.bool"/>-->
         </inputs>
 
         <outputs>
@@ -16,7 +15,6 @@
     </spec>
 
     <functions>
-
         <f name="bias_calib_proto" by_spec="core.filter.mvng_av">
             <in alias="i1">inputs/omega/x</in>
             <in alias="i2">inputs/omega/y</in>
@@ -46,9 +44,7 @@
         <f name="imu_reset" by_spec="core.logical.not">
             <in alias="input">bias_calib_proto/filled</in>
         </f>
-
     </functions>
-
 
     <link_outputs>
         <link alias="omega_bias">omega_bias_concat/v</link>

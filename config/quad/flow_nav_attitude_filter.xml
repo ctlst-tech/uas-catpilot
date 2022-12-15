@@ -16,7 +16,6 @@
     </spec>
 
     <functions>
-
         <f name="accel_horizon" by_spec="core.nav.att_from_accel">
             <in alias="a">inputs/a</in>
         </f>
@@ -37,11 +36,13 @@
 
         <f name="roll_adjustment" by_spec="core.math.gain">
             <in alias="input">roll_err/output</in>
+
             <param alias="gain">0.0001</param>
         </f>
 
         <f name="pitch_adjustment" by_spec="core.math.gain">
             <in alias="input">pitch_err/output</in>
+
             <param alias="gain">0.0001</param>
         </f>
 
@@ -72,5 +73,4 @@
         <link alias="pitch">to_euler_out/pitch</link>
         <link alias="yaw">to_euler_out/yaw</link>
     </link_outputs>
-
 </flow>

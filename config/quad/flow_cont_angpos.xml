@@ -74,7 +74,6 @@
             <in alias="input1">desired_auto_omega/v</in>
             <in alias="select">inputs/enable</in>
         </f>
-
     </functions>
 
     <link_outputs>
