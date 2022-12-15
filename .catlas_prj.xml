@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <catlas_project>
-    <doc name="Software system" type="swsys" file="config/cube/swsys.xml"/>
+    <doc name="Software system" type="swsys" file="config/quad/swsys.xml"/>
     <doc name="System schematic" type="hw_scheme" file="system_schematic.xml"/>
 </catlas_project>

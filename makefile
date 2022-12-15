@@ -5,7 +5,7 @@ codegen:
 
 prebuild: codegen
 	@echo Inlining XML configs
-	@./catpilot/c-atom/tools/xml2c_inliner.py --cfg_path config/cube/ --out xml_inline_cfgs.c
+	@./catpilot/c-atom/tools/xml2c_inliner.py --cfg_path config/quad/ --out xml_inline_cfgs.c
 
 bblocks:
 	@./catpilot/c-atom/tools/fspecgen.py --code --cmake --bbxml bblocks.xml --f_specs_dirs catpilot:catpilot/f_specs/ catom:catpilot/c-atom/f_specs/
