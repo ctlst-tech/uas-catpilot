@@ -9,7 +9,6 @@
 
         <outputs>
             <o alias="q" type="core.type.quat"/>
-            <o alias="q0" type="core.type.quat"/>
             <o alias="roll" type="core.type.f64"/>
             <o alias="pitch" type="core.type.f64"/>
             <o alias="yaw" type="core.type.f64"/>
@@ -69,7 +68,6 @@
 
     <link_outputs>
         <link alias="q">quat_correction/q</link>
-        <link alias="q0">initial_quat/q</link>
         <link alias="roll">to_euler_out/roll</link>
         <link alias="pitch">to_euler_out/pitch</link>
         <link alias="yaw">to_euler_out/yaw</link>

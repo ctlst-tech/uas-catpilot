@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <swsys>
-    <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
+    <expected_interface name="TLM1" dev_path="/dev/ttyS1"/>
 
     <bus name="nav_bus" eq_channel="1" max_topics="32"/>
 
@@ -72,7 +72,7 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="100">
+    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="50">
         <connect>
             <out alias="sine">gcu_bus/hk/sine</out>
         </connect>
