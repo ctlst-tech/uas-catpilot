@@ -1,84 +1,53 @@
-# ctlst-fmuv5
-## Description
+# UAS-Catpilot
+UAS-Catpilot is an open-source project for drone control systems. It contains the [catpilot](git@github.com:ctlst-tech/catpilot.git) library for support various autopilots and control system modules described with XML-based DSL.
 
-ctslt-fmuv5 is open sourcing project with c-atom library hardware integration
+# Requirements
+## Hardware requirement
+- Host (Ubuntu, Arch, MacOS)
+- Autopilot (Pixhawk 4, Cube Orange)
+- ST-LINK V2
 
-#### Software requirement
-1. cmake > 3.15
-2. openocd
-3. stlink-tools
-4. catch2
-5. bison
-6. flex
-7. [arm-none-eabi](https://developer.arm.com/downloads/-/gnu-rm)
+## Software requirement
+- cmake > 3.15
+- openocd
+- stlink-tools
+- catch2
+- bison
+- flex
+- [arm-none-eabi](https://developer.arm.com/downloads/-/gnu-rm)
 
-#### Hardware requirement
-1. Linux (Ubuntu, Arch) / MacOS
-2. Pixhawk 4 / Cube Orange
-3. ST-LINK V2
+It is recommended to use Ubuntu as the host operating system, and Visual Studio Code as the code editor. For a quick installation you can use the package manager:
 
-## Getting started
-
----
-
-### 1. Clone repository
-
+Ubuntu
 ```bash
-$ git clone ssh://git@git.jetbrains.space/ctlst/flight-embed-open-sourcing/ctlst-fmuv5.git
-$ cd ctlst-fmuv5
-$ git submodule update --init --recursive
+$ sudo apt-get install cmake openocd stlink-tools catch2 bison flex
 ```
 
----
-
-### 2. Build and flash
-
-To build a project, you must specify cmake build target (Release/Debug) and platform type (PX4/Cube/Linux). Also you need to generate configuration files.
-
-```bash
-$ make prebuild
-$ make build
-$ make flash
-```
-
----
-
-### 3. IDE
-
-You need to specify the build target, platform type, path to the compiler and other parameters that are required for your IDE.
-
-### vscode
-
-To build in vscode you need *.json configuration files. All required files are located in the .vscode project directory.
-
-Mandatory extensions:
-
+To build and debug with VS Code you need to set up *.json configuration files in the .vscode driectory. You also need to install the following extensions
 - CMake
 - CMake Tools
+- Clang-Format
 - Cortex-Debug
-
-Recommend extensions:
-
 - C/C++
 - C/C++ Extension Pack
 - C/C++ Themes
 - XML Format
-- Output Colorizer
 
-*Note: You may need to change the paths to bin*
+# Getting started
+### 1. Clone repository
+```bash
+$ git clone --recurse-submodules git@github.com:ctlst-tech/catpilot.git
+$ cd catpilot
+```
 
-### clion
+### 2. Build
+To build a project, you must specify cmake build target and board type. You also need to generate configuration files:
+```bash
+$ make quad config
+$ make cube
+```
 
-In the settings, you need to specify the build target, platform type, and also select the toolchain.
-
----
-
-### 3. Debug
-
-**vscode**
-
-To build in vscode you need the **Cortex-Debug** extension and configured **settings.json**, **task.json** and **launch.json**.
-
-**clion**
-
----
+### 3. Flash
+```bash
+$ make flash
+```
