@@ -2,12 +2,12 @@
 UAS-Catpilot is an open-source project for drone control systems. It contains the [catpilot](git@github.com:ctlst-tech/catpilot.git) library for support various autopilots and control system modules described with XML-based DSL.
 
 # Requirements
-## Hardware requirement
+## Hardware requirements
 - Host (Ubuntu, Arch, MacOS)
-- Autopilot (Pixhawk 4, Cube Orange)
+- Autopilot (Cube Orange)
 - ST-LINK V2
 
-## Software requirement
+## Software requirements
 - cmake > 3.15
 - openocd
 - stlink-tools
@@ -16,6 +16,28 @@ UAS-Catpilot is an open-source project for drone control systems. It contains th
 - flex
 - [arm-none-eabi](https://developer.arm.com/downloads/-/gnu-rm)
 
+# Getting started
+### 1. Preparing
+Connect your autopilot to STLINK programmer
+### 2. Clone repository
+```bash
+$ git clone --recurse-submodules git@github.com:ctlst-tech/uas-catpilot.git
+$ cd uas-catpilot
+```
+### 3. Config
+```bash
+$ make config
+```
+### 4. Build
+```bash
+$ make cube
+```
+### 5. Flash
+```bash
+$ make flash
+```
+
+# Additional information
 It is recommended to use Ubuntu as the host operating system, and Visual Studio Code as the code editor. For a quick installation you can use the package manager:
 
 Ubuntu
@@ -33,21 +55,40 @@ To build and debug with VS Code you need to set up *.json configuration files in
 - C/C++ Themes
 - XML Format
 
-# Getting started
-### 1. Clone repository
+To build a project with a non-default configuration, you should specify a cmake build target (Release or Debug) and the following definitions:
+- BOARD - Supported board type. For example: ```-DBOARD=cube```
+- CLI_PORT - Port for communication with autopilot. For example: ```-DCLI_PORT=TELEM2```
+- CLI_BAUDRATE - Serial port baudrate for communication. For example: ```-DCLI_BAUDRATE=57600```
+- OS_MONITOR - Show system information: threads, cpu load, RAM: ```-DOS_MONITOR=ON```
+
+And then you can build manually:
 ```bash
-$ git clone --recurse-submodules git@github.com:ctlst-tech/uas-catpilot.git
-$ cd catpilot
+$ rm -r -f build
+$ mkdir build
+$ cd build
+$ cmake .. -DCMAKE_BUILD_TYPE=Release -DBOARD=cube -DCLI_PORT=TELEM2 -DCLI_BAUDRATE=57600 -DOS_MONITOR=ON
+$ make uas-catpilot.elf
+$ cd ..
 ```
 
-### 2. Build
-To build a project, you must specify cmake build target and board type. You also need to generate configuration files:
+You can also download firmware with st-flash util:
 ```bash
-$ make quad config
-$ make cube
+$ st-flash write build/firmware/uas-catpilot.bin 0x08000000
 ```
 
-### 3. Flash
-```bash
-$ make flash
+If you use VS Code, you can change the *.json configuration files for auto build:
+
+settings.json
+```json
+{
+    "cmake.setBuildTypeOnMultiConfig": true,
+    "cmake.configureSettings": {
+        "BOARD": "cube",
+        "CLI_PORT": "TELEM2",
+        "CLI_BAUDRATE": "57600"
+    },
+    "cortex-debug.armToolchainPath": "/usr/bin",
+    "cortex-debug.openocdPath": "/usr/local/bin/openocd",
+    "cortex-debug.gdbPath": "/usr/bin/gdb-multiarch",
+}
 ```
