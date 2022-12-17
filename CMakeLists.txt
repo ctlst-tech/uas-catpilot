@@ -30,13 +30,26 @@ else ()
 endif ()
 
 execute_process (
-        COMMAND bash -c "git show --quiet | grep 'commit ' | sed 's/commit //' | awk '{print substr(toupper($0),1,8)}' | tr '\n' ' '"
-        OUTPUT_VARIABLE GIT_HASH
+        COMMAND bash -c "git show --quiet | grep 'commit ' | sed 's/commit //' | awk '{print substr($0,1,8)}' | tr '\n' ' '"
+        OUTPUT_VARIABLE GIT_HASH_UAS
 )
 execute_process (
-        COMMAND bash -c "if [ -z \"$(git status -s)\" ]; then echo CLEAN; else echo DIRTY; fi | tr '\n' ' '"
-        OUTPUT_VARIABLE GIT_STATE
+        COMMAND bash -c "if [ -z \"$(git status -s)\" ]; then echo clean; else echo dirty; fi | tr '\n' ' '"
+        OUTPUT_VARIABLE GIT_STATE_UAS
 )
+execute_process (
+        COMMAND bash -c "cd ../catpilot && git show --quiet | grep 'commit ' | sed 's/commit //' | awk '{print substr($0,1,8)}' | tr '\n' ' '"
+        OUTPUT_VARIABLE GIT_HASH_CATPILOT
+)
+execute_process (
+        COMMAND bash -c "cd ../catpilot && if [ -z \"$(git status -s)\" ]; then echo clean; else echo dirty; fi | tr '\n' ' '"
+        OUTPUT_VARIABLE GIT_STATE_CATPILOT
+)
+
+add_definitions(-DGIT_HASH_UAS="${GIT_HASH_UAS}")
+add_definitions(-DGIT_STATE_UAS="${GIT_STATE_UAS}")
+add_definitions(-DGIT_HASH_CATPILOT="${GIT_HASH_CATPILOT}")
+add_definitions(-DGIT_STATE_CATPILOT="${GIT_STATE_CATPILOT}")
 
 set(CMAKE_TOOLCHAIN_FILE catpilot/bsp/mcu/core/${MCU_FAMILY}/${MCU_MODEL}/${MCU_MODEL}_toolchain.cmake)
 
@@ -59,7 +72,9 @@ message("   C Compiler: ${CMAKE_C_COMPILER}")
 message("   C++ Compiler: ${CMAKE_CXX_COMPILER}")
 message("   Compiler flags: ${COMMON_FLAGS}")
 message("   Linker flags: ${LINKER_FLAGS}")
-message("   Debug port: ${CLI_PORT} ${CLI_BAUDRATE}\n")
+message("   Debug port: ${CLI_PORT} ${CLI_BAUDRATE}")
+message("   uas-catpilot: ${GIT_HASH_UAS}${GIT_STATE_UAS}")
+message("   catpilot: ${GIT_HASH_CATPILOT}${GIT_STATE_CATPILOT}\n")
 
 add_subdirectory(catpilot)
 
@@ -90,9 +105,6 @@ target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     ${FSPECS_LIBS}
     -lc -lm -lnosys
 )
-
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE GIT_HASH=\"${GIT_HASH}\")
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE GIT_STATE=\"${GIT_STATE}\")
 
 set(ELF_FILE ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.elf)
 set(HEX_FILE ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex)

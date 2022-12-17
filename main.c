@@ -16,7 +16,7 @@ int main(void) {
 void *catpilot(void *param) {
     pthread_setname_np((char *)__func__);
 
-    board_init(CLI_PORT, CLI_BAUDRATE, GIT_HASH, GIT_STATE);
+    board_init(CLI_PORT, CLI_BAUDRATE);
 
     xml_inline_mount("/cfg");
 
