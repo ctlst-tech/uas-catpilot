@@ -5,9 +5,10 @@
 #include "xml_inline.h"
 
 swsys_t core_sys;
+void *catpilot(void *param);
 
 int main(void) {
-    board_start();
+    board_start(catpilot);
     while (1) {
     }
 }
