@@ -1,5 +1,5 @@
 # UAS-Catpilot
-UAS-Catpilot is an open-source project for drone control systems. It contains the [catpilot](git@github.com:ctlst-tech/catpilot.git) library for support various autopilots and control system modules described with XML-based DSL.
+UAS-Catpilot is an open-source project for drone control systems. It contains the [catpilot](git@github.com:ctlst-tech/catpilot.git) library to support various autopilots. It also contains control system modules described with XML-based DSL.
 
 # Requirements
 ## Hardware requirements
@@ -18,7 +18,7 @@ UAS-Catpilot is an open-source project for drone control systems. It contains th
 
 # Getting started
 ### 1. Preparing
-Connect your autopilot to STLINK programmer
+Connect your autopilot to a STLINK programmer
 ### 2. Clone repository
 ```bash
 $ git clone --recurse-submodules git@github.com:ctlst-tech/uas-catpilot.git
@@ -45,7 +45,7 @@ Ubuntu
 $ sudo apt-get install cmake openocd stlink-tools catch2 bison flex
 ```
 
-To build and debug with VS Code you need to set up *.json configuration files in the .vscode driectory. You also need to install the following extensions
+To build and debug with VS Code you need to set up *.json configuration files in the .vscode directory. You also need to install the following extensions
 - CMake
 - CMake Tools
 - Clang-Format
