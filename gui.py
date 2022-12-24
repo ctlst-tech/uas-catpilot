@@ -15,7 +15,7 @@ args = args_parser.args
 mon = Monitor(monitor_bus_name=mon_bus_name, argv=sys.argv)
 
 mon.mkdir(telemetry_dir_name)
-ul
+
 topics_root = mon_bus_name + '/' + telemetry_dir_name
 
 mon.bridge_sdtl(path=args.serdev, baudrate=args.serbaud, bridge_to='telemetry')
