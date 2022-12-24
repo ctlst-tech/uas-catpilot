@@ -8,4 +8,5 @@ __pycache__
 .idea/
 cmake-build-debug/
 cmake-build-release/
-
+.cortex-debug.peripherals.state.json
+.cortex-debug.registers.state.json

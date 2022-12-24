@@ -5,9 +5,10 @@
 #include "xml_inline.h"
 
 swsys_t core_sys;
+void *catpilot(void *param);
 
 int main(void) {
-    board_start();
+    board_start(catpilot, 65535);
     while (1) {
     }
 }
@@ -15,7 +16,7 @@ int main(void) {
 void *catpilot(void *param) {
     pthread_setname_np((char *)__func__);
 
-    board_init(CLI_PORT, CLI_BAUDRATE, GIT_HASH, GIT_STATE);
+    board_init(CLI_PORT, CLI_BAUDRATE);
 
     xml_inline_mount("/cfg");
 

@@ -2,7 +2,6 @@
 
 <flow>
     <spec name="housekeeping">
-
         <outputs>
             <o alias="sine" type="core.type.f64"/>
         </outputs>
