@@ -187,26 +187,10 @@
             <param alias="ch2_min">1000</param>
             <param alias="ch3_min">1000</param>
             <param alias="ch4_min">1000</param>
-            <param alias="ch5_min"/>
-            <param alias="ch6_min"/>
-            <param alias="ch7_min"/>
-            <param alias="ch8_min"/>
             <param alias="ch1_max">2000</param>
             <param alias="ch2_max">2000</param>
             <param alias="ch3_max">2000</param>
             <param alias="ch4_max">2000</param>
-            <param alias="ch5_max"/>
-            <param alias="ch6_max"/>
-            <param alias="ch7_max"/>
-            <param alias="ch8_max"/>
-            <param alias="ch1_bipolar"/>
-            <param alias="ch2_bipolar"/>
-            <param alias="ch3_bipolar"/>
-            <param alias="ch4_bipolar"/>
-            <param alias="ch5_bipolar"/>
-            <param alias="ch6_bipolar"/>
-            <param alias="ch7_bipolar"/>
-            <param alias="ch8_bipolar"/>
         </f>
     </functions>
 
