@@ -3,7 +3,8 @@
     "cmake.configureSettings": {
         "BOARD": "cube",
         "CLI_PORT": "TELEM2",
-        "CLI_BAUDRATE": "57600"
+        "CLI_BAUDRATE": "57600",
+        "OS_MONITOR": "ON"
     },
     "cortex-debug.armToolchainPath": "/usr/bin",
     "cortex-debug.openocdPath": "/usr/local/bin/openocd",

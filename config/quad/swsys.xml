@@ -109,4 +109,11 @@
 
         <channel_2_name value="downlink_sk"/>
     </service>
+
+    <service type="eqrb_file" name="service_name">
+        <event_queue_source value="gcu_bus"/>
+        <file_prefix value="gcu"/>
+        <dst_dir value="/fs/logs"/>
+    </service>
+
 </swsys>
