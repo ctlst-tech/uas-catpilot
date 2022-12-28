@@ -142,6 +142,21 @@ void core_quat_prop_exec(
 
 ## DSL based integration
 
+Define top level behavior in the problem-oriented notation:
+
+- **swsys** - software system description layer; allocates functions and other blocks into tasks and processes.
+- **flow** - block to arrange computational graphs as a sequence of atomic reusable functions.
+- **fsm** - finite state machine notation, operates by states, transitions and actions on states and transitions.
+- **ibr** - interface bridge - designed to take care of converting information from and to other devices.
+
+<details>
+<summary>More info</summary>
+
+[Documentation](https://docs.ctlst.app/catom/intro.html)
+
+</details>
+
+
 ## Model-based design representation
 
 View this GitHub project in [C-ATLAS](https://s1.ctlst.app/p/STGhxorC)
