@@ -83,13 +83,13 @@ include_directories(
     ${BSP}
 )
 
-include(fspecs.cmake)
+include(atomics.cmake)
 
 add_executable(${PROJECT_NAME}.elf
     main.c
     xml_inline.c
     xml_inline_cfgs.c
-    ${FSPECS_REG}
+    ${ATOMICS_REG}
     # FIXME
     catpilot/c-atom/function/error.c
     catpilot/c-atom/function/conv.c
@@ -102,7 +102,7 @@ target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     os-static
     bsp-static
     c-atom-static
-    ${FSPECS_LIBS}
+    ${ATOMICS_LIBS}
     -lc -lm -lnosys
 )
 
