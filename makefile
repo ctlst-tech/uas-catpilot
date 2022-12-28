@@ -17,7 +17,7 @@ clean_build:
 	cd build && cmake .. -DTYPE=Cube -DCMAKE_BUILD_TYPE=Release && make catpilot.elf -j15
 
 cube:
-	rm -r -f build && mkdir build && cd build && cmake .. -DBOARD=cube -DCLI_PORT=TELEM2 -DCLI_BAUDRATE=57600 -DOS_MONITOR=ON && make uas-catpilot.elf
+	rm -r -f build && mkdir build && cd build && cmake .. -DBOARD=cube -DCLI_PORT=DBG -DCLI_BAUDRATE=115200 -DOS_MONITOR=ON && make uas-catpilot.elf
 
 flash:
 	@echo Firmware downloading
