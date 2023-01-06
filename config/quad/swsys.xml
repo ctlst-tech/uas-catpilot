@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<swsys>
+<swsys name="target">
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
     <bus name="nav_bus" eq_channel="1" max_topics="32"/>

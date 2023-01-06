@@ -15,7 +15,7 @@
     <device designator="h-rtk_f9p_rover_2" part_number="h-rtk_f9p_rover"/>
 
     <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_SWITCH" dev2_iface="Safety Button"/>
-    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_LED" dev2_iface="Safety LED"/>
+    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_SWITCH_LED" dev2_iface="Safety LED"/>
     <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="I2C" dev2_iface="I2C1"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_1" dev1_iface="MAIN1" dev2_iface="PWM"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_2" dev1_iface="MAIN2" dev2_iface="PWM"/>
