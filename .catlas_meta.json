@@ -1,5 +1,5 @@
 {
-    "swsys_": {
+    "swsys_target": {
         "root_meta": {
             "geometry": "{\"x\":0,\"y\":0,\"width\":1764,\"height\":984}"
         },
@@ -1177,7 +1177,7 @@
                     "SAFETY_SWITCH": {
                         "geometry": "{\"x\":180,\"y\":119.3333,\"side\":\"EAST\",\"width\":0,\"height\":0}"
                     },
-                    "SAFETY_LED": {
+                    "SAFETY_SWITCH_LED": {
                         "geometry": "{\"x\":180,\"y\":149.1667,\"side\":\"EAST\",\"width\":0,\"height\":0}"
                     }
                 },
@@ -1188,7 +1188,7 @@
             "h-rtk_f9p_rover_2/SAFETY_SWITCH-->kore_board_1/Safety Button": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":-186.2009,\"y\":925.8344,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":-108.5368,\"y\":925.8344},{\"x\":-108.5368,\"y\":980.8263}],\"end\":{\"x\":-65.4356,\"y\":980.8263},\"adjusted\":true}],\"labels\":[{\"x\":-108.5368,\"y\":953.3303}]}"
             },
-            "h-rtk_f9p_rover_2/SAFETY_LED-->kore_board_1/Safety LED": {
+            "h-rtk_f9p_rover_2/SAFETY_SWITCH_LED-->kore_board_1/Safety LED": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":-186.2009,\"y\":955.6678,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":-125.8182,\"y\":955.6678},{\"x\":-125.8182,\"y\":1053.3497}],\"end\":{\"x\":-65.4356,\"y\":1053.3497}}]}"
             },
             "h-rtk_f9p_rover_2/I2C-->kore_board_1/I2C1": {
