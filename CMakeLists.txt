@@ -5,8 +5,8 @@ set(PROJ_NAME "uas-catpilot")
 if (BOARD STREQUAL "host")
     set(MCU_FAMILY host)
     set(MCU_MODEL host)
-    set(OS "linux")
-    set(FS "linux")
+    set(OS "posix")
+    set(FS "posix")
     set(CLI_PORT "stdio")
     set(CLI_BAUDRATE "")
 elseif (BOARD STREQUAL "cube")
@@ -85,12 +85,15 @@ message("   catpilot: ${GIT_HASH_CATPILOT}${GIT_STATE_CATPILOT}\n")
 
 add_subdirectory(catpilot)
 
-include_directories(
-    ${OS}
-    ${BSP}
-)
+#include_directories(
+#    ${OS}
+#    ${BSP}
+#)
 
 include(atomics.cmake)
+
+add_executable(catom-launcher ${ATOMICS_REG})
+target_link_libraries(catom-launcher PUBLIC c-atom-launcher-static ${ATOMICS_LIBS})
 
 add_executable(${PROJECT_NAME}.elf
     main.c
@@ -101,9 +104,6 @@ add_executable(${PROJECT_NAME}.elf
     catpilot/c-atom/function/error.c
     catpilot/c-atom/function/conv.c
 )
-
-target_link_libraries(c-atom-static PUBLIC os-static)
-target_link_libraries(eswb-static PUBLIC os-static)
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     os-static
@@ -128,3 +128,4 @@ add_custom_command(TARGET "${PROJECT_NAME}.elf" POST_BUILD
     COMMAND ${CMAKE_SIZE} -A ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.elf
     COMMAND ${CMAKE_SIZE} --format=berkeley ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex
 )
+
