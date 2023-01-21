@@ -18,6 +18,7 @@
 
     <functions>
         <f name="imu1" by_spec="cube.sensors.icm20649"/>
+        <f name="mag1" by_spec="cube.sensors.ist8310"/>
         <f name="omega_x_biased" by_spec="core.math.sub">
             <in alias="input0">imu1/wx</in>
             <in alias="input1">inputs/omega_bias/x</in>
