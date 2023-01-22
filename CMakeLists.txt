@@ -85,10 +85,10 @@ message("   catpilot: ${GIT_HASH_CATPILOT}${GIT_STATE_CATPILOT}\n")
 
 add_subdirectory(catpilot)
 
-#include_directories(
-#    ${OS}
-#    ${BSP}
-#)
+include_directories(
+    ${OS}
+    ${BSP}
+)
 
 include(atomics.cmake)
 
