@@ -34,6 +34,11 @@ imu_a = ewChart([DataSourceEswbTopic('a_x', path=f'{topics_root}/nav/nav/a/x'),
                         DataSourceEswbTopic('a_z', path=f'{topics_root}/nav/nav/a/z')],
                         data_range=(-15, +15))
 
+mag = ewChart([DataSourceEswbTopic('mag_x', path=f'{topics_root}/nav/nav/mag/x', mult=1.0),
+                        DataSourceEswbTopic('mag_y', path=f'{topics_root}/nav/nav/mag/y', mult=1.0),
+                        DataSourceEswbTopic('mag_z', path=f'{topics_root}/nav/nav/mag/z', mult=1.0)],
+                        data_range=(-30, +30))
+
 hk_sine = ewChart([DataSourceEswbTopic('sine', path=f'{topics_root}/hk/sine'),
                         # DataSourceSinus('s1', iphase=0.0),
                         # DataSourceSinus('s2', iphase=1.0)
@@ -45,6 +50,7 @@ manc_xy = ewCursor([(DataSourceEswbTopic('x', path=f'{topics_root}/cont/man_cont
 
 mon.add_widget(ewGroup([imu_roll_pitch, ]))
 mon.add_widget(ewGroup([manc_xy, imu_omega, imu_a, hk_sine]))
+mon.add_widget(ewGroup([mag]))
 
 mon.add_widget(mon.get_stat_widget())
 mon.run()
