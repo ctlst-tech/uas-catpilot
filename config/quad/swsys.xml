@@ -3,7 +3,13 @@
 <swsys name="target">
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
-    <bus name="nav_bus" eq_channel="1" max_topics="48"/>
+    <bus name="nav_bus" eq_channel="1" max_topics="128">
+        <dir name="gnss2">
+            <dir name="raw"/>
+            <dir name="sol"/>
+        </dir>
+    </bus>
+
     <bus name="control_bus" eq_channel="1" max_topics="48">
         <dir name="rc" eq_channel="0"/>
         <dir name="solution" eq_channel="0"/>
@@ -30,7 +36,30 @@
             <in alias="omega_bias, q0, q">nav_bus/$alias</in>
             <in alias="reset">nav_bus/imu_reset</in>
 
-            <out alias="a, omega, q, mag">nav_bus/$alias</out>
+            <out alias="a, omega, q">nav_bus/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_nav_compass.xml" name="nav_compass" priority="6" clk_method="freerun">
+        <connect>
+            <in alias="q">nav_bus/q</in>
+
+            <out alias="mag">nav_bus/mag</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_ublox_parsing.xml" name="gnss2_frame" priority="-1" clk_method="freerun">
+        <param alias="serial_path">/dev/ttyS5</param>
+        <connect>
+            <out alias="ubx_frame">nav_bus/gnss2/raw/ubx_frame</out>
+            <out alias="rtcm_frame">nav_bus/gnss2/raw/rtcm_frame</out>
+        </connect>
+    </task>
+
+    <task type="ibr" config="ibr_ubx.xml" name="gnss2_sol" priority="3" clk_method="freerun">
+        <connect>
+            <in alias="rx_frame">nav_bus/gnss2/raw/ubx_frame</in>
+            <out alias="ubx_msgs">nav_bus/gnss2/sol/</out>
         </connect>
     </task>
 
