@@ -93,7 +93,11 @@ include_directories(
 
 include(atomics.cmake)
 
-add_executable(catom-launcher ${ATOMICS_REG})
+add_executable(catom-launcher
+    ${ATOMICS_REG}
+    # FIXME
+    catpilot/c-atom/function/conv.c)
+
 target_link_libraries(catom-launcher PUBLIC c-atom-launcher-static ${ATOMICS_LIBS})
 
 add_executable(${PROJECT_NAME}.elf
