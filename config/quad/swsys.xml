@@ -3,14 +3,14 @@
 <swsys name="target">
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
-    <bus name="nav_bus" eq_channel="1" max_topics="32"/>
-    <bus name="control_bus" eq_channel="1" max_topics="32">
+    <bus name="nav_bus" eq_channel="1" max_topics="48"/>
+    <bus name="control_bus" eq_channel="1" max_topics="48">
         <dir name="rc" eq_channel="0"/>
         <dir name="solution" eq_channel="0"/>
     </bus>
 
-    <bus name="gcu_bus" eq_channel="0" max_topics="32">
-        <event_queue buffer_size="2000" size="32"/>
+    <bus name="gcu_bus" eq_channel="0" max_topics="48">
+        <event_queue buffer_size="2000" size="48"/>
 
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
@@ -30,7 +30,7 @@
             <in alias="omega_bias, q0, q">nav_bus/$alias</in>
             <in alias="reset">nav_bus/imu_reset</in>
 
-            <out alias="a, omega, q">nav_bus/$alias</out>
+            <out alias="a, omega, q, mag">nav_bus/$alias</out>
         </connect>
     </task>
 
@@ -83,7 +83,7 @@
     </task>
 
     <bridge name="nav" priority="2" clk_method="timer" clk_period="50" to="gcu_bus/nav">
-        <source alias="omega, a">nav_bus/$alias</source>
+        <source alias="omega, a, mag">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw">nav_bus/$alias</source>
     </bridge>
 

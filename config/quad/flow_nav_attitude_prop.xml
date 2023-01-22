@@ -13,12 +13,15 @@
             <o alias="a" type="core.type.v3f64"/>
             <o alias="omega" type="core.type.v3f64"/>
             <o alias="q" type="core.type.quat"/>
+            <o alias="mag" type="core.type.v3f64"/>
         </outputs>
     </spec>
 
     <functions>
         <f name="imu1" by_spec="cube.sensors.icm20649"/>
+
         <f name="mag1" by_spec="cube.sensors.ist8310"/>
+
         <f name="omega_x_biased" by_spec="core.math.sub">
             <in alias="input0">imu1/wx</in>
             <in alias="input1">inputs/omega_bias/x</in>
@@ -58,11 +61,18 @@
             <in alias="y">imu1/wy</in>
             <in alias="z">imu1/wz</in>
         </f>
+
+        <f name="concat_mag" by_spec="core.math.vector3f64">
+            <in alias="x">mag1/magx</in>
+            <in alias="y">mag1/magy</in>
+            <in alias="z">mag1/magz</in>
+        </f>
     </functions>
 
     <link_outputs>
         <link alias="a">concat_accel/v</link>
         <link alias="omega">concat_omega/v</link>
         <link alias="q">integrate_att/q</link>
+        <link alias="mag">concat_mag/v</link>
     </link_outputs>
 </flow>
