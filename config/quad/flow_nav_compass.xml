@@ -20,6 +20,26 @@
             <in alias="z">mag1/magz</in>
         </f>
 
+        <f name="concat_mag" by_spec="core.math.vector_calib">
+            <in alias="in">concat_mag/v</in>
+
+            <param alias="a11">1.0</param>
+            <param alias="a21">0.0</param>
+            <param alias="a31">0.0</param>
+
+            <param alias="a12">0.0</param>
+            <param alias="a22">1.0</param>
+            <param alias="a32">0.0</param>
+    
+            <param alias="a13">0.0</param>
+            <param alias="a23">0.0</param>
+            <param alias="a33">1.0</param>
+
+            <param alias="b1">0.0</param>
+            <param alias="b2">0.0</param>
+            <param alias="b3">0.0</param>
+        </f>
+
     </functions>
 
     <link_outputs>
