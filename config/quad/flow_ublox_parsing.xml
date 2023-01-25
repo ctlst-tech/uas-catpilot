@@ -16,7 +16,7 @@
     <functions>
         <f name="rx_frame_sync" by_spec="ublox.protocol.rx_framing">
             <param alias="serial_path">$serial_path</param>
-            <param alias="ubx_frame_size">512</param>
+            <param alias="ubx_frame_size">256</param>
             <param alias="rtcm_frame_size">256</param>
         </f>
     </functions>
