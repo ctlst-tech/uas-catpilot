@@ -14,14 +14,24 @@
     <functions>
         <f name="mag1" by_spec="cube.sensors.ist8310"/>
 
-        <f name="concat_mag" by_spec="core.math.vector3f64">
+        <f name="roll0" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+        <f name="pitch0" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+        <f name="yaw0" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+
+        <f name="mag_concat" by_spec="core.math.vector3f64">
             <in alias="x">mag1/magx</in>
             <in alias="y">mag1/magy</in>
             <in alias="z">mag1/magz</in>
         </f>
 
-        <f name="concat_mag" by_spec="core.math.vector_calib">
-            <in alias="in">concat_mag/v</in>
+        <f name="mag_calib" by_spec="core.vector.calib">
+            <in alias="v">mag_concat/v</in>
 
             <param alias="a11">1.0</param>
             <param alias="a21">0.0</param>
@@ -40,9 +50,19 @@
             <param alias="b3">0.0</param>
         </f>
 
+        <f name="mag_turn_quat" by_spec="core.quat.from_euler">
+            <in alias="roll">roll0/output</in>
+            <in alias="pitch">pitch0/output</in>
+            <in alias="yaw">yaw0/output</in>
+        </f>
+
+        <f name="mag_rotate" by_spec="core.vector.qrotate">
+            <in alias="v">mag_calib/v</in>
+            <in alias="q">mag_turn_quat/q</in>
+        </f>
     </functions>
 
     <link_outputs>
-        <link alias="mag">concat_mag/v</link>
+        <link alias="mag">mag_rotate/v</link>
     </link_outputs>
 </flow>
