@@ -60,6 +60,10 @@
             <in alias="v">mag_calib/v</in>
             <in alias="q">mag_turn_quat/q</in>
         </f>
+
+        <f name="mag_proj" by_spec="core.vector.proj">
+            <in alias="v">mag_rotate/v</in>
+        </f>
     </functions>
 
     <link_outputs>
