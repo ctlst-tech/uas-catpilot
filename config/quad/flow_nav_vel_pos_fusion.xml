@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec>
+        <inputs>
+            <i alias="vel" type="core.type.f64"/>
+            <i alias="pos" type="core.type.f64"/>
+            <i alias="gnss_vel" type="core.type.f64"/>
+            <i alias="gnss_pos" type="core.type.f64"/>
+            <i alias="gnss_ready" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.f64"/>
+            <o alias="pos" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+</flow>

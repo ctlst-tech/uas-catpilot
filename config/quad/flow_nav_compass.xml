@@ -13,13 +13,11 @@
 
     <functions>
         <f name="mag1" by_spec="cube.sensors.ist8310"/>
-
         <f name="concat_mag" by_spec="core.math.vector3f64">
             <in alias="x">mag1/magx</in>
             <in alias="y">mag1/magy</in>
             <in alias="z">mag1/magz</in>
         </f>
-
     </functions>
 
     <link_outputs>

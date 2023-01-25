@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec>
+        <inputs>
+            <i alias="vel_n" type="core.type.f64"/>
+            <i alias="vel_e" type="core.type.f64"/>
+            <i alias="vel_d" type="core.type.f64"/>
+            <i alias="lat" type="core.type.f64"/>
+            <i alias="lon" type="core.type.f64"/>
+            <i alias="alt" type="core.type.f64"/>
+            <i alias="prec" type="core.type.f64"/>
+            <i alias="fix" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.v3f64"/>
+            <o alias="pos" type="core.type.v3f64"/>
+            <o alias="ready" type="core.type.bool"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="core.math.vector3f64_11" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/lat</in>
+            <in alias="y">inputs/lon</in>
+            <in alias="z">inputs/alt</in>
+        </f>
+
+        <f name="core.math.vector3f64_12" by_spec="core.math.vector3f64">
+            <in alias="z">inputs/vel_d</in>
+            <in alias="y">inputs/vel_e</in>
+            <in alias="x">inputs/vel_n</in>
+        </f>
+
+        <f name="core.source.constant_10" by_spec="core.source.constant">
+            <param alias="value"/>
+        </f>
+
+        <f name="core.math.gt_1" by_spec="core.math.gt">
+            <in alias="input1">core.source.constant_10/output</in>
+            <in alias="input0">inputs/prec</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="vel">core.math.vector3f64_12/v</link>
+        <link alias="pos">core.math.vector3f64_11/v</link>
+    </link_outputs>
+</flow>

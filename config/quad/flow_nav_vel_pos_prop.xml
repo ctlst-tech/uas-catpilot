@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec>
+        <inputs>
+            <i alias="a" type="core.type.f64"/>
+            <i alias="vel" type="core.type.f64"/>
+            <i alias="pos" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.f64"/>
+            <o alias="pos" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+</flow>
