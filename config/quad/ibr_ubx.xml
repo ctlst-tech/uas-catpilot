@@ -4,12 +4,12 @@
         </annotation>
 
         <inputs>
-            <i alias="rx_frame" annotation="UBX Frame, synced"/>
+            <i alias="rx_frame" annotation="UBX Frame, synced" type="core.type.vector_u8"/>
         </inputs>
 
         <outputs>
-            <o alias="ubx_msgs" annotation="Ublox messages parsed"/>
-        </outputs>
+            <o alias="ubx_msgs" annotation="Ublox messages parsed" type="core.type.vector_u8"/> <!-- fixme placeholder type -->
+         </outputs>
 
         <params>
         </params>

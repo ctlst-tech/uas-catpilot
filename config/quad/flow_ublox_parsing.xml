@@ -8,8 +8,8 @@
         </params>
 
         <outputs>
-            <o alias="ubx_frame"/>
-            <o alias="rtcm_frame"/>
+            <o alias="ubx_frame" type="core.type.vector_u8"/>
+            <o alias="rtcm_frame" type="core.type.vector_u8"/>
         </outputs>
     </spec>
 
