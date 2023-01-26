@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <flow>
-    <spec>
+    <spec name="gnss_process">
         <inputs>
             <i alias="vel_n" type="core.type.f64"/>
             <i alias="vel_e" type="core.type.f64"/>
@@ -38,18 +38,22 @@
         </f>
 
         <f name="prec_is_ok" by_spec="core.math.gt">
-            <in alias="input1">prec_threshold/output</in>
-            <in alias="input0">inputs/prec</in>
+            <in alias="input1">inputs/prec</in>
+            <in alias="input0">prec_threshold/output</in>
         </f>
 
         <f name="ready" by_spec="core.logical.and">
             <in alias="input0">prec_is_ok/output</in>
             <in alias="input1">inputs/fix</in>
         </f>
+
+        <f name="ready_reg" by_spec="core.logical.rs_trigger">
+            <in alias="s">ready/output</in>
+        </f>
     </functions>
 
     <link_outputs>
-        <link alias="ready">ready/output</link>
+        <link alias="ready">ready_reg/output</link>
         <link alias="vel">concat_vel/v</link>
         <link alias="pos">concat_pos/v</link>
     </link_outputs>

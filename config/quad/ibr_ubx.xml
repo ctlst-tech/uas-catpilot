@@ -96,7 +96,7 @@
 
     <!--    <process name="test_udp2eswb" protocol="test" src_msg="msg_sample" src="udp://*:1111" dst="eswb://msg_out" />-->
     <!--    <process name="test_eswb2udp" protocol="test" src_msg="msg_sample" src="eswb://msg_in" dst="udp://127.0.0.1:1112" />-->
-    <process name="ubx" protocol="ubx" frame="ubx" src="func_vec://rx_frame" dst="func://ubx_msgs" />
+    <process type="frame" name="ubx" protocol="ubx" frame="ubx" src="func_vec://rx_frame" dst="func://ubx_msgs" />
 <!--    <process name="sens_nav" protocol="fg_interaction" src_msg="nav" src="udp://*:6010" dst="func://nav" />-->
 <!--    <process name="sens_engine" protocol="fg_interaction" src_msg="engine" src="udp://*:6011" dst="func://engine" />-->
 <!--    <process name="cnt_airplane" protocol="fg_interaction" src_msg="control" src="func_br://control" dst="udp://127.0.0.1:6000" />-->

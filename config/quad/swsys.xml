@@ -4,7 +4,10 @@
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
     <bus name="nav_bus" eq_channel="1" max_topics="128">
-        <dir name="gnss">
+        <dir name="gnss" eq_channel="0">
+            <dir name="raw" eq_channel="0"/>
+            <dir name="sol" eq_channel="0"/>
+            <dir name="msg" eq_channel="0"/>
         </dir>
     </bus>
 

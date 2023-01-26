@@ -44,11 +44,20 @@
             "nav_compass": {
                 "geometry": "{\"x\":357.5126,\"y\":280.5963,\"width\":180,\"height\":40,\"empty\":true}"
             },
-            "gnss2_frame": {
-                "geometry": "{\"x\":584.1213,\"y\":279.5441,\"width\":180,\"height\":40,\"empty\":true}"
+            "nav_ublox_parsing": {
+                "geometry": "{\"x\":954.7155,\"y\":112.805,\"width\":180,\"height\":40,\"empty\":true}"
             },
-            "gnss2_sol": {
-                "geometry": "{\"x\":848.3696,\"y\":278.9372,\"width\":180,\"height\":40,\"empty\":true}"
+            "nav_gnss_msg": {
+                "geometry": "{\"x\":1211.9659,\"y\":129.313,\"width\":180,\"height\":40,\"empty\":true}"
+            },
+            "nav_gnss_process": {
+                "geometry": "{\"x\":1147.3094,\"y\":268.2558,\"width\":180,\"height\":40,\"empty\":true}"
+            },
+            "nav_vel_pos_prop": {
+                "geometry": "{\"x\":960.2182,\"y\":195.3452,\"width\":180,\"height\":40,\"empty\":true}"
+            },
+            "nav_vel_pos_fusion": {
+                "geometry": "{\"x\":548.8926,\"y\":114.1807,\"width\":180,\"height\":40,\"empty\":true}"
             },
             "nav_attitude_filter": {
                 "geometry": "{\"x\":679.4446,\"y\":362.844,\"width\":180,\"height\":40}"
@@ -73,15 +82,6 @@
             },
             "gcu_bus": {
                 "geometry": "{\"x\":216.1226,\"y\":834.2009,\"width\":653.6294,\"height\":28.3058}"
-            },
-            "nav_pos_prop": {
-                "geometry": "{\"x\":1027.6598,\"y\":358.3798,\"width\":180,\"height\":40,\"empty\":true}"
-            },
-            "nav_pos_fusion": {
-                "geometry": "{\"x\":1286.533,\"y\":356.9529,\"width\":180,\"height\":40,\"empty\":true}"
-            },
-            "gnss_process": {
-                "geometry": "{\"x\":1149.9805,\"y\":278.2574,\"width\":180,\"height\":40,\"empty\":true}"
             }
         },
         "edges": {
@@ -94,20 +94,17 @@
             "sdtl_consumer_debug_sdtl_channel_2_name-->sdtl_provider_gcu_link_downlink_sk": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":617.119,\"y\":924.4192},\"bendPoints\":[{\"x\":649.8708,\"y\":924.4192},{\"x\":649.8708,\"y\":1000.0062}],\"end\":{\"x\":617.1296,\"y\":1000.0062},\"adjusted\":true}],\"labels\":[{\"x\":649.8708,\"y\":962.2127}]}"
             },
-            "bus_nav_bus-->task_gnss2_sol": {
-                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":893.565,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":893.565,\"y\":318.9372,\"side\":\"SOUTH\"}}],\"labels\":[{\"x\":893.565,\"y\":389.4688}]}"
+            "task_nav_imu_alignement-->bus_nav_bus": {
+                "geometry": "{\"labels\":[{\"x\":338.9077,\"y\":132.0855}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":339.7257,\"y\":405.3914},\"bendPoints\":[],\"end\":{\"x\":339.911,\"y\":460.0005}}]}"
             },
-            "task_gnss2_sol-->bus_nav_bus": {
-                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":972.5445,\"y\":318.9372,\"side\":\"SOUTH\"},\"bendPoints\":[],\"end\":{\"x\":972.5445,\"y\":460.0005}}],\"labels\":[{\"x\":972.5445,\"y\":389.4688}]}"
-            },
-            "task_gnss2_frame-->bus_nav_bus": {
-                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":656.6267,\"y\":319.5441,\"side\":\"SOUTH\"},\"bendPoints\":[],\"end\":{\"x\":656.6267,\"y\":460.0005}}],\"labels\":[{\"x\":656.6267,\"y\":389.7723}]}"
-            },
-            "bus_nav_bus-->task_nav_attitude_prop": {
-                "geometry": "{\"labels\":[{\"x\":596.2833,\"y\":432.549}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":596.2833,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":596.2833,\"y\":405.0975,\"side\":\"SOUTH\"}}],\"jumpPoints\":[]}"
+            "bus_nav_bus-->task_nav_imu_alignement": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":376.6209,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":376.6209,\"y\":405.3914,\"side\":\"SOUTH\"}}],\"labels\":[{\"x\":376.6209,\"y\":432.6959}]}"
             },
             "task_nav_attitude_prop-->bus_nav_bus": {
                 "geometry": "{\"labels\":[{\"x\":557.0471,\"y\":432.549}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":557.0471,\"y\":405.0975,\"side\":\"SOUTH\"},\"bendPoints\":[],\"end\":{\"x\":557.0471,\"y\":460.0005}}],\"jumpPoints\":[]}"
+            },
+            "bus_nav_bus-->task_nav_attitude_prop": {
+                "geometry": "{\"labels\":[{\"x\":596.2833,\"y\":432.549}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":596.2833,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":596.2833,\"y\":405.0975,\"side\":\"SOUTH\"}}],\"jumpPoints\":[]}"
             },
             "task_nav_compass-->bus_nav_bus": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":460.8234,\"y\":320.5963,\"side\":\"SOUTH\"},\"bendPoints\":[],\"end\":{\"x\":460.8234,\"y\":460.0005}}],\"labels\":[{\"x\":460.8234,\"y\":390.2984}]}"
@@ -115,11 +112,32 @@
             "bus_nav_bus-->task_nav_compass": {
                 "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":445.1921,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":445.1921,\"y\":320.5963,\"side\":\"SOUTH\"}}],\"labels\":[{\"x\":445.1921,\"y\":390.2984}]}"
             },
-            "task_nav_imu_alignement-->bus_nav_bus": {
-                "geometry": "{\"labels\":[{\"x\":338.9077,\"y\":132.0855}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":339.7257,\"y\":405.3914},\"bendPoints\":[],\"end\":{\"x\":339.911,\"y\":460.0005}}]}"
+            "task_nav_ublox_parsing-->bus_nav_bus": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":954.7155,\"y\":112.805},\"end\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":247.0557,\"y\":112.805},{\"x\":247.0557,\"y\":460.0005}]}]}"
             },
-            "bus_nav_bus-->task_nav_imu_alignement": {
-                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":376.6209,\"y\":460.0005},\"bendPoints\":[],\"end\":{\"x\":376.6209,\"y\":405.3914,\"side\":\"SOUTH\"}}],\"labels\":[{\"x\":376.6209,\"y\":432.6959}]}"
+            "task_nav_gnss_msg-->bus_nav_bus": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":1211.9659,\"y\":129.313,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":1407,\"y\":129.313},{\"x\":1407,\"y\":445},{\"x\":1536,\"y\":445},{\"x\":1536,\"y\":460.0005}],\"end\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"}}]}"
+            },
+            "bus_nav_bus-->task_nav_gnss_msg": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":1536,\"y\":460.0005},{\"x\":1536,\"y\":129.313}],\"end\":{\"x\":1211.9659,\"y\":129.313,\"side\":\"EAST\"}}]}"
+            },
+            "task_nav_gnss_process-->bus_nav_bus": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":1147.3094,\"y\":268.2558},\"end\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":247.0557,\"y\":268.2558},{\"x\":247.0557,\"y\":460.0005}]}]}"
+            },
+            "bus_nav_bus-->task_nav_gnss_process": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"end\":{\"x\":1147.3094,\"y\":268.2558},\"bendPoints\":[{\"x\":247.0557,\"y\":460.0005},{\"x\":247.0557,\"y\":268.2558}]}]}"
+            },
+            "task_nav_vel_pos_prop-->bus_nav_bus": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":960.2182,\"y\":195.3452},\"end\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":247.0557,\"y\":195.3452},{\"x\":247.0557,\"y\":460.0005}]}]}"
+            },
+            "bus_nav_bus-->task_nav_vel_pos_prop": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"end\":{\"x\":960.2182,\"y\":195.3452},\"bendPoints\":[{\"x\":247.0557,\"y\":460.0005},{\"x\":247.0557,\"y\":195.3452}]}]}"
+            },
+            "task_nav_vel_pos_fusion-->bus_nav_bus": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":548.8926,\"y\":114.1807},\"end\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":247.0557,\"y\":114.1807},{\"x\":247.0557,\"y\":460.0005}]}]}"
+            },
+            "bus_nav_bus-->task_nav_vel_pos_fusion": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":222.0557,\"y\":460.0005,\"width\":1298.7769,\"height\":24.5114,\"side\":\"EAST\"},\"end\":{\"x\":548.8926,\"y\":114.1807},\"bendPoints\":[{\"x\":247.0557,\"y\":460.0005},{\"x\":247.0557,\"y\":114.1807}]}]}"
             },
             "task_nav_attitude_filter-->bus_nav_bus": {
                 "geometry": "{\"labels\":[{\"x\":768.6305,\"y\":130.9282}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":769.4446,\"y\":402.844},\"bendPoints\":[],\"end\":{\"x\":769.6338,\"y\":460.0005}}]}"
@@ -349,18 +367,129 @@
         }
     },
     "flow_nav_compass": {
-        "root_meta": {},
+        "root_meta": {
+            "geometry": "{\"x\":0,\"y\":0,\"width\":2334,\"height\":470.75}"
+        },
         "nodes": {
-            "mag1": {},
-            "concat_mag": {},
-            "inputs": {},
-            "outputs": {}
+            "mag1": {
+                "geometry": "{\"x\":312,\"y\":12,\"width\":180,\"height\":85}"
+            },
+            "mag_concat": {
+                "geometry": "{\"x\":642,\"y\":28.75,\"width\":180,\"height\":85}"
+            },
+            "mag_calib": {
+                "geometry": "{\"x\":942,\"y\":43.75,\"width\":180,\"height\":55}"
+            },
+            "local_mag_declination": {
+                "geometry": "{\"x\":1242,\"y\":300.4167,\"width\":180,\"height\":55}"
+            },
+            "euler": {
+                "geometry": "{\"x\":312,\"y\":180,\"width\":180,\"height\":85}"
+            },
+            "quat4projection": {
+                "geometry": "{\"x\":945.7176,\"y\":180,\"width\":180,\"height\":85}"
+            },
+            "yaw_zero": {
+                "geometry": "{\"x\":642,\"y\":403.75,\"width\":180,\"height\":55}"
+            },
+            "mag_azimuth_w_decl": {
+                "geometry": "{\"x\":1842,\"y\":182.0833,\"width\":180,\"height\":70}"
+            },
+            "core.vector.magnitude_1": {
+                "geometry": "{\"x\":1242,\"y\":43.75,\"width\":180,\"height\":55}"
+            },
+            "normalized_induction_module": {
+                "geometry": "{\"x\":1542,\"y\":43.75,\"width\":180,\"height\":55}"
+            },
+            "deg2rad": {
+                "geometry": "{\"x\":1542,\"y\":300.4167,\"width\":180,\"height\":55}"
+            },
+            "mag_azimuth": {
+                "geometry": "{\"x\":1542,\"y\":170.4167,\"width\":180,\"height\":70}"
+            },
+            "proj_to_horizon": {
+                "geometry": "{\"x\":1242.9294,\"y\":176.4087,\"width\":180,\"height\":70}"
+            },
+            "inverse_roll": {
+                "geometry": "{\"x\":642,\"y\":173.75,\"width\":180,\"height\":55}"
+            },
+            "inverse_pitch": {
+                "geometry": "{\"x\":642,\"y\":288.75,\"width\":180,\"height\":55}"
+            },
+            "inputs": {
+                "geometry": "{\"x\":12,\"y\":195,\"width\":180,\"height\":55}"
+            },
+            "outputs": {
+                "geometry": "{\"x\":2142,\"y\":174.5833,\"width\":180,\"height\":85}"
+            }
         },
         "edges": {
-            "mag1/magx-->concat_mag/x;": {},
-            "mag1/magy-->concat_mag/y;": {},
-            "mag1/magz-->concat_mag/z;": {},
-            "concat_mag/v-->outputs/mag;": {}
+            "inverse_pitch/output-->quat4projection/pitch;": {
+                "geometry": "{\"jumpPoints\":[],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":822,\"y\":316.25,\"side\":\"EAST\"},\"bendPoints\":[{\"x\":882,\"y\":316.25},{\"x\":882,\"y\":222.5}],\"end\":{\"x\":945.7176,\"y\":222.5}}]}"
+            },
+            "mag1/magz-->mag_concat/z;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":116.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":522,\"y\":75.75},{\"x\":522,\"y\":109.25},{\"x\":612,\"y\":109.25},{\"x\":612,\"y\":92.5}],\"start\":{\"x\":492,\"y\":75.75},\"end\":{\"x\":642,\"y\":92.5}}]}"
+            },
+            "mag1/magx-->mag_concat/x;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":40.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":612,\"y\":33.25},{\"x\":612,\"y\":50}],\"start\":{\"x\":492,\"y\":33.25},\"end\":{\"x\":642,\"y\":50}}]}"
+            },
+            "mag1/magy-->mag_concat/y;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":78.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":552,\"y\":54.5},{\"x\":552,\"y\":71.25}],\"start\":{\"x\":492,\"y\":54.5},\"end\":{\"x\":642,\"y\":71.25}}]}"
+            },
+            "mag_concat/v-->mag_calib/v;": {
+                "geometry": "{\"labels\":[{\"x\":882,\"y\":78.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":822,\"y\":71.25},\"end\":{\"x\":942,\"y\":71.25}}]}"
+            },
+            "inputs/q-->euler/q;": {
+                "geometry": "{\"labels\":[{\"x\":252,\"y\":229.5}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":192,\"y\":222.5},\"end\":{\"x\":312,\"y\":222.5}}]}"
+            },
+            "inverse_roll/output-->quat4projection/roll;": {
+                "geometry": "{\"labels\":[{\"x\":882,\"y\":208.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":822,\"y\":201.25},\"end\":{\"x\":945.7176,\"y\":201.25}}]}"
+            },
+            "yaw_zero/output-->quat4projection/yaw;": {
+                "geometry": "{\"labels\":[{\"x\":882,\"y\":438.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":912,\"y\":431.25},{\"x\":912,\"y\":243.75}],\"start\":{\"x\":822,\"y\":431.25},\"end\":{\"x\":945.7176,\"y\":243.75}}]}"
+            },
+            "mag_azimuth/output-->mag_azimuth_w_decl/input0;": {
+                "geometry": "{\"labels\":[{\"x\":1782,\"y\":212.4167}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1722,\"y\":205.4167},\"end\":{\"x\":1842,\"y\":205.4167}}]}"
+            },
+            "deg2rad/output-->mag_azimuth_w_decl/input1;": {
+                "geometry": "{\"labels\":[{\"x\":1782,\"y\":334.9167}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1812,\"y\":327.9167},{\"x\":1812,\"y\":228.75}],\"start\":{\"x\":1722,\"y\":327.9167},\"end\":{\"x\":1842,\"y\":228.75}}]}"
+            },
+            "mag_calib/v-->core.vector.magnitude_1/v;": {
+                "geometry": "{\"labels\":[{\"x\":1182,\"y\":78.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1122,\"y\":71.25},\"end\":{\"x\":1242,\"y\":71.25}}]}"
+            },
+            "core.vector.magnitude_1/output-->normalized_induction_module/input;": {
+                "geometry": "{\"labels\":[{\"x\":1482,\"y\":78.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1422,\"y\":71.25},\"end\":{\"x\":1542,\"y\":71.25}}]}"
+            },
+            "local_mag_declination/output-->deg2rad/input;": {
+                "geometry": "{\"labels\":[{\"x\":1482,\"y\":334.9167}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1422,\"y\":327.9167},\"end\":{\"x\":1542,\"y\":327.9167}}]}"
+            },
+            "proj_to_horizon/v-->mag_azimuth/input0;": {
+                "geometry": "{\"labels\":[{\"x\":1482,\"y\":186.75}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1482,\"y\":211.4087},{\"x\":1482,\"y\":193.75}],\"start\":{\"x\":1422.9294,\"y\":211.4087},\"end\":{\"x\":1542,\"y\":193.75}}]}"
+            },
+            "proj_to_horizon/v-->mag_azimuth/input1;": {
+                "geometry": "{\"labels\":[{\"x\":1482,\"y\":214.5794}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1482,\"y\":211.4087},{\"x\":1482,\"y\":217.75}],\"start\":{\"x\":1422.9294,\"y\":211.4087},\"end\":{\"x\":1542,\"y\":217.0833},\"adjusted\":true}],\"jumpPoints\":[]}"
+            },
+            "mag_calib/v-->proj_to_horizon/v;": {
+                "geometry": "{\"labels\":[{\"x\":1182,\"y\":189.0833}],\"junctionPoints\":[{\"x\":1152,\"y\":71.25},{\"x\":1152,\"y\":182.0833}],\"sections\":[{\"bendPoints\":[{\"x\":1152,\"y\":71.25},{\"x\":1152,\"y\":199.742}],\"start\":{\"x\":1122,\"y\":71.25},\"end\":{\"x\":1242.9294,\"y\":199.742}}]}"
+            },
+            "quat4projection/q-->proj_to_horizon/q;": {
+                "geometry": "{\"labels\":[{\"x\":1182,\"y\":229.5}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1125.7176,\"y\":222.5},\"end\":{\"x\":1242.9294,\"y\":223.0754}}]}"
+            },
+            "euler/roll-->inverse_roll/input;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":208.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":492,\"y\":201.25},\"end\":{\"x\":642,\"y\":201.25}}]}"
+            },
+            "euler/pitch-->inverse_pitch/input;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":323.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":522,\"y\":222.5},{\"x\":522,\"y\":316.25}],\"start\":{\"x\":492,\"y\":222.5},\"end\":{\"x\":642,\"y\":316.25}}]}"
+            },
+            "mag_azimuth_w_decl/output-->outputs/azimuth;": {
+                "geometry": "{\"labels\":[{\"x\":2082,\"y\":224.0833}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":2022,\"y\":217.0833},\"end\":{\"x\":2142,\"y\":217.0833}}]}"
+            },
+            "normalized_induction_module/output-->outputs/module;": {
+                "geometry": "{\"labels\":[{\"x\":1932,\"y\":64.25}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":2112,\"y\":71.25},{\"x\":2112,\"y\":195.8333}],\"start\":{\"x\":1722,\"y\":71.25},\"end\":{\"x\":2142,\"y\":195.8333}}]}"
+            },
+            "mag_calib/v-->outputs/mag;": {
+                "geometry": "{\"labels\":[{\"x\":1632,\"y\":422.4167}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1152,\"y\":71.25},{\"x\":1152,\"y\":415.4167},{\"x\":2112,\"y\":415.4167},{\"x\":2112,\"y\":238.3333}],\"start\":{\"x\":1122,\"y\":71.25},\"end\":{\"x\":2142,\"y\":238.3333}}]}"
+            }
         }
     },
     "flow_ublox_parsing": {
@@ -373,6 +502,194 @@
         "edges": {
             "rx_frame_sync/ubx_frame-->outputs/ubx_frame;": {},
             "rx_frame_sync/rtcm_frame-->outputs/rtcm_frame;": {}
+        }
+    },
+    "flow_gnss_process": {
+        "root_meta": {
+            "geometry": "{\"x\":0,\"y\":0,\"width\":1584,\"height\":465.2778}"
+        },
+        "nodes": {
+            "concat_pos": {
+                "geometry": "{\"x\":492,\"y\":170.2778,\"width\":180,\"height\":85}"
+            },
+            "concat_vel": {
+                "geometry": "{\"x\":492,\"y\":25.2778,\"width\":180,\"height\":85}"
+            },
+            "prec_threshold": {
+                "geometry": "{\"x\":12,\"y\":311.1111,\"width\":180,\"height\":55}"
+            },
+            "prec_is_ok": {
+                "geometry": "{\"x\":492,\"y\":315.2778,\"width\":180,\"height\":70}"
+            },
+            "ready": {
+                "geometry": "{\"x\":792,\"y\":326.9444,\"width\":180,\"height\":70}"
+            },
+            "ready_reg": {
+                "geometry": "{\"x\":1092,\"y\":315.2778,\"width\":180,\"height\":70}"
+            },
+            "inputs": {
+                "geometry": "{\"x\":12,\"y\":12,\"width\":180,\"height\":160}"
+            },
+            "outputs": {
+                "geometry": "{\"x\":1392,\"y\":170.2778,\"width\":180,\"height\":85}"
+            }
+        },
+        "edges": {
+            "inputs/lat-->concat_pos/x;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":150.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":342,\"y\":83.1111},{\"x\":342,\"y\":143.7778},{\"x\":462,\"y\":143.7778},{\"x\":462,\"y\":191.5278}],\"start\":{\"x\":192,\"y\":83.1111},\"end\":{\"x\":492,\"y\":191.5278}}]}"
+            },
+            "inputs/lon-->concat_pos/y;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":219.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":312,\"y\":100.8889},{\"x\":312,\"y\":212.7778}],\"start\":{\"x\":192,\"y\":100.8889},\"end\":{\"x\":492,\"y\":212.7778}}]}"
+            },
+            "inputs/alt-->concat_pos/z;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":257.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":282,\"y\":118.6667},{\"x\":282,\"y\":250.7778},{\"x\":462,\"y\":250.7778},{\"x\":462,\"y\":234.0278}],\"start\":{\"x\":192,\"y\":118.6667},\"end\":{\"x\":492,\"y\":234.0278}}]}"
+            },
+            "inputs/vel_d-->concat_vel/z;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":112.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":372,\"y\":65.3333},{\"x\":372,\"y\":105.7778},{\"x\":462,\"y\":105.7778},{\"x\":462,\"y\":89.0278}],\"start\":{\"x\":192,\"y\":65.3333},\"end\":{\"x\":492,\"y\":89.0278}}]}"
+            },
+            "inputs/vel_e-->concat_vel/y;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":74.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":402,\"y\":47.5556},{\"x\":402,\"y\":67.7778}],\"start\":{\"x\":192,\"y\":47.5556},\"end\":{\"x\":492,\"y\":67.7778}}]}"
+            },
+            "inputs/vel_n-->concat_vel/x;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":36.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":462,\"y\":29.7778},{\"x\":462,\"y\":46.5278}],\"start\":{\"x\":192,\"y\":29.7778},\"end\":{\"x\":492,\"y\":46.5278}}]}"
+            },
+            "inputs/prec-->prec_is_ok/input1;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":383.6111}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":252,\"y\":136.4444},{\"x\":252,\"y\":376.6111},{\"x\":462,\"y\":376.6111},{\"x\":462,\"y\":361.9444}],\"start\":{\"x\":192,\"y\":136.4444},\"end\":{\"x\":492,\"y\":361.9444}}]}"
+            },
+            "prec_threshold/output-->prec_is_ok/input0;": {
+                "geometry": "{\"labels\":[{\"x\":432,\"y\":345.6111}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":192,\"y\":338.6111},\"end\":{\"x\":492,\"y\":338.6111}}]}"
+            },
+            "prec_is_ok/output-->ready/input0;": {
+                "geometry": "{\"labels\":[{\"x\":732,\"y\":357.2778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":672,\"y\":350.2778},\"end\":{\"x\":792,\"y\":350.2778}}]}"
+            },
+            "inputs/fix-->ready/input1;": {
+                "geometry": "{\"labels\":[{\"x\":582,\"y\":452.2778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":222,\"y\":154.2222},{\"x\":222,\"y\":445.2778},{\"x\":762,\"y\":445.2778},{\"x\":762,\"y\":373.6111}],\"start\":{\"x\":192,\"y\":154.2222},\"end\":{\"x\":792,\"y\":373.6111}}]}"
+            },
+            "ready/output-->ready_reg/s;": {
+                "geometry": "{\"labels\":[{\"x\":1032,\"y\":368.9444}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":972,\"y\":361.9444},\"end\":{\"x\":1092,\"y\":361.9444}}]}"
+            },
+            "ready_reg/output-->outputs/ready;": {
+                "geometry": "{\"labels\":[{\"x\":1332,\"y\":357.2778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1362,\"y\":350.2778},{\"x\":1362,\"y\":234.0278}],\"start\":{\"x\":1272,\"y\":350.2778},\"end\":{\"x\":1392,\"y\":234.0278}}]}"
+            },
+            "concat_vel/v-->outputs/vel;": {
+                "geometry": "{\"labels\":[{\"x\":1032,\"y\":74.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1362,\"y\":67.7778},{\"x\":1362,\"y\":191.5278}],\"start\":{\"x\":672,\"y\":67.7778},\"end\":{\"x\":1392,\"y\":191.5278}}]}"
+            },
+            "concat_pos/v-->outputs/pos;": {
+                "geometry": "{\"labels\":[{\"x\":1032,\"y\":219.7778}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":672,\"y\":212.7778},\"end\":{\"x\":1392,\"y\":212.7778}}]}"
+            }
+        }
+    },
+    "flow_vel_pos_prop": {
+        "root_meta": {
+            "geometry": "{\"x\":0,\"y\":0,\"width\":1524,\"height\":216.8333}"
+        },
+        "nodes": {
+            "prop_vel": {},
+            "prop_pos": {},
+            "frame_transform": {},
+            "initial_reg": {},
+            "inputs": {
+                "geometry": "{\"x\":12,\"y\":12,\"width\":180,\"height\":85}"
+            },
+            "outputs": {
+                "geometry": "{\"x\":1332,\"y\":32,\"width\":180,\"height\":70}"
+            }
+        },
+        "edges": {
+            "inputs/vel-->prop_vel/v;": {},
+            "inputs/vel_init-->prop_vel/v0;": {},
+            "initial_reg/output-->prop_vel/enable;": {},
+            "frame_transform/v-->prop_vel/derivative;": {},
+            "inputs/pos-->prop_pos/v;": {},
+            "inputs/pos_init-->prop_pos/v0;": {},
+            "initial_reg/output-->prop_pos/enable;": {},
+            "prop_vel/v-->prop_pos/derivative;": {},
+            "inputs/q-->frame_transform/q;": {},
+            "inputs/a-->frame_transform/v;": {},
+            "inputs/init_cmd-->initial_reg/s;": {},
+            "prop_pos/v-->outputs/pos;": {},
+            "prop_vel/v-->outputs/vel;": {}
+        }
+    },
+    "flow_vel_pos_fusion": {
+        "root_meta": {
+            "geometry": "{\"x\":0,\"y\":0,\"width\":1464,\"height\":486}"
+        },
+        "nodes": {
+            "vel_residual": {
+                "geometry": "{\"x\":372,\"y\":43,\"width\":180,\"height\":70}"
+            },
+            "vel_compensation": {
+                "geometry": "{\"x\":672,\"y\":153.8333,\"width\":180,\"height\":70}"
+            },
+            "pos_compensation": {
+                "geometry": "{\"x\":672,\"y\":399.8333,\"width\":180,\"height\":70}"
+            },
+            "pos_residual": {
+                "geometry": "{\"x\":372,\"y\":289,\"width\":180,\"height\":70}"
+            },
+            "vel_gain": {
+                "geometry": "{\"x\":372,\"y\":173,\"width\":180,\"height\":55}"
+            },
+            "pos_gain": {
+                "geometry": "{\"x\":372,\"y\":419,\"width\":180,\"height\":55}"
+            },
+            "pos_correction": {
+                "geometry": "{\"x\":972,\"y\":388.1667,\"width\":180,\"height\":70}"
+            },
+            "vel_correction": {
+                "geometry": "{\"x\":972,\"y\":142.1667,\"width\":180,\"height\":70}"
+            },
+            "inputs": {
+                "geometry": "{\"x\":12,\"y\":259,\"width\":180,\"height\":115}"
+            },
+            "outputs": {
+                "geometry": "{\"x\":1272,\"y\":376.5,\"width\":180,\"height\":70}"
+            }
+        },
+        "edges": {
+            "inputs/gnss_vel-->vel_residual/v2;": {
+                "geometry": "{\"labels\":[{\"x\":312,\"y\":96.6667}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":252,\"y\":316.5},{\"x\":252,\"y\":89.6667}],\"start\":{\"x\":192,\"y\":316.5},\"end\":{\"x\":372,\"y\":89.6667}}]}"
+            },
+            "inputs/vel-->vel_residual/v1;": {
+                "geometry": "{\"labels\":[{\"x\":312,\"y\":51.6667}],\"junctionPoints\":[{\"x\":222,\"y\":58.6667}],\"sections\":[{\"bendPoints\":[{\"x\":222,\"y\":278.1667},{\"x\":222,\"y\":58.6667},{\"x\":342,\"y\":58.6667},{\"x\":342,\"y\":66.3333}],\"start\":{\"x\":192,\"y\":278.1667},\"end\":{\"x\":372,\"y\":66.3333}}]}"
+            },
+            "vel_gain/output-->vel_compensation/scalar;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":207.5}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":552,\"y\":200.5},\"end\":{\"x\":672,\"y\":200.5}}]}"
+            },
+            "vel_residual/v-->vel_compensation/v;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":85}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":642,\"y\":78},{\"x\":642,\"y\":177.1667}],\"start\":{\"x\":552,\"y\":78},\"end\":{\"x\":672,\"y\":177.1667}}]}"
+            },
+            "pos_gain/output-->pos_compensation/scalar;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":453.5}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":552,\"y\":446.5},\"end\":{\"x\":672,\"y\":446.5}}]}"
+            },
+            "pos_residual/v-->pos_compensation/v;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":331}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":642,\"y\":324},{\"x\":642,\"y\":423.1667}],\"start\":{\"x\":552,\"y\":324},\"end\":{\"x\":672,\"y\":423.1667}}]}"
+            },
+            "inputs/gnss_pos-->pos_residual/v2;": {
+                "geometry": "{\"labels\":[{\"x\":312,\"y\":342.6667}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":192,\"y\":335.6667},\"end\":{\"x\":372,\"y\":335.6667}}]}"
+            },
+            "inputs/pos-->pos_residual/v1;": {
+                "geometry": "{\"labels\":[{\"x\":312,\"y\":290.3333}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":342,\"y\":297.3333},{\"x\":342,\"y\":312.3333}],\"start\":{\"x\":192,\"y\":297.3333},\"end\":{\"x\":372,\"y\":312.3333}}]}"
+            },
+            "pos_compensation/v-->pos_correction/v2;": {
+                "geometry": "{\"labels\":[{\"x\":912,\"y\":441.8333}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":852,\"y\":434.8333},\"end\":{\"x\":972,\"y\":434.8333}}]}"
+            },
+            "inputs/pos-->pos_correction/v1;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":265}],\"junctionPoints\":[{\"x\":282,\"y\":297.3333}],\"sections\":[{\"bendPoints\":[{\"x\":282,\"y\":297.3333},{\"x\":282,\"y\":258},{\"x\":942,\"y\":258},{\"x\":942,\"y\":411.5}],\"start\":{\"x\":192,\"y\":297.3333},\"end\":{\"x\":972,\"y\":411.5}}]}"
+            },
+            "vel_compensation/v-->vel_correction/v2;": {
+                "geometry": "{\"labels\":[{\"x\":912,\"y\":195.8333}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":852,\"y\":188.8333},\"end\":{\"x\":972,\"y\":188.8333}}]}"
+            },
+            "inputs/vel-->vel_correction/v1;": {
+                "geometry": "{\"labels\":[{\"x\":612,\"y\":19}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":222,\"y\":278.1667},{\"x\":222,\"y\":12},{\"x\":942,\"y\":12},{\"x\":942,\"y\":165.5}],\"start\":{\"x\":192,\"y\":278.1667},\"end\":{\"x\":972,\"y\":165.5}}]}"
+            },
+            "vel_correction/v-->outputs/vel;": {
+                "geometry": "{\"labels\":[{\"x\":1212,\"y\":170.1667}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[{\"x\":1242,\"y\":177.1667},{\"x\":1242,\"y\":399.8333}],\"start\":{\"x\":1152,\"y\":177.1667},\"end\":{\"x\":1272,\"y\":399.8333}}]}"
+            },
+            "pos_correction/v-->outputs/pos;": {
+                "geometry": "{\"labels\":[{\"x\":1212,\"y\":430.1667}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":1152,\"y\":423.1667},\"end\":{\"x\":1272,\"y\":423.1667}}]}"
+            }
         }
     },
     "flow_nav_attitude_filter": {
@@ -1339,31 +1656,5 @@
                 "geometry": "{\"labels\":[{\"x\":252,\"y\":333}],\"junctionPoints\":[],\"sections\":[{\"start\":{\"x\":124.0639,\"y\":699.5016},\"bendPoints\":[],\"end\":{\"x\":125.0391,\"y\":763.2558}}]}"
             }
         }
-    },
-    "flow_": {
-        "root_meta": {
-            "geometry": "{\"x\":0,\"y\":0,\"width\":204,\"height\":164}"
-        },
-        "nodes": {
-            "core.math.vector3f64_11": {
-                "geometry": "{\"x\":251.6653,\"y\":-4.0497,\"width\":180,\"height\":85,\"empty\":true}"
-            },
-            "core.math.vector3f64_12": {
-                "geometry": "{\"x\":18.175,\"y\":-169.0158,\"width\":180,\"height\":85,\"empty\":true}"
-            },
-            "core.math.lt_2": {
-                "geometry": "{\"x\":169.3156,\"y\":166.5806,\"width\":180,\"height\":70,\"empty\":true}"
-            },
-            "inputs": {
-                "geometry": "{\"x\":-314.1786,\"y\":-19.7443,\"width\":195.241,\"height\":120.0153}"
-            },
-            "outputs": {
-                "geometry": "{\"x\":554.7221,\"y\":1.5464,\"width\":180,\"height\":40}"
-            },
-            "core.source.constant_10": {
-                "geometry": "{\"x\":-147.6163,\"y\":193.4064,\"width\":180,\"height\":55,\"empty\":true}"
-            }
-        },
-        "edges": {}
     }
 }
