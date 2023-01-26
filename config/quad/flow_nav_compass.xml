@@ -33,17 +33,26 @@
             <param alias="a31">0.0</param>
             <param alias="a32">0.0</param>
             <param alias="a33">1.0</param>
-            <param alias="b1">0.0</param>
-            <param alias="b2">0.0</param>
-            <param alias="b3">0.0</param>
+            <param alias="b1">-0.05</param>
+            <param alias="b2">-0.1</param>
+            <param alias="b3">+0.15</param>
         </f>
 
         <f name="local_mag_declination" by_spec="core.source.constant">
-            <param alias="value">0</param>
+            <param alias="value">-15</param>
         </f>
 
         <f name="euler" by_spec="core.quat.to_euler">
             <in alias="q">inputs/q</in>
+        </f>
+
+
+        <f name="inverse_roll" by_spec="core.math.neg">
+            <in alias="input">euler/roll</in>
+        </f>
+
+        <f name="inverse_pitch" by_spec="core.math.neg">
+            <in alias="input">euler/pitch</in>
         </f>
 
         <f name="quat4projection" by_spec="core.quat.from_euler">
@@ -56,19 +65,15 @@
             <param alias="value">0</param>
         </f>
 
-        <f name="mag_azimuth_w_decl" by_spec="core.math.sub">
-            <in alias="input0">mag_azimuth/output</in>
-            <in alias="input1">deg2rad/output</in>
-        </f>
 
-        <f name="core.vector.magnitude_1" by_spec="core.vector.magnitude">
+        <f name="magnitude" by_spec="core.vector.magnitude">
             <in alias="v">mag_calib/v</in>
         </f>
 
         <f name="normalized_induction_module" by_spec="core.math.inverse_gain">
-            <in alias="input">core.vector.magnitude_1/output</in>
+            <in alias="input">magnitude/output</in>
 
-            <param alias="inverse_gain">10</param>
+            <param alias="inverse_gain">0.530278</param>
         </f>
 
         <f name="deg2rad" by_spec="core.math.gain">
@@ -77,28 +82,34 @@
             <param alias="gain">0.01745277778</param>
         </f>
 
-        <f name="mag_azimuth" by_spec="core.math.atan2">
-            <in alias="input0">proj_to_horizon/v/x</in>
-            <in alias="input1">proj_to_horizon/v/y</in>
-        </f>
+
 
         <f name="proj_to_horizon" by_spec="core.vector.qrotate">
             <in alias="v">mag_calib/v</in>
             <in alias="q">quat4projection/q</in>
         </f>
 
-        <f name="inverse_roll" by_spec="core.math.neg">
-            <in alias="input">euler/roll</in>
+
+        <f name="inverse_y" by_spec="core.math.neg">
+            <in alias="input">proj_to_horizon/v/y</in>
         </f>
 
-        <f name="inverse_pitch" by_spec="core.math.neg">
-            <in alias="input">euler/pitch</in>
+        <f name="mag_azimuth" by_spec="core.math.atan2">
+            <in alias="input0">inverse_y/output</in>
+            <in alias="input1">proj_to_horizon/v/x</in>
         </f>
+
+        <f name="mag_azimuth_w_decl" by_spec="core.math.add">
+            <in alias="input0">mag_azimuth/output</in>
+            <in alias="input1">deg2rad/output</in>
+        </f>
+
     </functions>
 
     <link_outputs>
         <link alias="azimuth">mag_azimuth_w_decl/output</link>
         <link alias="magnitude">normalized_induction_module/output</link>
-        <link alias="induction">mag_calib/v</link>
+        <link alias="induction">proj_to_horizon/v</link>
+<!--        <link alias="induction">mag_concat/v</link>-->
     </link_outputs>
 </flow>
