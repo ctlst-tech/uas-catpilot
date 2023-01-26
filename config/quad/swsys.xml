@@ -46,14 +46,14 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_ublox_parsing.xml" name="gnss2_frame" priority="-1" clk_method="freerun">
+    <task type="flow" config="flow_ublox_parsing.xml" name="nav_ublox_parsing" priority="-1" clk_method="freerun">
         <connect>
             <out alias="ubx_frame">nav_bus/gnss/raw/ubx_frame</out>
             <out alias="rtcm_frame">nav_bus/gnss/raw/rtcm_frame</out>
         </connect>
     </task>
 
-    <task type="ibr" config="ibr_ubx.xml" name="gnss2_sol" priority="3" clk_method="freerun">
+    <task type="ibr" config="ibr_ubx.xml" name="nav_gnss_msg" priority="3" clk_method="freerun">
         <connect>
             <in alias="rx_frame">nav_bus/gnss/raw/ubx_frame</in>
 
@@ -142,7 +142,6 @@
         </connect>
     </task>
 
-
     <bridge name="nav" priority="2" clk_method="timer" clk_period="50" to="gcu_bus/nav">
         <source alias="omega, a, mag">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw">nav_bus/$alias</source>
@@ -170,5 +169,4 @@
 
         <channel_2_name value="downlink_sk"/>
     </service>
-
 </swsys>

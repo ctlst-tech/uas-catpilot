@@ -21,30 +21,36 @@
     </spec>
 
     <functions>
-        <f name="core.math.vector3f64_11" by_spec="core.math.vector3f64">
+        <f name="concat_pos" by_spec="core.math.vector3f64">
             <in alias="x">inputs/lat</in>
             <in alias="y">inputs/lon</in>
             <in alias="z">inputs/alt</in>
         </f>
 
-        <f name="core.math.vector3f64_12" by_spec="core.math.vector3f64">
+        <f name="concat_vel" by_spec="core.math.vector3f64">
             <in alias="z">inputs/vel_d</in>
             <in alias="y">inputs/vel_e</in>
             <in alias="x">inputs/vel_n</in>
         </f>
 
-        <f name="core.source.constant_10" by_spec="core.source.constant">
-            <param alias="value"/>
+        <f name="prec_threshold" by_spec="core.source.constant">
+            <param alias="value">10</param>
         </f>
 
-        <f name="core.math.gt_1" by_spec="core.math.gt">
-            <in alias="input1">core.source.constant_10/output</in>
+        <f name="prec_is_ok" by_spec="core.math.gt">
+            <in alias="input1">prec_threshold/output</in>
             <in alias="input0">inputs/prec</in>
+        </f>
+
+        <f name="ready" by_spec="core.logical.and">
+            <in alias="input0">prec_is_ok/output</in>
+            <in alias="input1">inputs/fix</in>
         </f>
     </functions>
 
     <link_outputs>
-        <link alias="vel">core.math.vector3f64_12/v</link>
-        <link alias="pos">core.math.vector3f64_11/v</link>
+        <link alias="ready">ready/output</link>
+        <link alias="vel">concat_vel/v</link>
+        <link alias="pos">concat_pos/v</link>
     </link_outputs>
 </flow>
