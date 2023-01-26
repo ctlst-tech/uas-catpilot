@@ -10,7 +10,7 @@
             <i alias="lon" type="core.type.f64"/>
             <i alias="alt" type="core.type.f64"/>
             <i alias="prec" type="core.type.f64"/>
-            <i alias="fix" type="core.type.f64"/>
+            <i alias="fix" type="core.type.bool"/>
         </inputs>
 
         <outputs>
@@ -48,8 +48,12 @@
         </f>
 
         <f name="ready_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
             <in alias="s">ready/output</in>
         </f>
+
+        <f name="reset_level_0" by_spec="core.logical.false"/>
+        <f name="core.logical.false_3" by_spec="core.logical.false"/>
     </functions>
 
     <link_outputs>

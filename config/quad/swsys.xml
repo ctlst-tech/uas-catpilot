@@ -45,11 +45,13 @@
         <connect>
             <in alias="q">nav_bus/q</in>
 
-            <out alias="mag">nav_bus/mag</out>
+            <out alias="induction, azimuth, magnitude">nav_bus/$alias</out>
         </connect>
     </task>
 
     <task type="flow" config="flow_ublox_parsing.xml" name="nav_ublox_parsing" priority="-1" clk_method="freerun">
+        <param alias="serial_path">/dev/ttyS2</param>
+
         <connect>
             <out alias="ubx_frame">nav_bus/gnss/raw/ubx_frame</out>
             <out alias="rtcm_frame">nav_bus/gnss/raw/rtcm_frame</out>
@@ -64,15 +66,15 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_gnss_process.xml" name="nav_gnss_process" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss2/sol/posllh">
+    <task type="flow" config="flow_nav_gnss_process.xml" name="nav_gnss_process" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss/msg/velned">
         <connect>
-            <in alias="vel_n">nav_bus/gnss/sol/velned/velN</in>
-            <in alias="vel_e">nav_bus/gnss/sol/velned/velE</in>
-            <in alias="vel_d">nav_bus/gnss/sol/velned/velD</in>
-            <in alias="lat, lon">nav_bus/gnss/sol/posllh/$alias</in>
-            <in alias="alt">nav_bus/gnss/sol/posllh/height</in>
-            <in alias="prec">nav_bus/gnss/sol/posllh/hAcc</in>
-            <in alias="fix">nav_bus/gnss/sol/posllh/hAcc</in>
+            <in alias="vel_n">nav_bus/gnss/msg/velned/velN</in>
+            <in alias="vel_e">nav_bus/gnss/msg/velned/velE</in>
+            <in alias="vel_d">nav_bus/gnss/msg/velned/velD</in>
+            <in alias="lat, lon">nav_bus/gnss/msg/posllh/$alias</in>
+            <in alias="alt">nav_bus/gnss/msg/posllh/height</in>
+            <in alias="prec">nav_bus/gnss/msg/posllh/hAcc</in>
+            <in alias="fix">nav_bus/gnss/msg/posllh/hAcc</in>
 
             <out alias="vel, pos, ready">nav_bus/gnss/sol/$alias</out>
         </connect>
@@ -80,13 +82,16 @@
 
     <task type="flow" config="flow_nav_vel_pos_prop.xml" name="nav_vel_pos_prop" priority="4" clk_method="timer" clk_period="10">
         <connect>
-            <in alias="a, vel, pos">nav_bus/$alias</in>
+            <in alias="q, a, vel, pos">nav_bus/$alias</in>
+            <in alias="pos_init">nav_bus/gnss/sol/pos</in>
+            <in alias="vel_init">nav_bus/gnss/sol/vel</in>
+            <in alias="init_cmd">nav_bus/gnss/sol/ready</in>
 
             <out alias="vel, pos">nav_bus/$alias</out>
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_vel_pos_fusion.xml" name="nav_vel_pos_fusion" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss2/sol/posllh">
+    <task type="flow" config="flow_nav_vel_pos_fusion.xml" name="nav_vel_pos_fusion" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss/sol/vel">
         <connect>
             <in alias="vel, pos">nav_bus/$alias</in>
             <in alias="gnss_vel">nav_bus/gnss/sol/vel</in>
@@ -146,7 +151,7 @@
     </task>
 
     <bridge name="nav" priority="2" clk_method="timer" clk_period="50" to="gcu_bus/nav">
-        <source alias="omega, a, mag">nav_bus/$alias</source>
+        <source alias="omega, a, induction">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw">nav_bus/$alias</source>
     </bridge>
 

@@ -39,8 +39,11 @@
         </f>
 
         <f name="initial_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
             <in alias="s">inputs/init_cmd</in>
         </f>
+
+        <f name="reset_level_0" by_spec="core.logical.false"/>
     </functions>
 
     <link_outputs>

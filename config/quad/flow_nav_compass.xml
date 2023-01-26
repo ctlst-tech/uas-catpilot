@@ -7,9 +7,9 @@
         </inputs>
 
         <outputs>
-            <o alias="module" type="core.type.f64"/>
+            <o alias="magnitude" type="core.type.f64"/>
             <o alias="azimuth" type="core.type.f64"/>
-            <o alias="mag" type="core.type.v3f64"/>
+            <o alias="induction" type="core.type.v3f64"/>
         </outputs>
     </spec>
 
@@ -98,7 +98,7 @@
 
     <link_outputs>
         <link alias="azimuth">mag_azimuth_w_decl/output</link>
-        <link alias="module">normalized_induction_module/output</link>
-        <link alias="mag">mag_calib/v</link>
+        <link alias="magnitude">normalized_induction_module/output</link>
+        <link alias="induction">mag_calib/v</link>
     </link_outputs>
 </flow>
