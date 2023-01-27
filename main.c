@@ -18,6 +18,9 @@ void *catpilot(void *param) {
 
     board_init(CLI_PORT, CLI_BAUDRATE);
 
+#ifdef DEBUG_MODE
+    board_debug_mode();
+#else
     xml_inline_mount("/cfg");
 
     swsys_rv_t swsys_rv = swsys_load("/cfg/swsys.xml", "/cfg", &core_sys);
@@ -30,6 +33,7 @@ void *catpilot(void *param) {
     } else {
         LOG_ERROR("SYSTEM", "Configuration loading error");
     }
+#endif
 
     board_fail();
 
