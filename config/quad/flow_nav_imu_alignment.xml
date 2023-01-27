@@ -5,6 +5,7 @@
         <inputs>
             <i alias="omega" type="core.type.v3f64"/>
             <i alias="a" type="core.type.v3f64"/>
+            <i alias="azimuth" type="core.type.f64"/>
         </inputs>
 
         <outputs>

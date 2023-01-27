@@ -72,5 +72,11 @@ manc_xy = EwCursor([(DataSourceEswbTopic('x', path=f'{topics_root}/cont/man_cont
 mon.add_widget(EwGroup([ai, hi, compass, imu_roll_pitch, ]))
 mon.add_widget(EwGroup([manc_xy, imu_omega, imu_a, mag, hk_sine]))
 
-mon.add_widget(mon.get_stat_widget())
+status = EwTable(caption='Status', data_sources=[
+    DataSourceEswbTopic(name='armed', path=f'{topics_root}/cont/man_cont/armed'),
+    DataSourceEswbTopic(name='gnss_prec', path=f'{topics_root}/nav/nav/gnss_prec'),
+    DataSourceEswbTopic(name='gnss_ready', path=f'{topics_root}/nav/nav/gnss_ready'),
+])
+
+mon.add_widget(EwGroup([status, mon.get_stat_widget()]))
 mon.run()

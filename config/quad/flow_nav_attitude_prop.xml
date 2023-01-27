@@ -52,16 +52,11 @@
             <in alias="z">imu1/az</in>
         </f>
 
-        <f name="concat_omega" by_spec="core.math.vector3f64">
-            <in alias="x">imu1/wx</in>
-            <in alias="y">imu1/wy</in>
-            <in alias="z">imu1/wz</in>
-        </f>
     </functions>
 
     <link_outputs>
         <link alias="a">concat_accel/v</link>
-        <link alias="omega">concat_omega/v</link>
+        <link alias="omega">omega_biased/v</link>
         <link alias="q">integrate_att/q</link>
     </link_outputs>
 </flow>

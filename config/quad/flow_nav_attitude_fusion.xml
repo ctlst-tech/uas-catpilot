@@ -5,6 +5,7 @@
         <inputs>
             <i alias="q" type="core.type.quat"/>
             <i alias="a" type="core.type.v3f64"/>
+            <i alias="azimuth" type="core.type.f64"/>
         </inputs>
 
         <outputs>
@@ -32,6 +33,11 @@
         <f name="pitch_err" by_spec="core.math.sub">
             <in alias="input0">to_euler/pitch</in>
             <in alias="input1">accel_horizon/pitch</in>
+        </f>
+
+        <f name="yaw_err" by_spec="core.math.sub">
+            <in alias="input0">to_euler/yaw</in>
+            <in alias="input1">inputs/azimuth</in>
         </f>
 
         <f name="roll_adjustment" by_spec="core.math.gain">
