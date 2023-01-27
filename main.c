@@ -18,7 +18,7 @@ void *catpilot(void *param) {
 
     board_init(CLI_PORT, CLI_BAUDRATE);
 
-#ifdef DEBUG_MODE
+#ifdef MAINTENANCE_MODE
     board_debug_mode();
 #else
     xml_inline_mount("/cfg");
