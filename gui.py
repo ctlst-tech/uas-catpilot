@@ -14,7 +14,10 @@ telemetry_dir_name = 'telemetry'
 args_parser = ArgParser()
 args = args_parser.args
 
-mon = EswbMonitor(monitor_bus_name=mon_bus_name, argv=sys.argv)
+mon = EswbMonitor(monitor_bus_name=mon_bus_name, argv=sys.argv, tabs=True)
+
+front_tab = mon.add_tab('Main')
+sdtl_tab = mon.add_tab('SDTL')
 
 mon.mkdir(telemetry_dir_name)
 
@@ -64,13 +67,10 @@ hk_sine = EwChart([DataSourceEswbTopic('sine', path=f'{topics_root}/hk/sine'),
                         # DataSourceSinus('s1', iphase=0.0),
                         # DataSourceSinus('s2', iphase=1.0)
                    ],
-                        data_range=(-1, +1))
+                   data_range=(-1, +1))
 
 manc_xy = EwCursor([(DataSourceEswbTopic('x', path=f'{topics_root}/cont/man_cont/direct/x'),
                           DataSourceEswbTopic('y', path=f'{topics_root}/cont/man_cont/direct/y'))])
-
-mon.add_widget(EwGroup([ai, hi, compass, imu_roll_pitch, ]))
-mon.add_widget(EwGroup([manc_xy, imu_omega, imu_a, mag, hk_sine]))
 
 status = EwTable(caption='Status', data_sources=[
     DataSourceEswbTopic(name='armed', path=f'{topics_root}/cont/man_cont/armed'),
@@ -78,5 +78,10 @@ status = EwTable(caption='Status', data_sources=[
     DataSourceEswbTopic(name='gnss_ready', path=f'{topics_root}/nav/nav/gnss_ready'),
 ])
 
-mon.add_widget(EwGroup([status, mon.get_stat_widget()]))
+
+front_tab.add_widget(EwGroup([ai, hi, compass, imu_roll_pitch, ]))
+front_tab.add_widget(EwGroup([manc_xy, imu_omega, imu_a, mag, hk_sine]))
+front_tab.add_widget(EwGroup([status, mon.get_small_widget()]))
+
+sdtl_tab.add_widget(EwGroup([mon.get_stat_widget()]))
 mon.run()
