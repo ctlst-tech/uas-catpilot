@@ -49,7 +49,7 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_ublox_parsing.xml" name="nav_ublox_parsing" priority="-1" clk_method="freerun">
+    <task type="flow" config="flow_ublox_parsing.xml" name="nav_ublox_parsing" priority="2" clk_method="freerun">
         <param alias="serial_path">/dev/ttyS2</param>
 
         <connect>
@@ -154,6 +154,12 @@
         <source alias="omega, a, induction">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
         <source alias="ind_magnitude">nav_bus/magnitude</source>
+        <source alias="gnss_lat">nav_bus/gnss/sol/pos/x</source>
+        <source alias="gnss_lon">nav_bus/gnss/sol/pos/y</source>
+        <source alias="gnss_alt">nav_bus/gnss/sol/pos/z</source>
+        <source alias="gnss_vel_n">nav_bus/gnss/sol/vel/x</source>
+        <source alias="gnss_vel_e">nav_bus/gnss/sol/vel/y</source>
+        <source alias="gnss_vel_d">nav_bus/gnss/sol/vel/z</source>
         <source alias="gnss_prec">nav_bus/gnss/msg/posllh/hAcc</source>
         <source alias="gnss_ready">nav_bus/gnss/sol/ready</source>
     </bridge>
