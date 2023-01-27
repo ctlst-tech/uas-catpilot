@@ -21,18 +21,6 @@
     </spec>
 
     <functions>
-        <f name="concat_pos" by_spec="core.math.vector3f64">
-            <in alias="x">inputs/lat</in>
-            <in alias="y">inputs/lon</in>
-            <in alias="z">inputs/alt</in>
-        </f>
-
-        <f name="concat_vel" by_spec="core.math.vector3f64">
-            <in alias="z">inputs/vel_d</in>
-            <in alias="y">inputs/vel_e</in>
-            <in alias="x">inputs/vel_n</in>
-        </f>
-
         <f name="prec_threshold" by_spec="core.source.constant">
             <param alias="value">10</param>
         </f>
@@ -47,13 +35,25 @@
             <in alias="input1">inputs/fix</in>
         </f>
 
+        <f name="reset_level_0" by_spec="core.logical.false"/>
+
         <f name="ready_reg" by_spec="core.logical.rs_trigger">
             <in alias="r">reset_level_0/output</in>
             <in alias="s">ready/output</in>
         </f>
 
-        <f name="reset_level_0" by_spec="core.logical.false"/>
-        <f name="core.logical.false_3" by_spec="core.logical.false"/>
+        <f name="concat_pos" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/lat</in>
+            <in alias="y">inputs/lon</in>
+            <in alias="z">inputs/alt</in>
+        </f>
+
+        <f name="concat_vel" by_spec="core.math.vector3f64">
+            <in alias="z">inputs/vel_d</in>
+            <in alias="y">inputs/vel_e</in>
+            <in alias="x">inputs/vel_n</in>
+        </f>
+
     </functions>
 
     <link_outputs>
