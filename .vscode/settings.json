@@ -5,7 +5,7 @@
         "CLI_PORT": "TELEM2",
         "CLI_BAUDRATE": "57600",
         "OS_MONITOR": "ON",
-        "DEBUG_MODE": "ON"
+        "MAINTENANCE_MODE": "ON"
     },
     "cortex-debug.armToolchainPath": "/usr/bin",
     "cortex-debug.openocdPath": "/usr/local/bin/openocd",
