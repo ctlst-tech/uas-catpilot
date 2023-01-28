@@ -11,13 +11,14 @@
         </dir>
     </bus>
 
-    <bus name="control_bus" eq_channel="1" max_topics="48">
+    <bus name="control_bus" eq_channel="1" max_topics="64">
         <dir name="rc" eq_channel="0"/>
+        <dir name="auto" eq_channel="0"/>
         <dir name="solution" eq_channel="0"/>
     </bus>
 
-    <bus name="gcu_bus" eq_channel="0" max_topics="48">
-        <event_queue buffer_size="2000" size="48"/>
+    <bus name="gcu_bus" eq_channel="0" max_topics="64">
+        <event_queue buffer_size="512" size="48"/>
 
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
@@ -112,19 +113,32 @@
 
     <task type="flow" config="flow_rc.xml" name="rc" priority="5" clk_method="timer" clk_period="20">
         <connect>
-            <out alias="desired_roll, desired_pitch, desired_omega">control_bus/rc/$alias</out>
+            <out alias="desired_attitude, desired_omega, desired_vel_body">control_bus/rc/$alias</out>
             <out alias="direct, direct_collective">control_bus/rc/$alias</out>
-            <out alias="enable_angrate, enable_angpos, arming">control_bus/rc/$alias</out>
+            <out alias="enable_angrate, enable_angpos, enable_vel, enable_auto, arming">control_bus/rc/$alias</out>
             <out alias="pid_gain_angrate, pid_gain_angpos">control_bus/rc/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_cont_vel_pos.xml" name="cont_vel_pos" priority="4" clk_method="inp_upd" clk_input_path="nav_bus/vel">
+        <connect>
+            <in alias="yaw, pos, vel">nav_bus/$alias</in>
+            <in alias="desired_vel_body, enable_vel, enable_auto">control_bus/rc/$alias</in>
+
+            <out alias="vel_enabled, collective, hold_yaw_cmd">control_bus/auto/$alias</out>
+            <out alias="desired_attitude, vel_body">control_bus/auto/$alias</out>
         </connect>
     </task>
 
     <task type="flow" config="flow_cont_angpos.xml" name="cont_angpos" priority="5" clk_method="inp_upd" clk_input_path="nav_bus/roll">
         <connect>
-            <in alias="roll, pitch">nav_bus/$alias</in>
-            <in alias="desired_roll, desired_pitch">control_bus/rc/$alias</in>
+            <in alias="roll, pitch, yaw">nav_bus/$alias</in>
+            <in alias="desired_attitude_rc">control_bus/rc/desired_attitude</in>
+            <in alias="desired_attitude_auto">control_bus/auto/desired_attitude</in>
             <in alias="rc_desired_omega">control_bus/rc/desired_omega</in>
-            <in alias="enable">control_bus/rc/enable_angpos</in>
+            <in alias="enable_angpos">control_bus/rc/enable_angpos</in>
+            <in alias="enable_auto">control_bus/auto/vel_enabled</in>
+            <in alias="hold_yaw_cmd">control_bus/auto/hold_yaw_cmd</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angpos</in>
 
             <out alias="desired_omega, enabled">control_bus/$alias</out>
@@ -137,8 +151,10 @@
             <in alias="desired_omega">control_bus/desired_omega</in>
             <in alias="arming, direct">control_bus/rc/$alias</in>
             <in alias="collective">control_bus/rc/direct_collective</in>
+            <in alias="collective_auto">control_bus/auto/collective</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angrate</in>
             <in alias="enable">control_bus/rc/enable_angrate</in>
+            <in alias="enable_auto_collective">control_bus/auto/vel_enabled</in>
 
             <out alias="m1, m2, m3, m4, armed">control_bus/solution/$alias</out>
         </connect>
@@ -164,9 +180,18 @@
         <source alias="gnss_ready">nav_bus/gnss/sol/ready</source>
     </bridge>
 
+    <bridge name="cont_mode" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
+        <source alias="enable_angrate">control_bus/rc/enable_angrate</source>
+        <source alias="enable_angpos">control_bus/rc/enable_angpos</source>
+        <source alias="enable_vel">control_bus/rc/enable_vel</source>
+        <source alias="enable_auto">control_bus/rc/enable_auto</source>
+        <source alias="hold_yaw_cmd">control_bus/auto/hold_yaw_cmd</source>
+        <source alias="vel_enabled">control_bus/auto/vel_enabled</source>
+        <source alias="armed">control_bus/solution/armed</source>
+    </bridge>
+
     <bridge name="man_cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
         <source alias="direct, direct_collective">control_bus/rc/$alias</source>
-        <source alias="armed">control_bus/solution/armed</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

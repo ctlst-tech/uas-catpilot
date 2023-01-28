@@ -3,13 +3,15 @@
 <flow>
     <spec name="rc">
         <outputs>
-            <o alias="desired_roll" type="core.type.f64"/>
-            <o alias="desired_pitch" type="core.type.f64"/>
             <o alias="desired_omega" type="core.type.v3f64"/>
+            <o alias="desired_attitude" type="core.type.v3f64"/>
+            <o alias="desired_vel_body" type="core.type.v3f64"/>
             <o alias="direct" type="core.type.v3f64"/>
             <o alias="direct_collective" type="core.type.v3f64"/>
             <o alias="enable_angrate" type="core.type.bool"/>
             <o alias="enable_angpos" type="core.type.bool"/>
+            <o alias="enable_vel" type="core.type.bool"/>
+            <o alias="enable_auto" type="core.type.bool"/>
             <o alias="pid_gain_angrate" type="core.type.f64"/>
             <o alias="pid_gain_angpos" type="core.type.f64"/>
             <o alias="arming" type="core.type.bool"/>
@@ -18,17 +20,13 @@
 
     <functions>
         <f name="rc" by_spec="cube.io.rc"/>
-        <f name="arm_activation_threshold" by_spec="core.source.constant">
+        <f name="logic_sw_activation_threshold" by_spec="core.source.constant">
             <param alias="value">0.5</param>
         </f>
 
         <f name="arm_signal" by_spec="core.math.lt">
-            <in alias="input0">arm_activation_threshold/output</in>
+            <in alias="input0">logic_sw_activation_threshold/output</in>
             <in alias="input1">rc/rc_channel5</in>
-        </f>
-
-        <f name="mode_switch" by_spec="core.cont.mode_switch2">
-            <in alias="input">rc/rc_channel6</in>
         </f>
 
         <f name="rc_channel2_inv" by_spec="core.math.neg">
@@ -104,16 +102,87 @@
             <in alias="input1">collective_in/output</in>
             <in alias="select">arm_signal/output</in>
         </f>
+
+        <f name="desired_vel" by_spec="core.math.vector3f64">
+            <in alias="z">input_manc_vel_vert/output</in>
+            <in alias="y">input_manc_vel_transv/output</in>
+            <in alias="x">input_manc_vel_longit/output</in>
+        </f>
+
+        <f name="input_manc_vel_longit" by_spec="core.math.gain">
+            <in alias="input">direct/v</in>
+
+            <param alias="gain">2</param>
+        </f>
+
+        <f name="input_manc_vel_transv" by_spec="core.math.gain">
+            <in alias="input">direct/v</in>
+
+            <param alias="gain">2</param>
+        </f>
+
+        <f name="input_manc_vel_vert" by_spec="core.math.gain">
+            <in alias="input">manc_vert_speed/output</in>
+        </f>
+
+        <f name="manc_vert_speed" by_spec="core.math.sub">
+            <in alias="input1">manc_vert_speed_bias/output</in>
+            <in alias="input0">direct/v</in>
+        </f>
+
+        <f name="manc_vert_speed_bias" by_spec="core.source.constant">
+            <param alias="value">0.5</param>
+        </f>
+
+        <f name="enable_auto_signal" by_spec="core.math.gt">
+            <in alias="input0">rc/rc_channel9</in>
+            <in alias="input1">logic_sw_activation_threshold/output</in>
+        </f>
+
+        <f name="desired_attutude" by_spec="core.math.vector3f64">
+            <in alias="z">zero/output</in>
+            <in alias="y">input_pitch/output</in>
+            <in alias="x">input_roll/output</in>
+        </f>
+
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="ang_vel_mode_switch" by_spec="core.cont.mode_switch2">
+            <in alias="input">rc/rc_channel6</in>
+        </f>
+
+        <f name="enable_direct_control" by_spec="core.math.gt">
+            <in alias="input1">logic_sw_activation_threshold/output</in>
+            <in alias="input0">rc/rc_channel10</in>
+        </f>
+
+        <f name="core.logical.and_4" by_spec="core.logical.and">
+            <in alias="input1">direct_control_disabled/output</in>
+            <in alias="input0">ang_vel_mode_switch/mode1</in>
+        </f>
+
+        <f name="core.logical.and_5" by_spec="core.logical.and">
+            <in alias="input1">direct_control_disabled/output</in>
+            <in alias="input0">ang_vel_mode_switch/mode2</in>
+        </f>
+
+        <f name="direct_control_disabled" by_spec="core.logical.not">
+            <in alias="input">enable_direct_control/output</in>
+        </f>
     </functions>
 
     <link_outputs>
-        <link alias="desired_roll">input_roll/output</link>
-        <link alias="desired_pitch">input_pitch/output</link>
+        <link alias="enable_angrate">direct_control_disabled/output</link>
+        <link alias="enable_vel">core.logical.and_5/output</link>
+        <link alias="enable_angpos">core.logical.and_4/output</link>
+        <link alias="desired_attitude">desired_attutude/v</link>
+        <link alias="desired_vel_body">desired_vel/v</link>
+        <link alias="enable_auto">enable_auto_signal/output</link>
         <link alias="desired_omega">desired_omega/v</link>
         <link alias="direct">direct/v</link>
         <link alias="direct_collective">collective_arm_mux/output</link>
-        <link alias="enable_angrate">mode_switch/mode1</link>
-        <link alias="enable_angpos">mode_switch/mode2</link>
         <link alias="pid_gain_angpos">pids_att_gain_multiplier/output</link>
         <link alias="pid_gain_angrate">pids_rate_gain_multiplier/output</link>
         <link alias="arming">arm_signal/output</link>

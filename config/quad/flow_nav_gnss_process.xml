@@ -35,10 +35,9 @@
             <in alias="input1">inputs/fix</in>
         </f>
 
-        <f name="reset_level_0" by_spec="core.logical.false"/>
-
+        <f name="reset_cmd" by_spec="core.logical.false"/>
         <f name="ready_reg" by_spec="core.logical.rs_trigger">
-            <in alias="r">reset_level_0/output</in>
+            <in alias="r">reset_cmd/output</in>
             <in alias="s">ready/output</in>
         </f>
 
@@ -53,7 +52,6 @@
             <in alias="y">inputs/vel_e</in>
             <in alias="x">inputs/vel_n</in>
         </f>
-
     </functions>
 
     <link_outputs>

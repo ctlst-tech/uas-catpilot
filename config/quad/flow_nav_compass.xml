@@ -46,7 +46,6 @@
             <in alias="q">inputs/q</in>
         </f>
 
-
         <f name="inverse_roll" by_spec="core.math.neg">
             <in alias="input">euler/roll</in>
         </f>
@@ -65,7 +64,6 @@
             <param alias="value">0</param>
         </f>
 
-
         <f name="magnitude" by_spec="core.vector.magnitude">
             <in alias="v">mag_calib/v</in>
         </f>
@@ -82,13 +80,10 @@
             <param alias="gain">0.01745277778</param>
         </f>
 
-
-
         <f name="proj_to_horizon" by_spec="core.vector.qrotate">
             <in alias="v">mag_calib/v</in>
             <in alias="q">quat4projection/q</in>
         </f>
-
 
         <f name="inverse_y" by_spec="core.math.neg">
             <in alias="input">proj_to_horizon/v/y</in>
@@ -103,13 +98,11 @@
             <in alias="input0">mag_azimuth/output</in>
             <in alias="input1">deg2rad/output</in>
         </f>
-
     </functions>
 
     <link_outputs>
         <link alias="azimuth">mag_azimuth_w_decl/output</link>
         <link alias="magnitude">normalized_induction_module/output</link>
         <link alias="induction">proj_to_horizon/v</link>
-<!--        <link alias="induction">mag_concat/v</link>-->
     </link_outputs>
 </flow>

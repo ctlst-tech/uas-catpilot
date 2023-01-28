@@ -3,12 +3,15 @@
 <flow>
     <spec name="cont_angpos">
         <inputs>
+            <i alias="enable_auto" type="core.type.bool"/>
+            <i alias="desired_attitude_auto" type="core.type.v3f64"/>
+            <i alias="desired_attitude_rc" type="core.type.v3f64"/>
             <i alias="roll" type="core.type.f64"/>
             <i alias="pitch" type="core.type.f64"/>
-            <i alias="desired_roll" type="core.type.f64"/>
-            <i alias="desired_pitch" type="core.type.f64"/>
+            <i alias="yaw" type="core.type.f64"/>
             <i alias="rc_desired_omega" type="core.type.v3f64"/>
-            <i alias="enable" type="core.type.bool"/>
+            <i alias="enable_angpos" type="core.type.bool"/>
+            <i alias="hold_yaw_cmd" type="core.type.bool"/>
             <i alias="pids_gain" type="core.type.f64"/>
         </inputs>
 
@@ -19,15 +22,22 @@
     </spec>
 
     <functions>
+
+        <f name="attitude_input_source" by_spec="core.cont.mux3f64">
+            <in alias="input0">inputs/desired_attitude_rc</in>
+            <in alias="input1">inputs/desired_attitude_auto</in>
+            <in alias="select">inputs/enable_auto</in>
+        </f>
+
         <f name="angles_preset" by_spec="core.source.constant">
             <param alias="value">0.0</param>
         </f>
 
         <f name="pid_roll" by_spec="core.cont.pid">
-            <in alias="input">inputs/desired_roll</in>
+            <in alias="input">attitude_input_source/output</in>
             <in alias="feedback">inputs/roll</in>
             <in alias="preset">angles_preset/output</in>
-            <in alias="enable">inputs/enable</in>
+            <in alias="enable">inputs/enable_angpos</in>
 
             <param alias="Kp">4</param>
             <param alias="integral_min">-0.1</param>
@@ -37,10 +47,10 @@
         </f>
 
         <f name="pid_pitch" by_spec="core.cont.pid">
-            <in alias="input">inputs/desired_pitch</in>
+            <in alias="input">attitude_input_source/output</in>
             <in alias="feedback">inputs/pitch</in>
             <in alias="preset">angles_preset/output</in>
-            <in alias="enable">inputs/enable</in>
+            <in alias="enable">inputs/enable_angpos</in>
 
             <param alias="Kp">4</param>
             <param alias="integral_min">-0.1</param>
@@ -60,15 +70,34 @@
         </f>
 
         <f name="desired_auto_omega" by_spec="core.math.vector3f64">
+            <in alias="z">omega_z_mux/output</in>
             <in alias="x">pid_multed_roll/output</in>
             <in alias="y">pid_multed_pitch/output</in>
-            <in alias="z">inputs/rc_desired_omega/z</in>
         </f>
 
         <f name="desired_omega" by_spec="core.cont.mux3f64">
             <in alias="input0">inputs/rc_desired_omega</in>
             <in alias="input1">desired_auto_omega/v</in>
-            <in alias="select">inputs/enable</in>
+            <in alias="select">inputs/enable_angpos</in>
+        </f>
+
+
+
+        <f name="omega_z_mux" by_spec="core.cont.mux">
+            <in alias="input0">inputs/rc_desired_omega</in>
+            <in alias="select">pid_yaw/enabled</in>
+            <in alias="input1">pid_yaw/output</in>
+        </f>
+
+        <f name="pid_yaw" by_spec="core.cont.pid">
+            <in alias="feedback">inputs/yaw</in>
+            <in alias="input">attitude_input_source/output</in>
+            <in alias="enable">yaw_regulation_enable/output</in>
+        </f>
+
+        <f name="yaw_regulation_enable" by_spec="core.logical.and">
+            <in alias="input1">inputs/hold_yaw_cmd</in>
+            <in alias="input0">inputs/enable_angpos</in>
         </f>
     </functions>
 

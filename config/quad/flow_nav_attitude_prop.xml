@@ -51,7 +51,6 @@
             <in alias="y">imu1/ay</in>
             <in alias="z">imu1/az</in>
         </f>
-
     </functions>
 
     <link_outputs>

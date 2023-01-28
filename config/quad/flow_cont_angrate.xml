@@ -6,8 +6,10 @@
             <i alias="omega" type="core.type.v3f64"/>
             <i alias="desired_omega" type="core.type.v3f64"/>
             <i alias="collective" type="core.type.f64"/>
+            <i alias="collective_auto" type="core.type.f64"/>
             <i alias="direct" type="core.type.v3f64"/>
             <i alias="enable" type="core.type.bool"/>
+            <i alias="enable_auto_collective" type="core.type.bool"/>
             <i alias="arming" type="core.type.bool"/>
             <i alias="pids_gain" type="core.type.f64"/>
         </inputs>
@@ -126,8 +128,14 @@
             <param alias="value">0.15</param>
         </f>
 
+        <f name="collective_auto_mux" by_spec="core.cont.mux">
+            <in alias="select">inputs/enable_auto_collective</in>
+            <in alias="input1">inputs/collective_auto</in>
+            <in alias="input0">inputs/collective</in>
+        </f>
+
         <f name="collective_input" by_spec="core.math.gain">
-            <in alias="input">inputs/collective</in>
+            <in alias="input">collective_auto_mux/output</in>
 
             <param alias="gain">0.85</param>
         </f>
