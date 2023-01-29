@@ -8,7 +8,7 @@ swsys_t core_sys;
 void *catpilot(void *param);
 
 int main(void) {
-    board_start(catpilot, 16*1024);
+    board_start(catpilot, 8*1024);
     while (1) {
     }
 }
