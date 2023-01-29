@@ -17,6 +17,10 @@
     </spec>
 
     <functions>
+        <f name="vel_gain" by_spec="core.source.constant">
+            <param alias="value">0.01</param>
+        </f>
+
         <f name="vel_residual" by_spec="core.vector.sub">
             <in alias="v2">inputs/gnss_vel</in>
             <in alias="v1">inputs/vel</in>
@@ -27,32 +31,28 @@
             <in alias="v">vel_residual/v</in>
         </f>
 
-        <f name="pos_compensation" by_spec="core.vector.mul_scalar">
-            <in alias="scalar">pos_gain/output</in>
-            <in alias="v">pos_residual/v</in>
-        </f>
-
         <f name="pos_residual" by_spec="core.vector.sub">
             <in alias="v2">inputs/gnss_pos</in>
             <in alias="v1">inputs/pos</in>
-        </f>
-
-        <f name="vel_gain" by_spec="core.source.constant">
-            <param alias="value">0.01</param>
         </f>
 
         <f name="pos_gain" by_spec="core.source.constant">
             <param alias="value">0.01</param>
         </f>
 
-        <f name="pos_correction" by_spec="core.vector.add">
-            <in alias="v2">pos_compensation/v</in>
-            <in alias="v1">inputs/pos</in>
+        <f name="pos_compensation" by_spec="core.vector.mul_scalar">
+            <in alias="scalar">pos_gain/output</in>
+            <in alias="v">pos_residual/v</in>
         </f>
 
         <f name="vel_correction" by_spec="core.vector.add">
             <in alias="v2">vel_compensation/v</in>
             <in alias="v1">inputs/vel</in>
+        </f>
+
+        <f name="pos_correction" by_spec="core.vector.add">
+            <in alias="v2">pos_compensation/v</in>
+            <in alias="v1">inputs/pos</in>
         </f>
     </functions>
 

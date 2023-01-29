@@ -7,7 +7,7 @@
             <o alias="desired_attitude" type="core.type.v3f64"/>
             <o alias="desired_vel_body" type="core.type.v3f64"/>
             <o alias="direct" type="core.type.v3f64"/>
-            <o alias="direct_collective" type="core.type.v3f64"/>
+            <o alias="direct_collective" type="core.type.f64"/>
             <o alias="enable_angrate" type="core.type.bool"/>
             <o alias="enable_angpos" type="core.type.bool"/>
             <o alias="enable_vel" type="core.type.bool"/>
@@ -73,6 +73,16 @@
             <in alias="input">direct/v/y</in>
 
             <param alias="gain">0.8</param>
+        </f>
+
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="desired_attutude" by_spec="core.math.vector3f64">
+            <in alias="z">zero/output</in>
+            <in alias="y">input_pitch/output</in>
+            <in alias="x">input_roll/output</in>
         </f>
 
         <f name="pids_att_gain_multiplier" by_spec="core.math.gain">
@@ -145,16 +155,6 @@
             <in alias="input1">logic_sw_activation_threshold/output</in>
         </f>
 
-        <f name="desired_attutude" by_spec="core.math.vector3f64">
-            <in alias="z">zero/output</in>
-            <in alias="y">input_pitch/output</in>
-            <in alias="x">input_roll/output</in>
-        </f>
-
-        <f name="zero" by_spec="core.source.constant">
-            <param alias="value">0</param>
-        </f>
-
         <f name="ang_vel_mode_switch" by_spec="core.cont.mode_switch2">
             <in alias="input">rc/rc_channel6</in>
         </f>
@@ -162,6 +162,10 @@
         <f name="enable_direct_control" by_spec="core.math.gt">
             <in alias="input1">logic_sw_activation_threshold/output</in>
             <in alias="input0">rc/rc_channel10</in>
+        </f>
+
+        <f name="direct_control_disabled" by_spec="core.logical.not">
+            <in alias="input">enable_direct_control/output</in>
         </f>
 
         <f name="enable_ang_pos" by_spec="core.logical.and">
@@ -172,10 +176,6 @@
         <f name="enable_vel" by_spec="core.logical.and">
             <in alias="input1">direct_control_disabled/output</in>
             <in alias="input0">ang_vel_mode_switch/mode2</in>
-        </f>
-
-        <f name="direct_control_disabled" by_spec="core.logical.not">
-            <in alias="input">enable_direct_control/output</in>
         </f>
     </functions>
 

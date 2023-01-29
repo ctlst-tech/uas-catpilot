@@ -103,7 +103,7 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_attitude_fusion.xml" name="nav_attitude_fusion" priority="7" clk_method="timer" clk_period="20">
+    <task type="flow" config="flow_nav_attitude_fusion.xml" name="nav_attitude_fusion" priority="12" clk_method="timer" clk_period="20">
         <connect>
             <in alias="q, a, azimuth">nav_bus/$alias</in>
 
@@ -156,7 +156,7 @@
             <in alias="enable">control_bus/rc/enable_angrate</in>
             <in alias="enable_auto_collective">control_bus/auto/vel_enabled</in>
 
-            <out alias="m1, m2, m3, m4, armed">control_bus/solution/$alias</out>
+            <out alias="m1, m2, m3, m4, armed, sol, sol_collective">control_bus/solution/$alias</out>
         </connect>
     </task>
 
@@ -192,6 +192,7 @@
 
     <bridge name="man_cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
         <source alias="direct, direct_collective">control_bus/rc/$alias</source>
+        <source alias="sol, sol_collective">control_bus/solution/$alias</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

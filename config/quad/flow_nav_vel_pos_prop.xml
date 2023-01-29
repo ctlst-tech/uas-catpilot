@@ -19,35 +19,8 @@
     </spec>
 
     <functions>
-        <f name="prop_vel" by_spec="core.vector.propagate">
-            <in alias="derivative">accel/v</in>
-            <in alias="v">inputs/vel</in>
-            <in alias="v0">inputs/vel_init</in>
-            <in alias="enable">initial_reg/output</in>
-        </f>
-
-        <f name="prop_pos" by_spec="core.vector.propagate">
-            <in alias="derivative">delta_v_vect_conv/v</in>
-            <in alias="v">inputs/pos</in>
-            <in alias="v0">inputs/pos_init</in>
-            <in alias="enable">initial_reg/output</in>
-        </f>
-
-        <f name="frame_transform" by_spec="core.vector.qrotate">
-            <in alias="q">frame_transf_quat/q</in>
-            <in alias="v">inputs/a</in>
-        </f>
-
-        <f name="initial_reg" by_spec="core.logical.rs_trigger">
-            <in alias="r">reset_level_0/output</in>
-            <in alias="s">inputs/init_cmd</in>
-        </f>
-
-        <f name="reset_level_0" by_spec="core.logical.false"/>
-        <f name="g_vector" by_spec="core.math.vector3f64">
-            <in alias="y">zero/output</in>
-            <in alias="x">zero/output</in>
-            <in alias="z">g/output</in>
+        <f name="frame_transf_quat" by_spec="core.quat.conjugate">
+            <in alias="q">inputs/q</in>
         </f>
 
         <f name="g" by_spec="core.source.constant">
@@ -58,9 +31,33 @@
             <param alias="value">0</param>
         </f>
 
+        <f name="g_vector" by_spec="core.math.vector3f64">
+            <in alias="y">zero/output</in>
+            <in alias="x">zero/output</in>
+            <in alias="z">g/output</in>
+        </f>
+
+        <f name="frame_transform" by_spec="core.vector.qrotate">
+            <in alias="q">frame_transf_quat/q</in>
+            <in alias="v">inputs/a</in>
+        </f>
+
         <f name="accel" by_spec="core.vector.sub">
             <in alias="v2">g_vector/v</in>
             <in alias="v1">frame_transform/v</in>
+        </f>
+
+        <f name="reset_level_0" by_spec="core.logical.false"/>
+        <f name="initial_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
+            <in alias="s">inputs/init_cmd</in>
+        </f>
+
+        <f name="prop_vel" by_spec="core.vector.propagate">
+            <in alias="derivative">accel/v</in>
+            <in alias="v">inputs/vel</in>
+            <in alias="v0">inputs/vel_init</in>
+            <in alias="enable">initial_reg/output</in>
         </f>
 
         <f name="lat_in_radians" by_spec="core.math.deg2rad">
@@ -71,15 +68,14 @@
             <in alias="input">lat_in_radians/output</in>
         </f>
 
-        <f name="lon_correction" by_spec="core.math.mul">
-            <in alias="input0">dv_lon_in_rad/output</in>
-            <in alias="input1">lon_correction_factor/output</in>
-        </f>
-
         <f name="dv_lat_in_rad" by_spec="core.math.inverse_gain">
             <in alias="input">prop_vel/v/x</in>
 
             <param alias="inverse_gain">6378000</param>
+        </f>
+
+        <f name="dv_lat_in_rad_deg" by_spec="core.math.rad2deg">
+            <in alias="input">dv_lat_in_rad/output</in>
         </f>
 
         <f name="dv_lon_in_rad" by_spec="core.math.inverse_gain">
@@ -88,22 +84,26 @@
             <param alias="inverse_gain">6378000</param>
         </f>
 
-        <f name="delta_v_vect_conv" by_spec="core.math.vector3f64">
-            <in alias="x">dv_lat_in_rad_deg/output</in>
-            <in alias="y">dv_lon_in_deg/output</in>
-            <in alias="z">prop_vel/v/z</in>
-        </f>
-
-        <f name="dv_lat_in_rad_deg" by_spec="core.math.rad2deg">
-            <in alias="input">dv_lat_in_rad/output</in>
+        <f name="lon_correction" by_spec="core.math.mul">
+            <in alias="input0">dv_lon_in_rad/output</in>
+            <in alias="input1">lon_correction_factor/output</in>
         </f>
 
         <f name="dv_lon_in_deg" by_spec="core.math.rad2deg">
             <in alias="input">lon_correction/output</in>
         </f>
 
-        <f name="frame_transf_quat" by_spec="core.quat.conjugate">
-            <in alias="q">inputs/q</in>
+        <f name="delta_v_vect_conv" by_spec="core.math.vector3f64">
+            <in alias="x">dv_lat_in_rad_deg/output</in>
+            <in alias="y">dv_lon_in_deg/output</in>
+            <in alias="z">prop_vel/v/z</in>
+        </f>
+
+        <f name="prop_pos" by_spec="core.vector.propagate">
+            <in alias="derivative">delta_v_vect_conv/v</in>
+            <in alias="v">inputs/pos</in>
+            <in alias="v0">inputs/pos_init</in>
+            <in alias="enable">initial_reg/output</in>
         </f>
     </functions>
 

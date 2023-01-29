@@ -32,8 +32,13 @@
             <param alias="value">0.0</param>
         </f>
 
+        <f name="yaw_regulation_enable" by_spec="core.logical.and">
+            <in alias="input1">inputs/hold_yaw_cmd</in>
+            <in alias="input0">inputs/enable_angpos</in>
+        </f>
+
         <f name="pid_roll" by_spec="core.cont.pid">
-            <in alias="input">attitude_input_source/output</in>
+            <in alias="input">attitude_input_source/output/x</in>
             <in alias="feedback">inputs/roll</in>
             <in alias="preset">angles_preset/output</in>
             <in alias="enable">inputs/enable_angpos</in>
@@ -46,7 +51,7 @@
         </f>
 
         <f name="pid_pitch" by_spec="core.cont.pid">
-            <in alias="input">attitude_input_source/output</in>
+            <in alias="input">attitude_input_source/output/y</in>
             <in alias="feedback">inputs/pitch</in>
             <in alias="preset">angles_preset/output</in>
             <in alias="enable">inputs/enable_angpos</in>
@@ -56,6 +61,12 @@
             <param alias="integral_max">+0.1</param>
             <param alias="output_min">-0.8</param>
             <param alias="output_max">+0.8</param>
+        </f>
+
+        <f name="pid_yaw" by_spec="core.cont.pid">
+            <in alias="input">attitude_input_source/output/z</in>
+            <in alias="feedback">inputs/yaw</in>
+            <in alias="enable">yaw_regulation_enable/output</in>
         </f>
 
         <f name="pid_multed_roll" by_spec="core.math.mul">
@@ -68,6 +79,12 @@
             <in alias="input1">inputs/pids_gain</in>
         </f>
 
+        <f name="omega_z_mux" by_spec="core.cont.mux">
+            <in alias="input0">inputs/rc_desired_omega/z</in>
+            <in alias="input1">pid_yaw/output</in>
+            <in alias="select">pid_yaw/enabled</in>
+        </f>
+
         <f name="desired_auto_omega" by_spec="core.math.vector3f64">
             <in alias="z">omega_z_mux/output</in>
             <in alias="x">pid_multed_roll/output</in>
@@ -78,23 +95,6 @@
             <in alias="input0">inputs/rc_desired_omega</in>
             <in alias="input1">desired_auto_omega/v</in>
             <in alias="select">inputs/enable_angpos</in>
-        </f>
-
-        <f name="omega_z_mux" by_spec="core.cont.mux">
-            <in alias="input0">inputs/rc_desired_omega</in>
-            <in alias="select">pid_yaw/enabled</in>
-            <in alias="input1">pid_yaw/output</in>
-        </f>
-
-        <f name="pid_yaw" by_spec="core.cont.pid">
-            <in alias="feedback">inputs/yaw</in>
-            <in alias="input">attitude_input_source/output</in>
-            <in alias="enable">yaw_regulation_enable/output</in>
-        </f>
-
-        <f name="yaw_regulation_enable" by_spec="core.logical.and">
-            <in alias="input1">inputs/hold_yaw_cmd</in>
-            <in alias="input0">inputs/enable_angpos</in>
         </f>
     </functions>
 

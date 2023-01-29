@@ -21,6 +21,7 @@
     </spec>
 
     <functions>
+        <f name="fix_stub" by_spec="core.logical.true"/>
         <f name="prec_threshold" by_spec="core.source.constant">
             <param alias="value">10</param>
         </f>
@@ -31,8 +32,8 @@
         </f>
 
         <f name="ready" by_spec="core.logical.and">
+            <in alias="input1">fix_stub/output</in>
             <in alias="input0">prec_is_ok/output</in>
-            <in alias="input1">inputs/fix</in>
         </f>
 
         <f name="reset_cmd" by_spec="core.logical.false"/>
