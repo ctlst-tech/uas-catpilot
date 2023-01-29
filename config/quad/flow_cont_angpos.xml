@@ -22,7 +22,6 @@
     </spec>
 
     <functions>
-
         <f name="attitude_input_source" by_spec="core.cont.mux3f64">
             <in alias="input0">inputs/desired_attitude_rc</in>
             <in alias="input1">inputs/desired_attitude_auto</in>
@@ -80,8 +79,6 @@
             <in alias="input1">desired_auto_omega/v</in>
             <in alias="select">inputs/enable_angpos</in>
         </f>
-
-
 
         <f name="omega_z_mux" by_spec="core.cont.mux">
             <in alias="input0">inputs/rc_desired_omega</in>

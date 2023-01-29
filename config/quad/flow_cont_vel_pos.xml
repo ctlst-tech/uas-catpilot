@@ -26,18 +26,41 @@
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body</in>
             <in alias="feedback">frame_transform/v/x</in>
+
+            <param alias="Kp">0.1</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-0.5</param>
+            <param alias="output_max">0.5</param>
         </f>
 
         <f name="pid_vel_transv" by_spec="core.cont.pid">
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body</in>
             <in alias="feedback">frame_transform/v/y</in>
+
+            <param alias="Kp">0.1</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-0.5</param>
+            <param alias="output_max">0.5</param>
         </f>
 
         <f name="pid_vel_vert" by_spec="core.cont.pid">
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body</in>
             <in alias="feedback">frame_transform/v/z</in>
+
+            <param alias="Kp">0.1</param>
+            <param alias="Ki">0.1</param>
+            <param alias="integral_min">0.4</param>
+            <param alias="integral_max">0.8</param>
+            <param alias="output_min">0.4</param>
+            <param alias="output_max">1.0</param>
         </f>
 
         <f name="zero" by_spec="core.source.constant">

@@ -76,7 +76,7 @@
     </functions>
 
     <link_outputs>
-        <link alias="q">quat_correction/q</link>
+        <link alias="q">norm_att_quat/q</link>
         <link alias="roll">to_euler_out/roll</link>
         <link alias="pitch">to_euler_out/pitch</link>
         <link alias="yaw">to_euler_out/yaw</link>

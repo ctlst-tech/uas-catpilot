@@ -15,11 +15,15 @@
         </inputs>
 
         <outputs>
+            <o alias="armed" type="core.type.bool"/>
             <o alias="m1" type="core.type.f64"/>
             <o alias="m2" type="core.type.f64"/>
             <o alias="m3" type="core.type.f64"/>
             <o alias="m4" type="core.type.f64"/>
-            <o alias="armed" type="core.type.bool"/>
+            <o alias="transv" type="core.type.f64"/>
+            <o alias="longit" type="core.type.f64"/>
+            <o alias="rudder" type="core.type.f64"/>
+            <o alias="collective" type="core.type.f64"/>
         </outputs>
     </spec>
 
@@ -203,10 +207,14 @@
     </functions>
 
     <link_outputs>
+        <link alias="armed">arming_logic/output</link>
         <link alias="m1">mixer/m1</link>
         <link alias="m2">mixer/m2</link>
         <link alias="m3">mixer/m3</link>
         <link alias="m4">mixer/m4</link>
-        <link alias="armed">arming_logic/output</link>
+        <link alias="collective">collective_arm_mux/output</link>
+        <link alias="transv">att_arm_mux/output/x</link>
+        <link alias="longit">att_arm_mux/output/y</link>
+        <link alias="rudder">att_arm_mux/output/z</link>
     </link_outputs>
 </flow>

@@ -103,35 +103,41 @@
             <in alias="select">arm_signal/output</in>
         </f>
 
-        <f name="desired_vel" by_spec="core.math.vector3f64">
-            <in alias="z">input_manc_vel_vert/output</in>
-            <in alias="y">input_manc_vel_transv/output</in>
-            <in alias="x">input_manc_vel_longit/output</in>
+        <f name="inv_vel_longit" by_spec="core.math.neg">
+            <in alias="input">direct/v/y</in>
         </f>
 
         <f name="input_manc_vel_longit" by_spec="core.math.gain">
-            <in alias="input">direct/v</in>
+            <in alias="input">inv_vel_longit/output</in>
 
             <param alias="gain">2</param>
         </f>
 
         <f name="input_manc_vel_transv" by_spec="core.math.gain">
-            <in alias="input">direct/v</in>
+            <in alias="input">direct/v/x</in>
 
             <param alias="gain">2</param>
         </f>
 
-        <f name="input_manc_vel_vert" by_spec="core.math.gain">
-            <in alias="input">manc_vert_speed/output</in>
+        <f name="manc_vert_speed_bias" by_spec="core.source.constant">
+            <param alias="value">0.5</param>
         </f>
 
         <f name="manc_vert_speed" by_spec="core.math.sub">
+            <in alias="input0">rc/rc_channel3</in>
             <in alias="input1">manc_vert_speed_bias/output</in>
-            <in alias="input0">direct/v</in>
         </f>
 
-        <f name="manc_vert_speed_bias" by_spec="core.source.constant">
-            <param alias="value">0.5</param>
+        <f name="input_manc_vel_vert" by_spec="core.math.gain">
+            <in alias="input">manc_vert_speed/output</in>
+
+            <param alias="gain">1</param>
+        </f>
+
+        <f name="desired_vel" by_spec="core.math.vector3f64">
+            <in alias="z">input_manc_vel_vert/output</in>
+            <in alias="y">input_manc_vel_transv/output</in>
+            <in alias="x">input_manc_vel_longit/output</in>
         </f>
 
         <f name="enable_auto_signal" by_spec="core.math.gt">
@@ -158,12 +164,12 @@
             <in alias="input0">rc/rc_channel10</in>
         </f>
 
-        <f name="core.logical.and_4" by_spec="core.logical.and">
+        <f name="enable_ang_pos" by_spec="core.logical.and">
             <in alias="input1">direct_control_disabled/output</in>
             <in alias="input0">ang_vel_mode_switch/mode1</in>
         </f>
 
-        <f name="core.logical.and_5" by_spec="core.logical.and">
+        <f name="enable_vel" by_spec="core.logical.and">
             <in alias="input1">direct_control_disabled/output</in>
             <in alias="input0">ang_vel_mode_switch/mode2</in>
         </f>
@@ -175,8 +181,8 @@
 
     <link_outputs>
         <link alias="enable_angrate">direct_control_disabled/output</link>
-        <link alias="enable_vel">core.logical.and_5/output</link>
-        <link alias="enable_angpos">core.logical.and_4/output</link>
+        <link alias="enable_vel">enable_vel/output</link>
+        <link alias="enable_angpos">enable_ang_pos/output</link>
         <link alias="desired_attitude">desired_attutude/v</link>
         <link alias="desired_vel_body">desired_vel/v</link>
         <link alias="enable_auto">enable_auto_signal/output</link>
