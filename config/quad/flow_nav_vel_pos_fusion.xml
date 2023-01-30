@@ -3,27 +3,27 @@
 <flow>
     <spec name="vel_pos_fusion">
         <inputs>
-            <i alias="vel" type="core.type.f64"/>
-            <i alias="pos" type="core.type.f64"/>
-            <i alias="gnss_vel" type="core.type.f64"/>
-            <i alias="gnss_pos" type="core.type.f64"/>
+            <i alias="vel" type="core.type.v3f64"/>
+            <i alias="pos" type="core.type.v3f64"/>
+            <i alias="gnss_vel" type="core.type.v3f64"/>
+            <i alias="gnss_pos" type="core.type.v3f64"/>
             <i alias="gnss_ready" type="core.type.bool"/>
         </inputs>
 
         <outputs>
-            <o alias="vel" type="core.type.f64"/>
-            <o alias="pos" type="core.type.f64"/>
+            <o alias="vel" type="core.type.v3f64"/>
+            <o alias="pos" type="core.type.v3f64"/>
         </outputs>
     </spec>
 
     <functions>
         <f name="vel_gain" by_spec="core.source.constant">
-            <param alias="value">0.01</param>
+            <param alias="value">0.03</param>
         </f>
 
         <f name="vel_residual" by_spec="core.vector.sub">
-            <in alias="v2">inputs/gnss_vel</in>
             <in alias="v1">inputs/vel</in>
+            <in alias="v2">inputs/gnss_vel</in>
         </f>
 
         <f name="vel_compensation" by_spec="core.vector.mul_scalar">
@@ -32,12 +32,12 @@
         </f>
 
         <f name="pos_residual" by_spec="core.vector.sub">
-            <in alias="v2">inputs/gnss_pos</in>
             <in alias="v1">inputs/pos</in>
+            <in alias="v2">inputs/gnss_pos</in>
         </f>
 
         <f name="pos_gain" by_spec="core.source.constant">
-            <param alias="value">0.01</param>
+            <param alias="value">0.03</param>
         </f>
 
         <f name="pos_compensation" by_spec="core.vector.mul_scalar">
@@ -45,14 +45,14 @@
             <in alias="v">pos_residual/v</in>
         </f>
 
-        <f name="vel_correction" by_spec="core.vector.add">
-            <in alias="v2">vel_compensation/v</in>
+        <f name="vel_correction" by_spec="core.vector.sub">
             <in alias="v1">inputs/vel</in>
+            <in alias="v2">vel_compensation/v</in>
         </f>
 
-        <f name="pos_correction" by_spec="core.vector.add">
-            <in alias="v2">pos_compensation/v</in>
+        <f name="pos_correction" by_spec="core.vector.sub">
             <in alias="v1">inputs/pos</in>
+            <in alias="v2">pos_compensation/v</in>
         </f>
     </functions>
 

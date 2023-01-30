@@ -66,10 +66,13 @@ void *catpilot(void *param) {
 
     swsys_rv_t swsys_rv = swsys_load("/cfg/swsys.xml", "/cfg", &core_sys);
     if (swsys_rv == swsys_e_ok) {
+        printf("SWSYS \"%s\" loaded\n", core_sys.name != NULL ? core_sys.name : "no name" );
+
         LOG_INFO("SYSTEM", "Configuration loading successful");
         swsys_rv = swsys_top_module_start(&core_sys);
         if (swsys_rv != swsys_e_ok) {
             LOG_ERROR("SYSTEM", "Module start error");
+            printf("SWSYS \"%s\" failed to start\n", core_sys.name != NULL ? core_sys.name : "no name");
         }
     } else {
         LOG_ERROR("SYSTEM", "Configuration loading error");

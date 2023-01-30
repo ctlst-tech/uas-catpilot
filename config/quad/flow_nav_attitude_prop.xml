@@ -3,6 +3,8 @@
 <flow>
     <spec name="nav_attitude_prop">
         <inputs>
+            <i alias="roll" type="core.type.f64"/>
+            <i alias="euler_correction" type="core.type.v3f64"/>
             <i alias="omega_bias" type="core.type.v3f64"/>
             <i alias="q0" type="core.type.quat"/>
             <i alias="q" type="core.type.quat"/>
@@ -39,10 +41,18 @@
             <in alias="z">omega_z_biased/output</in>
         </f>
 
+        <f name="correction" by_spec="core.quat.euler_correction">
+            <in alias="roll">inputs/roll</in>
+            <in alias="q">inputs/q</in>
+            <in alias="roll_err">inputs/euler_correction/x</in>
+            <in alias="pitch_err">inputs/euler_correction/y</in>
+            <in alias="yaw_err">inputs/euler_correction/z</in>
+        </f>
+
         <f name="integrate_att" by_spec="core.quat.prop">
+            <in alias="q">correction/q</in>
             <in alias="omega">omega_biased/v</in>
             <in alias="q0">inputs/q0</in>
-            <in alias="q">inputs/q</in>
             <in alias="reset">inputs/reset</in>
         </f>
 
@@ -50,6 +60,10 @@
             <in alias="x">imu1/ax</in>
             <in alias="y">imu1/ay</in>
             <in alias="z">imu1/az</in>
+        </f>
+
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
         </f>
     </functions>
 

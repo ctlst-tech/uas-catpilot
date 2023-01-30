@@ -17,7 +17,7 @@
         <dir name="solution" eq_channel="0"/>
     </bus>
 
-    <bus name="gcu_bus" eq_channel="0" max_topics="64">
+    <bus name="gcu_bus" eq_channel="0" max_topics="128">
         <event_queue buffer_size="512" size="48"/>
 
         <dir name="hk" eq_channel="16"/>
@@ -35,7 +35,7 @@
 
     <task type="flow" config="flow_nav_attitude_prop.xml" name="nav_attitude_prop" priority="8" clk_method="freerun">
         <connect>
-            <in alias="omega_bias, q0, q">nav_bus/$alias</in>
+            <in alias="omega_bias, q0, q, roll, euler_correction">nav_bus/$alias</in>
             <in alias="reset">nav_bus/imu_reset</in>
 
             <out alias="a, omega, q">nav_bus/$alias</out>
@@ -103,11 +103,11 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_attitude_fusion.xml" name="nav_attitude_fusion" priority="12" clk_method="timer" clk_period="20">
+    <task type="flow" config="flow_nav_attitude_fusion.xml" name="nav_attitude_fusion" priority="7" clk_method="timer" clk_period="20">
         <connect>
             <in alias="q, a, azimuth">nav_bus/$alias</in>
 
-            <out alias="q, roll, pitch, yaw">nav_bus/$alias</out>
+            <out alias="euler_correction, roll, pitch, yaw">nav_bus/$alias</out>
         </connect>
     </task>
 
@@ -170,17 +170,15 @@
         <source alias="omega, a, induction">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
         <source alias="ind_magnitude">nav_bus/magnitude</source>
-        <source alias="gnss_lat">nav_bus/gnss/sol/pos/x</source>
-        <source alias="gnss_lon">nav_bus/gnss/sol/pos/y</source>
-        <source alias="gnss_alt">nav_bus/gnss/sol/pos/z</source>
-        <source alias="gnss_vel_n">nav_bus/gnss/sol/vel/x</source>
-        <source alias="gnss_vel_e">nav_bus/gnss/sol/vel/y</source>
-        <source alias="gnss_vel_d">nav_bus/gnss/sol/vel/z</source>
+        <source alias="gnss_pos">nav_bus/gnss/sol/pos</source>
+        <source alias="gnss_vel">nav_bus/gnss/sol/vel</source>
+        <source alias="pos">nav_bus/pos</source>
+        <source alias="vel">nav_bus/vel</source>
         <source alias="gnss_prec">nav_bus/gnss/msg/posllh/hAcc</source>
         <source alias="gnss_ready">nav_bus/gnss/sol/ready</source>
     </bridge>
 
-    <bridge name="cont_mode" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
+    <bridge name="cont_mode" priority="2" clk_method="timer" clk_period="500" to="gcu_bus/cont">
         <source alias="enable_angrate">control_bus/rc/enable_angrate</source>
         <source alias="enable_angpos">control_bus/rc/enable_angpos</source>
         <source alias="enable_vel">control_bus/rc/enable_vel</source>
@@ -190,9 +188,11 @@
         <source alias="armed">control_bus/solution/armed</source>
     </bridge>
 
-    <bridge name="man_cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
+    <bridge name="cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
         <source alias="direct, direct_collective">control_bus/rc/$alias</source>
         <source alias="sol, sol_collective">control_bus/solution/$alias</source>
+        <source alias="desired_vel_body">control_bus/rc/desired_vel_body</source>
+        <source alias="vel_body">control_bus/auto/vel_body</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

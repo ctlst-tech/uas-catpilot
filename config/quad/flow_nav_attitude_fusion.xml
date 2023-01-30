@@ -9,7 +9,7 @@
         </inputs>
 
         <outputs>
-            <o alias="q" type="core.type.quat"/>
+            <o alias="euler_correction" type="core.type.v3f64"/>
             <o alias="roll" type="core.type.f64"/>
             <o alias="pitch" type="core.type.f64"/>
             <o alias="yaw" type="core.type.f64"/>
@@ -58,25 +58,19 @@
             <param alias="gain">0.0005</param>
         </f>
 
-        <f name="quat_correction" by_spec="core.quat.euler_correction">
-            <in alias="q">inputs/q</in>
-            <in alias="roll">to_euler/roll</in>
-            <in alias="roll_err">roll_adjustment/output</in>
-            <in alias="pitch_err">pitch_adjustment/output</in>
-            <in alias="yaw_err">yaw_adjustment/output</in>
-        </f>
-
-        <f name="norm_att_quat" by_spec="core.quat.norm">
-            <in alias="q">quat_correction/q</in>
-        </f>
-
         <f name="to_euler_out" by_spec="core.quat.to_euler">
-            <in alias="q">norm_att_quat/q</in>
+            <in alias="q">inputs/q</in>
+        </f>
+
+        <f name="euler_corrections" by_spec="core.math.vector3f64">
+            <in alias="z">yaw_adjustment/output</in>
+            <in alias="y">pitch_adjustment/output</in>
+            <in alias="x">roll_adjustment/output</in>
         </f>
     </functions>
 
     <link_outputs>
-        <link alias="q">norm_att_quat/q</link>
+        <link alias="euler_correction">euler_corrections/v</link>
         <link alias="roll">to_euler_out/roll</link>
         <link alias="pitch">to_euler_out/pitch</link>
         <link alias="yaw">to_euler_out/yaw</link>
