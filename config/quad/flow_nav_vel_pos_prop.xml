@@ -9,6 +9,8 @@
             <i alias="pos" type="core.type.v3f64"/>
             <i alias="vel_init" type="core.type.v3f64"/>
             <i alias="pos_init" type="core.type.v3f64"/>
+            <i alias="vel_correction" type="core.type.v3f64"/>
+            <i alias="pos_correction" type="core.type.v3f64"/>
             <i alias="init_cmd" type="core.type.bool"/>
         </inputs>
 
@@ -19,6 +21,16 @@
     </spec>
 
     <functions>
+        <f name="vel_compensated" by_spec="core.vector.sub">
+            <in alias="v2">inputs/vel_correction</in>
+            <in alias="v1">inputs/vel</in>
+        </f>
+
+        <f name="pos_compensated" by_spec="core.vector.sub">
+            <in alias="v2">inputs/pos_correction</in>
+            <in alias="v1">inputs/pos</in>
+        </f>
+
         <f name="frame_transf_quat" by_spec="core.quat.conjugate">
             <in alias="q">inputs/q</in>
         </f>
@@ -43,7 +55,6 @@
 
         <f name="frame_transformed_a" by_spec="core.vector.qrotate">
             <in alias="q">inputs/q</in>
-<!--            <in alias="q">frame_transf_quat/q</in>-->
             <in alias="v">inputs/a</in>
         </f>
 
@@ -78,8 +89,8 @@
         </f>
 
         <f name="prop_vel" by_spec="core.vector.propagate">
+            <in alias="v">vel_compensated/v</in>
             <in alias="derivative">accel/v</in>
-            <in alias="v">inputs/vel</in>
             <in alias="v0">inputs/vel_init</in>
             <in alias="enable">initial_reg/output</in>
         </f>
@@ -124,8 +135,8 @@
         </f>
 
         <f name="prop_pos" by_spec="core.vector.propagate">
+            <in alias="v">pos_compensated/v</in>
             <in alias="derivative">delta_v_vect_conv/v</in>
-            <in alias="v">inputs/pos</in>
             <in alias="v0">inputs/pos_init</in>
             <in alias="enable">initial_reg/output</in>
         </f>

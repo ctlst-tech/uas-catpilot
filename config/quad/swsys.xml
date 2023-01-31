@@ -87,6 +87,7 @@
             <in alias="pos_init">nav_bus/gnss/sol/pos</in>
             <in alias="vel_init">nav_bus/gnss/sol/vel</in>
             <in alias="init_cmd">nav_bus/gnss/sol/ready</in>
+            <in alias="vel_correction, pos_correction">nav_bus/$alias</in>
 
             <out alias="vel, pos">nav_bus/$alias</out>
         </connect>
@@ -99,7 +100,7 @@
             <in alias="gnss_pos">nav_bus/gnss/sol/pos</in>
             <in alias="gnss_ready">nav_bus/gnss/sol/ready</in>
 
-            <out alias="vel, pos">nav_bus/$alias</out>
+            <out alias="vel_correction, pos_correction">nav_bus/$alias</out>
         </connect>
     </task>
 
