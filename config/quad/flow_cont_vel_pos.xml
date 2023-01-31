@@ -10,6 +10,9 @@
             <i alias="desired_vel_body" type="core.type.v3f64"/>
             <i alias="pos" type="core.type.v3f64"/>
             <i alias="vel" type="core.type.v3f64"/>
+            <i alias="preset_collective" type="core.type.f64"/>
+            <i alias="preset_roll" type="core.type.f64"/>
+            <i alias="preset_pitch" type="core.type.f64"/>
         </inputs>
 
         <outputs>
@@ -26,10 +29,18 @@
             <param alias="value">0</param>
         </f>
 
+        <f name="lin_vel_int_preset" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="yaw_inv" by_spec="core.math.neg">
+            <in alias="input">inputs/yaw</in>
+        </f>
+
         <f name="frame_tras_quat" by_spec="core.quat.from_euler">
-            <in alias="yaw">inputs/yaw</in>
-            <in alias="pitch">zero/output</in>
             <in alias="roll">zero/output</in>
+            <in alias="pitch">zero/output</in>
+            <in alias="yaw">yaw_inv/output</in>
         </f>
 
         <f name="frame_transform" by_spec="core.vector.qrotate">
@@ -46,6 +57,7 @@
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body/x</in>
             <in alias="feedback">frame_transform/v/x</in>
+            <in alias="preset">inputs/preset_pitch</in>
 
             <param alias="Kp">0.1</param>
             <param alias="Ki">0.03</param>
@@ -60,6 +72,7 @@
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body/y</in>
             <in alias="feedback">frame_transform/v/y</in>
+            <in alias="preset">inputs/preset_roll</in>
 
             <param alias="Kp">0.1</param>
             <param alias="Ki">0.03</param>
@@ -74,12 +87,13 @@
             <in alias="enable">pid_enable_cmd/output</in>
             <in alias="input">inputs/desired_vel_body/z</in>
             <in alias="feedback">frame_transform/v/z</in>
+            <in alias="preset">inputs/preset_collective</in>
 
             <param alias="Kp">0.1</param>
             <param alias="Ki">0.1</param>
-            <param alias="integral_min">0.4</param>
+            <param alias="integral_min">0.15</param>
             <param alias="integral_max">0.8</param>
-            <param alias="output_min">0.4</param>
+            <param alias="output_min">0.15</param>
             <param alias="output_max">1.0</param>
         </f>
 
@@ -88,9 +102,13 @@
             <param alias="value">0</param>
         </f>
 
+        <f name="desired_pitch" by_spec="core.math.neg">
+            <in alias="input">pid_vel_longit/output</in>
+        </f>
+
         <f name="desired_attitude" by_spec="core.math.vector3f64">
             <in alias="x">pid_vel_transv/output</in>
-            <in alias="y">pid_vel_longit/output</in>
+            <in alias="y">desired_pitch/output</in>
             <in alias="z">desired_yaw_stub/output</in>
         </f>
     </functions>

@@ -48,10 +48,14 @@
             <in alias="z">inputs/alt</in>
         </f>
 
+        <f name="ven_u" by_spec="core.math.neg">
+            <in alias="input">inputs/vel_d</in>
+        </f>
+
         <f name="concat_vel" by_spec="core.math.vector3f64">
-            <in alias="z">inputs/vel_d</in>
-            <in alias="y">inputs/vel_e</in>
             <in alias="x">inputs/vel_n</in>
+            <in alias="y">inputs/vel_e</in>
+            <in alias="z">ven_u/output</in>
         </f>
     </functions>
 

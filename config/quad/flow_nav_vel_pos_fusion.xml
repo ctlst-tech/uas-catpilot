@@ -18,7 +18,7 @@
 
     <functions>
         <f name="vel_gain" by_spec="core.source.constant">
-            <param alias="value">0.03</param>
+            <param alias="value">0.1</param>
         </f>
 
         <f name="vel_residual" by_spec="core.vector.sub">
@@ -37,7 +37,7 @@
         </f>
 
         <f name="pos_gain" by_spec="core.source.constant">
-            <param alias="value">0.03</param>
+            <param alias="value">0.05</param>
         </f>
 
         <f name="pos_compensation" by_spec="core.vector.mul_scalar">

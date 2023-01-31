@@ -124,6 +124,9 @@
         <connect>
             <in alias="yaw, pos, vel">nav_bus/$alias</in>
             <in alias="desired_vel_body, enable_vel, enable_auto">control_bus/rc/$alias</in>
+            <in alias="preset_roll">nav_bus/roll</in>
+            <in alias="preset_pitch">nav_bus/pitch</in>
+            <in alias="preset_collective">control_bus/rc/direct_collective</in>
 
             <out alias="vel_enabled, collective, hold_yaw_cmd">control_bus/auto/$alias</out>
             <out alias="desired_attitude, vel_body">control_bus/auto/$alias</out>

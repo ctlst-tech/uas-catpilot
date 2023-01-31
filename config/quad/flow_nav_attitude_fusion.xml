@@ -35,7 +35,7 @@
             <in alias="input1">accel_horizon/pitch</in>
         </f>
 
-        <f name="yaw_err" by_spec="core.math.sub">
+        <f name="yaw_err" by_spec="core.math.sub_rad_angle">
             <in alias="input0">to_euler/yaw</in>
             <in alias="input1">inputs/azimuth</in>
         </f>

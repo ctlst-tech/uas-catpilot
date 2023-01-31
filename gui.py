@@ -45,9 +45,13 @@ ai = EwAttitudeIndicator([
     DataSourceEswbTopic('pitch', path=f'{topics_root}/nav/nav/pitch', mult=57.32)
 ])
 
-hi = EwHeadingIndicator([DataSourceEswbTopic('yaw', path=f'{topics_root}/nav/nav/yaw', mult=57.32)])
+ds_yaw = DataSourceEswbTopic('yaw', path=f'{topics_root}/nav/nav/yaw', mult=57.32)
 
-compass = EwHeadingIndicator([DataSourceEswbTopic('azimuth', path=f'{topics_root}/nav/nav/azimuth', mult=57.32)])
+hi = EwHeadingIndicator([ds_yaw])
+
+ds_mag_azimuth = DataSourceEswbTopic('azimuth', path=f'{topics_root}/nav/nav/azimuth', mult=57.32)
+
+compass = EwHeadingIndicator([ds_mag_azimuth])
 
 imu_roll_pitch = EwChart([DataSourceEswbTopic('roll', path=f'{topics_root}/nav/nav/roll', mult=57.32),
                         DataSourceEswbTopic('pitch', path=f'{topics_root}/nav/nav/pitch', mult=57.32)],
@@ -58,16 +62,24 @@ imu_omega = EwChart([DataSourceEswbTopic('omega_x', path=f'{topics_root}/nav/nav
                         DataSourceEswbTopic('omega_z', path=f'{topics_root}/nav/nav/omega/z', mult=57.32)],
                         data_range=(-60, +60))
 
-imu_a = EwChart([DataSourceEswbTopic('a_x', path=f'{topics_root}/nav/nav/a/x'),
-                        DataSourceEswbTopic('a_y', path=f'{topics_root}/nav/nav/a/y'),
-                        DataSourceEswbTopic('a_z', path=f'{topics_root}/nav/nav/a/z')],
+ds_accel_x = DataSourceEswbTopic('a_x', path=f'{topics_root}/nav/nav/a/x')
+ds_accel_y = DataSourceEswbTopic('a_y', path=f'{topics_root}/nav/nav/a/y')
+ds_accel_z = DataSourceEswbTopic('a_z', path=f'{topics_root}/nav/nav/a/z')
+
+imu_a = EwChart([ds_accel_x,
+                 ds_accel_y,
+                 ds_accel_z,],
                         data_range=(-15, +15))
 
 norm_ind_magnitude_ds = DataSourceEswbTopic('mag', path=f'{topics_root}/nav/nav/ind_magnitude')
 
-mag = EwChart([DataSourceEswbTopic('mag_x', path=f'{topics_root}/nav/nav/induction/x'),
-               DataSourceEswbTopic('mag_y', path=f'{topics_root}/nav/nav/induction/y'),
-               DataSourceEswbTopic('mag_z', path=f'{topics_root}/nav/nav/induction/z'),
+ds_magn_x = DataSourceEswbTopic('mag_x', path=f'{topics_root}/nav/nav/induction/x')
+ds_magn_y = DataSourceEswbTopic('mag_y', path=f'{topics_root}/nav/nav/induction/y')
+ds_magn_z = DataSourceEswbTopic('mag_z', path=f'{topics_root}/nav/nav/induction/z')
+
+mag = EwChart([ds_magn_x,
+               ds_magn_y,
+               ds_magn_z,
                norm_ind_magnitude_ds],
                 data_range=(-0.7, +0.7))
 
@@ -132,11 +144,20 @@ nav_data_table = EwTable(caption='Nav Data', data_sources=[
     ds_vel_n,
     ds_vel_e,
     ds_vel_d,
+    ds_accel_x,
+    ds_accel_y,
+    ds_accel_z,
+    ds_magn_x,
+    ds_magn_y,
+    ds_magn_z,
 ])
 
 gnss_prec = EwChart([DataSourceEswbTopic('gnss_prec', path=f'{topics_root}/nav/nav/gnss_prec')])
 
-map = EwLocationMap([ds_gnss_lat, ds_gnss_lon, ds_gnss_alt, ])
+map = EwLocationMap(
+    [('gnss', ds_gnss_lat, ds_gnss_lon, ds_mag_azimuth), ('est', ds_lat, ds_lon, ds_yaw)],
+    with_control=True)
+
 rel_map = EwRelativePosition([
     DataSourceSinus('plane_phi', mult=360),
     DataSourceConst('plane_r', value=60),

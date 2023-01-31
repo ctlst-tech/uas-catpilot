@@ -31,20 +31,44 @@
             <param alias="value">0</param>
         </f>
 
+        <f name="a_z_bias_quick_fix" by_spec="core.source.constant">
+            <param alias="value">0.1</param>
+        </f>
+
         <f name="g_vector" by_spec="core.math.vector3f64">
             <in alias="y">zero/output</in>
             <in alias="x">zero/output</in>
             <in alias="z">g/output</in>
         </f>
 
-        <f name="frame_transform" by_spec="core.vector.qrotate">
-            <in alias="q">frame_transf_quat/q</in>
+        <f name="frame_transformed_a" by_spec="core.vector.qrotate">
+            <in alias="q">inputs/q</in>
+<!--            <in alias="q">frame_transf_quat/q</in>-->
             <in alias="v">inputs/a</in>
         </f>
 
+        <f name="accel_n" by_spec="core.math.neg">
+            <in alias="input">frame_transformed_a/v/x</in>
+        </f>
+
+        <f name="accel_e" by_spec="core.math.neg">
+            <in alias="input">frame_transformed_a/v/y</in>
+        </f>
+
+        <f name="accel_z_biased" by_spec="core.math.add">
+            <in alias="input0">frame_transformed_a/v/z</in>
+            <in alias="input1">a_z_bias_quick_fix/output</in>
+        </f>
+
+        <f name="adjusted_signs" by_spec="core.math.vector3f64">
+            <in alias="x">accel_n/output</in>
+            <in alias="y">accel_e/output</in>
+            <in alias="z">accel_z_biased/output</in>
+        </f>
+
         <f name="accel" by_spec="core.vector.sub">
+            <in alias="v1">adjusted_signs/v</in>
             <in alias="v2">g_vector/v</in>
-            <in alias="v1">frame_transform/v</in>
         </f>
 
         <f name="reset_level_0" by_spec="core.logical.false"/>
