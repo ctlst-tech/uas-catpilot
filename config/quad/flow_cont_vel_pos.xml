@@ -48,18 +48,40 @@
             <in alias="q">to_body_trn/q</in>
         </f>
 
+        <f name="from_body_trn" by_spec="core.quat.from_euler">
+            <in alias="yaw">inputs/yaw</in>
+            <in alias="pitch">zero/output</in>
+            <in alias="roll">zero/output</in>
+        </f>
+
+        <f name="pre_set_vector" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/preset_roll</in>
+            <in alias="y">inputs/preset_pitch</in>
+            <in alias="z">zero/output</in>
+        </f>
+
+        <f name="ne_regs_preset" by_spec="core.vector.qrotate">
+            <in alias="v">pre_set_vector/v</in>
+            <in alias="q">from_body_trn/q</in>
+        </f>
+
         <f name="pid_enable_cmd" by_spec="core.logical.or">
             <in alias="input1">inputs/enable_auto</in>
             <in alias="input0">inputs/enable_vel</in>
         </f>
 
+        <f name="desired_vel_ne" by_spec="core.vector.qrotate">
+            <in alias="v">inputs/desired_vel_body</in>
+            <in alias="q">to_body_trn/q</in>
+        </f>
+
         <f name="pid_vel_east" by_spec="core.cont.pid">
+            <in alias="input">desired_vel_ne/v/y</in>
             <in alias="feedback">inputs/vel/y</in>
             <in alias="enable">pid_enable_cmd/output</in>
-            <in alias="input">inputs/desired_vel_body/x</in>
-            <in alias="preset">inputs/preset_pitch</in>
+            <in alias="preset">ne_regs_preset/v/x</in>
 
-            <param alias="Kp">0.1</param>
+            <param alias="Kp">0.15</param>
             <param alias="Ki">0.03</param>
             <param alias="Kd">0</param>
             <param alias="integral_min">-0.3</param>
@@ -69,12 +91,12 @@
         </f>
 
         <f name="pid_vel_north" by_spec="core.cont.pid">
+            <in alias="input">desired_vel_ne/v/x</in>
             <in alias="feedback">inputs/vel/x</in>
+            <in alias="preset">ne_regs_preset/v/y</in>
             <in alias="enable">pid_enable_cmd/output</in>
-            <in alias="input">inputs/desired_vel_body/y</in>
-            <in alias="preset">inputs/preset_roll</in>
 
-            <param alias="Kp">0.1</param>
+            <param alias="Kp">0.15</param>
             <param alias="Ki">0.03</param>
             <param alias="Kd">0</param>
             <param alias="integral_min">-0.3</param>
@@ -89,8 +111,8 @@
             <in alias="feedback">inputs/vel/z</in>
             <in alias="preset">inputs/preset_collective</in>
 
-            <param alias="Kp">0.1</param>
-            <param alias="Ki">0.1</param>
+            <param alias="Kp">0.15</param>
+            <param alias="Ki">0.07</param>
             <param alias="integral_min">0.15</param>
             <param alias="integral_max">0.8</param>
             <param alias="output_min">0.15</param>
@@ -112,13 +134,17 @@
             <in alias="v">cont_vel_sol/v</in>
         </f>
 
+        <f name="desired_pitch" by_spec="core.math.neg">
+            <in alias="input">desired_roll_pitch/v/y</in>
+        </f>
+
         <f name="desired_yaw_stub" by_spec="core.source.constant">
             <param alias="value">0</param>
         </f>
 
         <f name="desired_attitude_concat" by_spec="core.math.vector3f64">
             <in alias="x">desired_roll_pitch/v/x</in>
-            <in alias="y">desired_roll_pitch/v/y</in>
+            <in alias="y">desired_pitch/output</in>
             <in alias="z">desired_yaw_stub/output</in>
         </f>
 

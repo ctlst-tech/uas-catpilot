@@ -20,6 +20,24 @@
 
     <functions>
         <f name="imu1" by_spec="cube.sensors.icm20649"/>
+        <f name="ax" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/ax</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="ay" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/ay</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="az" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/az</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
         <f name="omega_x_biased" by_spec="core.math.sub">
             <in alias="input0">imu1/wx</in>
             <in alias="input1">inputs/omega_bias/x</in>
@@ -57,13 +75,9 @@
         </f>
 
         <f name="concat_accel" by_spec="core.math.vector3f64">
-            <in alias="x">imu1/ax</in>
-            <in alias="y">imu1/ay</in>
-            <in alias="z">imu1/az</in>
-        </f>
-
-        <f name="zero" by_spec="core.source.constant">
-            <param alias="value">0</param>
+            <in alias="x">ax/output</in>
+            <in alias="y">ay/output</in>
+            <in alias="z">az/output</in>
         </f>
     </functions>
 
