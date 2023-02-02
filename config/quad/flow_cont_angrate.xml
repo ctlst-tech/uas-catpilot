@@ -175,6 +175,10 @@
             <in alias="input1">inputs/arming</in>
         </f>
 
+        <f name="adc" by_spec="cube.sensors.adc">
+            <param alias="channel">3</param>
+        </f>
+
         <f name="io" by_spec="cube.io.pwm">
             <in alias="ch4">mixer/m4</in>
             <in alias="ch3">mixer/m3</in>
@@ -192,6 +196,7 @@
             <param alias="ch3_max">2000</param>
             <param alias="ch4_max">2000</param>
         </f>
+
     </functions>
 
     <link_outputs>
