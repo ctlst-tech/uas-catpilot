@@ -164,9 +164,13 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="50">
+    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="200">
         <connect>
             <out alias="sine">gcu_bus/hk/sine</out>
+            <out alias="Vbat">gcu_bus/hk/Vbat</out>
+            <out alias="Vbat_min">gcu_bus/hk/Vbat_min</out>
+            <out alias="Vbat_max">gcu_bus/hk/Vbat_max</out>
+            <out alias="Curr, Curr_min, Curr_max">gcu_bus/hk/$alias</out>
         </connect>
     </task>
 

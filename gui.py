@@ -89,6 +89,16 @@ hk_sine = EwChart([DataSourceEswbTopic('sine', path=f'{topics_root}/hk/sine'),
                    ],
                    data_range=(-1, +1))
 
+hk_Vbat = EwChart([DataSourceEswbTopic('Vbat', path=f'{topics_root}/hk/Vbat'),
+                   DataSourceEswbTopic('Vbat_min', path=f'{topics_root}/hk/Vbat_min'),
+                   DataSourceEswbTopic('Vbat_max', path=f'{topics_root}/hk/Vbat_max')
+                   ])
+
+hk_CurrBat = EwChart([DataSourceEswbTopic('Curr', path=f'{topics_root}/hk/Curr'),
+                   DataSourceEswbTopic('Curr_min', path=f'{topics_root}/hk/Curr_min'),
+                   DataSourceEswbTopic('Curr_max', path=f'{topics_root}/hk/Curr_max')
+                   ])
+
 manc_xy = EwCursor([
     (DataSourceEswbTopic('x', path=f'{topics_root}/cont/cont/direct/x'),
                           DataSourceEswbTopic('y', path=f'{topics_root}/cont/cont/direct/y')),
@@ -183,6 +193,7 @@ vel_body_chart_vert = EwChart([vel_body_vert, desired_vel_body_vert])
 
 front_tab.add_widget(EwGroup([ai, hi, compass, manc_xy, modes, mon.get_small_widget()]))
 front_tab.add_widget(EwGroup([imu_roll_pitch, gnss_prec, hk_sine]))
+front_tab.add_widget(EwGroup([hk_Vbat, hk_CurrBat]))
 # front_tab.add_widget(EwGroup([]))
 
 nav_data_tab.add_widget(nav_data_table)
