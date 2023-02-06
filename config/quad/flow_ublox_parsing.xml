@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="ublox_parsing">
+        <params>
+            <p alias="serial_path" type="core.type.str"/>
+        </params>
+
+        <outputs>
+            <o alias="ubx_frame" type="core.type.vector_u8"/>
+            <o alias="rtcm_frame" type="core.type.vector_u8"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="rx_frame_sync" by_spec="ublox.protocol.rx_framing">
+            <param alias="ubx_frame_size">256</param>
+            <param alias="rtcm_frame_size">256</param>
+            <param alias="serial_path">$serial_path</param>
+            <param alias="baudrate">115200</param>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="ubx_frame">rx_frame_sync/ubx_frame</link>
+        <link alias="rtcm_frame">rx_frame_sync/rtcm_frame</link>
+    </link_outputs>
+</flow>

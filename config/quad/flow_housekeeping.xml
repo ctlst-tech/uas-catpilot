@@ -10,7 +10,6 @@
     <functions>
         <f name="sine" by_spec="core.source.sin">
             <param alias="period">1.0</param>
-            <param alias="phase"/>
         </f>
     </functions>
 

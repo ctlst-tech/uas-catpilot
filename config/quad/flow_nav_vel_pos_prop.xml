@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="vel_pos_prop">
+        <inputs>
+            <i alias="q" type="core.type.quat"/>
+            <i alias="a" type="core.type.v3f64"/>
+            <i alias="vel" type="core.type.v3f64"/>
+            <i alias="pos" type="core.type.v3f64"/>
+            <i alias="vel_init" type="core.type.v3f64"/>
+            <i alias="pos_init" type="core.type.v3f64"/>
+            <i alias="init_cmd" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.f64"/>
+            <o alias="pos" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="prop_vel" by_spec="core.vector.propagate">
+            <in alias="v">inputs/vel</in>
+            <in alias="v0">inputs/vel_init</in>
+            <in alias="enable">initial_reg/output</in>
+            <in alias="derivative">frame_transform/v</in>
+        </f>
+
+        <f name="prop_pos" by_spec="core.vector.propagate">
+            <in alias="v">inputs/pos</in>
+            <in alias="v0">inputs/pos_init</in>
+            <in alias="enable">initial_reg/output</in>
+            <in alias="derivative">prop_vel/v</in>
+        </f>
+
+        <f name="frame_transform" by_spec="core.vector.qrotate">
+            <in alias="q">inputs/q</in>
+            <in alias="v">inputs/a</in>
+        </f>
+
+        <f name="initial_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
+            <in alias="s">inputs/init_cmd</in>
+        </f>
+
+        <f name="reset_level_0" by_spec="core.logical.false"/>
+    </functions>
+
+    <link_outputs>
+        <link alias="pos">prop_pos/v</link>
+        <link alias="vel">prop_vel/v</link>
+    </link_outputs>
+</flow>

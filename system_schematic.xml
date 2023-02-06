@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<hw_sys_scheme>
+<hw_sys_scheme name="scheme1">
     <device designator="kore_board_1" part_number="kore_board"/>
     <device designator="cube_orange_1" part_number="cube_orange"/>
     <device designator="skywalker_1" part_number="skywalker"/>
@@ -14,14 +14,20 @@
     <device designator="cm-4510_4" part_number="cm-4510"/>
     <device designator="h-rtk_f9p_rover_2" part_number="h-rtk_f9p_rover"/>
 
-    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_SWITCH" dev2_iface="Safety Button"/>
-    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_LED" dev2_iface="Safety LED"/>
+    <interface_link dev1="kore_board_1" dev2="sik_telemetry_radio_1" dev1_iface="TLM1_POWER" dev2_iface="Power"/>
+    <interface_link dev1="kore_board_1" dev2="skywalker_4" dev1_iface="ESC4_POWER" dev2_iface="Power"/>
+    <interface_link dev1="kore_board_1" dev2="skywalker_3" dev1_iface="ESC3_POWER" dev2_iface="Power"/>
+    <interface_link dev1="kore_board_1" dev2="skywalker_2" dev1_iface="ESC2_POWER" dev2_iface="Power"/>
+    <interface_link dev1="kore_board_1" dev2="skywalker_1" dev1_iface="ESC1_POWER" dev2_iface="Power"/>
+    <interface_link dev1="kore_board_1" dev2="h-rtk_f9p_rover_2" dev1_iface="GPS1_POWER" dev2_iface="VCC 5V"/>
+    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="SAFETY_SWITCH_LED" dev2_iface="Safety LED"/>
     <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="I2C" dev2_iface="I2C1"/>
+    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="UART" dev2_iface="SER3"/>
+    <interface_link dev1="kore_board_1" dev2="h-rtk_f9p_rover_2" dev1_iface="Safety Button" dev2_iface="SAFETY_SWITCH"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_1" dev1_iface="MAIN1" dev2_iface="PWM"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_2" dev1_iface="MAIN2" dev2_iface="PWM"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_3" dev1_iface="MAIN3" dev2_iface="PWM"/>
     <interface_link dev1="kore_board_1" dev2="skywalker_4" dev1_iface="MAIN4" dev2_iface="PWM"/>
-    <interface_link dev1="h-rtk_f9p_rover_2" dev2="kore_board_1" dev1_iface="UART" dev2_iface="SER3"/>
     <interface_link dev1="skywalker_4" dev2="cm-4510_4" dev1_iface="DC" dev2_iface="DC"/>
     <interface_link dev1="skywalker_3" dev2="cm-4510_3" dev1_iface="DC" dev2_iface="DC"/>
     <interface_link dev1="skywalker_2" dev2="cm-4510_2" dev1_iface="DC" dev2_iface="DC"/>

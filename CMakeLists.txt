@@ -2,13 +2,21 @@ cmake_minimum_required(VERSION 3.15)
 
 set(PROJ_NAME "uas-catpilot")
 
-if (BOARD STREQUAL "cube")
+if (BOARD STREQUAL "host")
+    set(MCU_FAMILY host)
+    set(MCU_MODEL host)
+    set(OS "posix")
+    set(FS "posix")
+    set(CLI_PORT "stdio")
+    set(CLI_BAUDRATE "")
+elseif (BOARD STREQUAL "cube")
     set(MCU_FAMILY stm32)
     set(MCU_MODEL h753)
     set(IC_CUBEIO "ON")
     set(IC_ICM20602 "ON")
     set(IC_ICM20649 "ON")
     set(IC_ICM20948 "ON")
+    set(IC_IST8310 "ON")
     set(IC_MS5611 "ON")
     set(IC_SD "ON")
     set(OS "freertos")
@@ -23,8 +31,14 @@ if (BOARD STREQUAL "cube")
     if (OS_MONITOR STREQUAL "ON")
         add_definitions(-DOS_MONITOR)
     endif()
+    if (MAINTENANCE_MODE STREQUAL "ON")
+        add_definitions(-DMAINTENANCE_MODE)
+    endif()
     add_definitions(-DCLI_PORT="${CLI_PORT}")
     add_definitions(-DCLI_BAUDRATE="${CLI_BAUDRATE}")
+    set(ESWB_EQRB_NO_SOCKET "1")
+    set(CATOM_NO_SOCKET "1")
+    set(FAKE_PTHREAD "1")
 else ()
     message(FATAL_ERROR "Board is not selected!")
 endif ()
@@ -56,9 +70,6 @@ set(CMAKE_TOOLCHAIN_FILE catpilot/bsp/mcu/core/${MCU_FAMILY}/${MCU_MODEL}/${MCU_
 set(ASM_FILE ${PROJECT_BINARY_DIR}/${PROJ_NAME}.asm)
 
 set(MAP_CREATION "ON")
-set(ESWB_EQRB_NO_SOCKET "1")
-set(CATOM_NO_SOCKET "1")
-set(FAKE_PTHREAD "1")
 
 project(${PROJ_NAME} C ASM)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/firmware)
@@ -83,26 +94,30 @@ include_directories(
     ${BSP}
 )
 
-include(fspecs.cmake)
+include(atomics.cmake)
+
+add_executable(catom-launcher
+    ${ATOMICS_REG}
+    # FIXME
+    catpilot/c-atom/function/conv.c)
+
+target_link_libraries(catom-launcher PUBLIC c-atom-launcher-static ${ATOMICS_LIBS})
 
 add_executable(${PROJECT_NAME}.elf
     main.c
     xml_inline.c
     xml_inline_cfgs.c
-    ${FSPECS_REG}
+    ${ATOMICS_REG}
     # FIXME
     catpilot/c-atom/function/error.c
     catpilot/c-atom/function/conv.c
 )
 
-target_link_libraries(c-atom-static PUBLIC os-static)
-target_link_libraries(eswb-static PUBLIC os-static)
-
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     os-static
     bsp-static
     c-atom-static
-    ${FSPECS_LIBS}
+    ${ATOMICS_LIBS}
     -lc -lm -lnosys
 )
 
@@ -121,3 +136,4 @@ add_custom_command(TARGET "${PROJECT_NAME}.elf" POST_BUILD
     COMMAND ${CMAKE_SIZE} -A ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.elf
     COMMAND ${CMAKE_SIZE} --format=berkeley ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.hex
 )
+

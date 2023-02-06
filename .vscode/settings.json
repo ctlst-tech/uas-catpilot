@@ -4,9 +4,10 @@
         "BOARD": "cube",
         "CLI_PORT": "TELEM2",
         "CLI_BAUDRATE": "57600",
-        "OS_MONITOR": "ON"
+        "OS_MONITOR": "ON",
+        "MAINTENANCE_MODE": "OFF"
     },
     "cortex-debug.armToolchainPath": "/usr/bin",
     "cortex-debug.openocdPath": "/usr/local/bin/openocd",
-    "cortex-debug.gdbPath": "/usr/bin/gdb-multiarch",
+    "cortex-debug.gdbPath": "/usr/bin/arm-none-eabi-gdb",
 }

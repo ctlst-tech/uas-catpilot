@@ -30,8 +30,6 @@
             <in alias="enable">inputs/enable</in>
 
             <param alias="Kp">4</param>
-            <param alias="Ki"/>
-            <param alias="Kd"/>
             <param alias="integral_min">-0.1</param>
             <param alias="integral_max">+0.1</param>
             <param alias="output_min">-0.8</param>
@@ -45,8 +43,6 @@
             <in alias="enable">inputs/enable</in>
 
             <param alias="Kp">4</param>
-            <param alias="Ki"/>
-            <param alias="Kd"/>
             <param alias="integral_min">-0.1</param>
             <param alias="integral_max">+0.1</param>
             <param alias="output_min">-0.8</param>
