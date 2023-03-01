@@ -21,6 +21,7 @@
     </spec>
 
     <functions>
+        <f name="fix_stub" by_spec="core.logical.true"/>
         <f name="concat_pos" by_spec="core.math.vector3f64">
             <in alias="x">inputs/lat</in>
             <in alias="y">inputs/lon</in>
@@ -42,18 +43,18 @@
             <in alias="input0">prec_threshold/output</in>
         </f>
 
-        <f name="ready" by_spec="core.logical.and">
+        <f name="ready_and" by_spec="core.logical.and">
             <in alias="input0">prec_is_ok/output</in>
-            <in alias="input1">inputs/fix</in>
-        </f>
-
-        <f name="ready_reg" by_spec="core.logical.rs_trigger">
-            <in alias="r">reset_level_0/output</in>
-            <in alias="s">ready/output</in>
+            <in alias="input1">fix_stub/output</in>
         </f>
 
         <f name="reset_level_0" by_spec="core.logical.false"/>
         <f name="core.logical.false_3" by_spec="core.logical.false"/>
+
+        <f name="ready_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
+            <in alias="s">ready_and/output</in>
+        </f>
     </functions>
 
     <link_outputs>

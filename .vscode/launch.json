@@ -15,5 +15,13 @@
                 "catpilot/bsp/mcu/core/stm32/h753/stm32h753.cfg"
             ],
         },
+        {
+            "name": "Host",
+            "request": "launch",
+            "type": "cppdbg",
+            "cwd": "${workspaceRoot}",
+            "args": ["--convert_to_csv", "/tmp/gcu_20.eqrb", "./gcu_20.csv"],
+            "program": "${workspaceRoot}/catpilot/c-atom/eswb/build/eswbutil"
+        },
     ]
 }
