@@ -3,6 +3,8 @@
 <flow>
     <spec name="nav_attitude_prop">
         <inputs>
+            <i alias="roll" type="core.type.f64"/>
+            <i alias="euler_correction" type="core.type.v3f64"/>
             <i alias="omega_bias" type="core.type.v3f64"/>
             <i alias="q0" type="core.type.quat"/>
             <i alias="q" type="core.type.quat"/>
@@ -18,6 +20,24 @@
 
     <functions>
         <f name="imu1" by_spec="cube.sensors.icm20649"/>
+        <f name="ax" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/ax</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="ay" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/ay</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="az" by_spec="core.filter.moving_average">
+            <in alias="input">imu1/az</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
         <f name="omega_x_biased" by_spec="core.math.sub">
             <in alias="input0">imu1/wx</in>
             <in alias="input1">inputs/omega_bias/x</in>
@@ -39,29 +59,31 @@
             <in alias="z">omega_z_biased/output</in>
         </f>
 
+        <f name="correction" by_spec="core.quat.euler_correction">
+            <in alias="roll">inputs/roll</in>
+            <in alias="q">inputs/q</in>
+            <in alias="roll_err">inputs/euler_correction/x</in>
+            <in alias="pitch_err">inputs/euler_correction/y</in>
+            <in alias="yaw_err">inputs/euler_correction/z</in>
+        </f>
+
         <f name="integrate_att" by_spec="core.quat.prop">
+            <in alias="q">correction/q</in>
             <in alias="omega">omega_biased/v</in>
             <in alias="q0">inputs/q0</in>
-            <in alias="q">inputs/q</in>
             <in alias="reset">inputs/reset</in>
         </f>
 
         <f name="concat_accel" by_spec="core.math.vector3f64">
-            <in alias="x">imu1/ax</in>
-            <in alias="y">imu1/ay</in>
-            <in alias="z">imu1/az</in>
-        </f>
-
-        <f name="concat_omega" by_spec="core.math.vector3f64">
-            <in alias="x">imu1/wx</in>
-            <in alias="y">imu1/wy</in>
-            <in alias="z">imu1/wz</in>
+            <in alias="x">ax/output</in>
+            <in alias="y">ay/output</in>
+            <in alias="z">az/output</in>
         </f>
     </functions>
 
     <link_outputs>
         <link alias="a">concat_accel/v</link>
-        <link alias="omega">concat_omega/v</link>
+        <link alias="omega">omega_biased/v</link>
         <link alias="q">integrate_att/q</link>
     </link_outputs>
 </flow>

@@ -3,14 +3,22 @@
 <swsys name="target">
     <expected_interface name="TLM1" dev_path="/dev/ttyS0"/>
 
-    <bus name="nav_bus" eq_channel="1" max_topics="32"/>
-    <bus name="control_bus" eq_channel="1" max_topics="32">
+    <bus name="nav_bus" eq_channel="1" max_topics="128">
+        <dir name="gnss" eq_channel="0">
+            <dir name="raw" eq_channel="0"/>
+            <dir name="sol" eq_channel="0"/>
+            <dir name="msg" eq_channel="0"/>
+        </dir>
+    </bus>
+
+    <bus name="control_bus" eq_channel="1" max_topics="64">
         <dir name="rc" eq_channel="0"/>
+        <dir name="auto" eq_channel="0"/>
         <dir name="solution" eq_channel="0"/>
     </bus>
 
-    <bus name="gcu_bus" eq_channel="0" max_topics="32">
-        <event_queue buffer_size="2000" size="32"/>
+    <bus name="gcu_bus" eq_channel="0" max_topics="128">
+        <event_queue buffer_size="512" size="48"/>
 
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
@@ -19,7 +27,7 @@
 
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
         <connect>
-            <in alias="omega, a">nav_bus/$alias</in>
+            <in alias="omega, a, azimuth">nav_bus/$alias</in>
 
             <out alias="omega_bias, q0, imu_reset">nav_bus/$alias</out>
         </connect>
@@ -27,36 +35,114 @@
 
     <task type="flow" config="flow_nav_attitude_prop.xml" name="nav_attitude_prop" priority="8" clk_method="freerun">
         <connect>
-            <in alias="omega_bias, q0, q">nav_bus/$alias</in>
+            <in alias="omega_bias, q0, q, roll, euler_correction">nav_bus/$alias</in>
             <in alias="reset">nav_bus/imu_reset</in>
 
             <out alias="a, omega, q">nav_bus/$alias</out>
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_attitude_filter.xml" name="nav_attitude_filter" priority="7" clk_method="timer" clk_period="20">
+    <task type="flow" config="flow_nav_compass.xml" name="nav_compass" priority="6" clk_method="freerun">
         <connect>
-            <in alias="q, a">nav_bus/$alias</in>
+            <in alias="q">nav_bus/q</in>
 
-            <out alias="q, roll, pitch, yaw">nav_bus/$alias</out>
+            <out alias="induction, azimuth, magnitude">nav_bus/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_ublox_parsing.xml" name="nav_ublox_parsing" priority="2" clk_method="freerun">
+        <param alias="serial_path">/dev/ttyS2</param>
+
+        <connect>
+            <out alias="ubx_frame">nav_bus/gnss/raw/ubx_frame</out>
+            <out alias="rtcm_frame">nav_bus/gnss/raw/rtcm_frame</out>
+        </connect>
+    </task>
+
+    <task type="ibr" config="ibr_ubx.xml" name="nav_gnss_msg" priority="3" clk_method="freerun">
+        <connect>
+            <in alias="rx_frame">nav_bus/gnss/raw/ubx_frame</in>
+
+            <out alias="ubx_msgs">nav_bus/gnss/msg/</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_nav_gnss_process.xml" name="nav_gnss_process" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss/msg/velned">
+        <connect>
+            <in alias="vel_n">nav_bus/gnss/msg/velned/velN</in>
+            <in alias="vel_e">nav_bus/gnss/msg/velned/velE</in>
+            <in alias="vel_d">nav_bus/gnss/msg/velned/velD</in>
+            <in alias="lat, lon">nav_bus/gnss/msg/posllh/$alias</in>
+            <in alias="alt">nav_bus/gnss/msg/posllh/height</in>
+            <in alias="prec">nav_bus/gnss/msg/posllh/hAcc</in>
+            <in alias="fix">nav_bus/gnss/msg/posllh/hAcc</in>
+
+            <out alias="vel, pos, ready">nav_bus/gnss/sol/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_nav_vel_pos_prop.xml" name="nav_vel_pos_prop" priority="4" clk_method="timer" clk_period="10">
+        <connect>
+            <in alias="q, a, vel, pos">nav_bus/$alias</in>
+            <in alias="pos_init">nav_bus/gnss/sol/pos</in>
+            <in alias="vel_init">nav_bus/gnss/sol/vel</in>
+            <in alias="init_cmd">nav_bus/gnss/sol/ready</in>
+            <in alias="vel_correction, pos_correction">nav_bus/$alias</in>
+
+            <out alias="vel, pos">nav_bus/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_nav_vel_pos_fusion.xml" name="nav_vel_pos_fusion" priority="3" clk_method="inp_upd" clk_input_path="nav_bus/gnss/sol/vel">
+        <connect>
+            <in alias="vel, pos">nav_bus/$alias</in>
+            <in alias="gnss_vel">nav_bus/gnss/sol/vel</in>
+            <in alias="gnss_pos">nav_bus/gnss/sol/pos</in>
+            <in alias="gnss_ready">nav_bus/gnss/sol/ready</in>
+
+            <out alias="vel_correction, pos_correction">nav_bus/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_nav_attitude_fusion.xml" name="nav_attitude_fusion" priority="7" clk_method="timer" clk_period="20">
+        <connect>
+            <in alias="q, a, azimuth">nav_bus/$alias</in>
+
+            <out alias="euler_correction, roll, pitch, yaw">nav_bus/$alias</out>
         </connect>
     </task>
 
     <task type="flow" config="flow_rc.xml" name="rc" priority="5" clk_method="timer" clk_period="20">
         <connect>
-            <out alias="desired_roll, desired_pitch, desired_omega">control_bus/rc/$alias</out>
+            <out alias="desired_attitude, desired_omega, desired_vel_body">control_bus/rc/$alias</out>
             <out alias="direct, direct_collective">control_bus/rc/$alias</out>
-            <out alias="enable_angrate, enable_angpos, arming">control_bus/rc/$alias</out>
+            <out alias="enable_angrate, enable_angpos, enable_vel, enable_auto, arming">control_bus/rc/$alias</out>
             <out alias="pid_gain_angrate, pid_gain_angpos">control_bus/rc/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_cont_vel_pos.xml" name="cont_vel_pos" priority="4" clk_method="inp_upd" clk_input_path="nav_bus/vel">
+        <connect>
+            <in alias="yaw, pos, vel">nav_bus/$alias</in>
+            <in alias="desired_vel_body, enable_vel, enable_auto">control_bus/rc/$alias</in>
+            <in alias="preset_roll">nav_bus/roll</in>
+            <in alias="preset_pitch">nav_bus/pitch</in>
+            <in alias="preset_collective">control_bus/rc/direct_collective</in>
+
+            <out alias="vel_enabled, collective, hold_yaw_cmd">control_bus/auto/$alias</out>
+            <out alias="desired_attitude, vel_body">control_bus/auto/$alias</out>
         </connect>
     </task>
 
     <task type="flow" config="flow_cont_angpos.xml" name="cont_angpos" priority="5" clk_method="inp_upd" clk_input_path="nav_bus/roll">
         <connect>
-            <in alias="roll, pitch">nav_bus/$alias</in>
-            <in alias="desired_roll, desired_pitch">control_bus/rc/$alias</in>
+            <in alias="roll, pitch, yaw">nav_bus/$alias</in>
+            <in alias="desired_attitude_rc">control_bus/rc/desired_attitude</in>
+            <in alias="desired_attitude_auto">control_bus/auto/desired_attitude</in>
             <in alias="rc_desired_omega">control_bus/rc/desired_omega</in>
-            <in alias="enable">control_bus/rc/enable_angpos</in>
+            <in alias="enable_angpos">control_bus/rc/enable_angpos</in>
+            <in alias="enable_auto">control_bus/auto/vel_enabled</in>
+            <in alias="hold_yaw_cmd">control_bus/auto/hold_yaw_cmd</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angpos</in>
 
             <out alias="desired_omega, enabled">control_bus/$alias</out>
@@ -69,26 +155,52 @@
             <in alias="desired_omega">control_bus/desired_omega</in>
             <in alias="arming, direct">control_bus/rc/$alias</in>
             <in alias="collective">control_bus/rc/direct_collective</in>
+            <in alias="collective_auto">control_bus/auto/collective</in>
             <in alias="pids_gain">control_bus/rc/pid_gain_angrate</in>
             <in alias="enable">control_bus/rc/enable_angrate</in>
+            <in alias="enable_auto_collective">control_bus/auto/vel_enabled</in>
 
-            <out alias="m1, m2, m3, m4, armed">control_bus/solution/$alias</out>
+            <out alias="m1, m2, m3, m4, armed, sol, sol_collective">control_bus/solution/$alias</out>
         </connect>
     </task>
 
-    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="50">
+    <task type="flow" config="flow_housekeeping.xml" name="housekeeping" priority="3" clk_method="timer" clk_period="200">
         <connect>
             <out alias="sine">gcu_bus/hk/sine</out>
+            <out alias="Vbat">gcu_bus/hk/Vbat</out>
+            <out alias="Vbat_min">gcu_bus/hk/Vbat_min</out>
+            <out alias="Vbat_max">gcu_bus/hk/Vbat_max</out>
+            <out alias="Curr, Curr_min, Curr_max">gcu_bus/hk/$alias</out>
         </connect>
     </task>
 
-    <bridge name="nav" priority="2" clk_method="timer" clk_period="50" to="gcu_bus/nav">
-        <source alias="omega, a">nav_bus/$alias</source>
-        <source alias="roll, pitch, yaw">nav_bus/$alias</source>
+    <bridge name="nav" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/nav">
+        <source alias="omega, a, induction">nav_bus/$alias</source>
+        <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
+        <source alias="ind_magnitude">nav_bus/magnitude</source>
+        <source alias="gnss_pos">nav_bus/gnss/sol/pos</source>
+        <source alias="gnss_vel">nav_bus/gnss/sol/vel</source>
+        <source alias="pos">nav_bus/pos</source>
+        <source alias="vel">nav_bus/vel</source>
+        <source alias="gnss_prec">nav_bus/gnss/msg/posllh/hAcc</source>
+        <source alias="gnss_ready">nav_bus/gnss/sol/ready</source>
     </bridge>
 
-    <bridge name="man_cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
+    <bridge name="cont_mode" priority="2" clk_method="timer" clk_period="500" to="gcu_bus/cont">
+        <source alias="enable_angrate">control_bus/rc/enable_angrate</source>
+        <source alias="enable_angpos">control_bus/rc/enable_angpos</source>
+        <source alias="enable_vel">control_bus/rc/enable_vel</source>
+        <source alias="enable_auto">control_bus/rc/enable_auto</source>
+        <source alias="hold_yaw_cmd">control_bus/auto/hold_yaw_cmd</source>
+        <source alias="vel_enabled">control_bus/auto/vel_enabled</source>
+        <source alias="armed">control_bus/solution/armed</source>
+    </bridge>
+
+    <bridge name="cont" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/cont">
         <source alias="direct, direct_collective">control_bus/rc/$alias</source>
+        <source alias="sol, sol_collective">control_bus/solution/$alias</source>
+        <source alias="desired_vel_body">control_bus/rc/desired_vel_body</source>
+        <source alias="vel_body">control_bus/auto/vel_body</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

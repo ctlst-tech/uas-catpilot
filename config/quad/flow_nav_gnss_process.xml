@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="gnss_process">
+        <inputs>
+            <i alias="vel_n" type="core.type.f64"/>
+            <i alias="vel_e" type="core.type.f64"/>
+            <i alias="vel_d" type="core.type.f64"/>
+            <i alias="lat" type="core.type.f64"/>
+            <i alias="lon" type="core.type.f64"/>
+            <i alias="alt" type="core.type.f64"/>
+            <i alias="prec" type="core.type.f64"/>
+            <i alias="fix" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.v3f64"/>
+            <o alias="pos" type="core.type.v3f64"/>
+            <o alias="ready" type="core.type.bool"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="fix_stub" by_spec="core.logical.true"/>
+        <f name="prec_threshold" by_spec="core.source.constant">
+            <param alias="value">10</param>
+        </f>
+
+        <f name="prec_is_ok" by_spec="core.math.gt">
+            <in alias="input1">inputs/prec</in>
+            <in alias="input0">prec_threshold/output</in>
+        </f>
+
+        <f name="ready" by_spec="core.logical.and">
+            <in alias="input1">fix_stub/output</in>
+            <in alias="input0">prec_is_ok/output</in>
+        </f>
+
+        <f name="reset_cmd" by_spec="core.logical.false"/>
+        <f name="ready_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_cmd/output</in>
+            <in alias="s">ready/output</in>
+        </f>
+
+        <f name="concat_pos" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/lat</in>
+            <in alias="y">inputs/lon</in>
+            <in alias="z">inputs/alt</in>
+        </f>
+
+        <f name="ven_u" by_spec="core.math.neg">
+            <in alias="input">inputs/vel_d</in>
+        </f>
+
+        <f name="concat_vel" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/vel_n</in>
+            <in alias="y">inputs/vel_e</in>
+            <in alias="z">ven_u/output</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="ready">ready_reg/output</link>
+        <link alias="vel">concat_vel/v</link>
+        <link alias="pos">concat_pos/v</link>
+    </link_outputs>
+</flow>

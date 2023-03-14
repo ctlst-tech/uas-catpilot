@@ -4,6 +4,12 @@
     <spec name="housekeeping">
         <outputs>
             <o alias="sine" type="core.type.f64"/>
+            <o alias="Vbat" type="core.type.f64"/>
+            <o alias="Vbat_min" type="core.type.f64"/>
+            <o alias="Vbat_max" type="core.type.f64"/>
+            <o alias="Curr" type="core.type.f64"/>
+            <o alias="Curr_min" type="core.type.f64"/>
+            <o alias="Curr_max" type="core.type.f64"/>
         </outputs>
     </spec>
 
@@ -11,9 +17,24 @@
         <f name="sine" by_spec="core.source.sin">
             <param alias="period">1.0</param>
         </f>
+        <f name="voltage" by_spec="cube.sensors.adc">
+            <param alias="channel">0</param>
+            <param alias="scale">15.3</param>
+        </f>
+        <f name="current" by_spec="cube.sensors.adc">
+            <param alias="channel">1</param>
+            <param alias="scale">50.0</param>
+            <param alias="offset">0.45</param>
+        </f>
     </functions>
 
     <link_outputs>
         <link alias="sine">sine/out</link>
+        <link alias="Vbat">voltage/output</link>
+        <link alias="Vbat_min">voltage/min</link>
+        <link alias="Vbat_max">voltage/max</link>
+        <link alias="Curr">current/output</link>
+        <link alias="Curr_min">current/min</link>
+        <link alias="Curr_max">current/max</link>
     </link_outputs>
 </flow>

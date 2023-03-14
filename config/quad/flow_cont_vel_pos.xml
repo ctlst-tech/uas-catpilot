@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="cont_vel_pos">
+        <inputs>
+            <i alias="yaw" type="core.type.f64"/>
+            <i alias="desired_yaw" type="core.type.f64"/>
+            <i alias="enable_vel" type="core.type.bool"/>
+            <i alias="enable_auto" type="core.type.bool"/>
+            <i alias="desired_vel_body" type="core.type.v3f64"/>
+            <i alias="pos" type="core.type.v3f64"/>
+            <i alias="vel" type="core.type.v3f64"/>
+            <i alias="preset_collective" type="core.type.f64"/>
+            <i alias="preset_roll" type="core.type.f64"/>
+            <i alias="preset_pitch" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="desired_attitude" type="core.type.v3f64"/>
+            <o alias="vel_enabled" type="core.type.bool"/>
+            <o alias="collective" type="core.type.f64"/>
+            <o alias="hold_yaw_cmd" type="core.type.bool"/>
+            <o alias="vel_body" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="lin_vel_int_preset" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="yaw_inv" by_spec="core.math.neg">
+            <in alias="input">inputs/yaw</in>
+        </f>
+
+        <f name="to_body_trn" by_spec="core.quat.from_euler">
+            <in alias="roll">zero/output</in>
+            <in alias="pitch">zero/output</in>
+            <in alias="yaw">yaw_inv/output</in>
+        </f>
+
+        <f name="inp_vel_frm_transform" by_spec="core.vector.qrotate">
+            <in alias="v">inputs/vel</in>
+            <in alias="q">to_body_trn/q</in>
+        </f>
+
+        <f name="from_body_trn" by_spec="core.quat.from_euler">
+            <in alias="yaw">inputs/yaw</in>
+            <in alias="pitch">zero/output</in>
+            <in alias="roll">zero/output</in>
+        </f>
+
+        <f name="pre_set_vector" by_spec="core.math.vector3f64">
+            <in alias="x">inputs/preset_roll</in>
+            <in alias="y">inputs/preset_pitch</in>
+            <in alias="z">zero/output</in>
+        </f>
+
+        <f name="ne_regs_preset" by_spec="core.vector.qrotate">
+            <in alias="v">pre_set_vector/v</in>
+            <in alias="q">from_body_trn/q</in>
+        </f>
+
+        <f name="pid_enable_cmd" by_spec="core.logical.or">
+            <in alias="input1">inputs/enable_auto</in>
+            <in alias="input0">inputs/enable_vel</in>
+        </f>
+
+        <f name="desired_vel_ne" by_spec="core.vector.qrotate">
+            <in alias="v">inputs/desired_vel_body</in>
+            <in alias="q">to_body_trn/q</in>
+        </f>
+
+        <f name="pid_vel_east" by_spec="core.cont.pid">
+            <in alias="input">desired_vel_ne/v/y</in>
+            <in alias="feedback">inputs/vel/y</in>
+            <in alias="enable">pid_enable_cmd/output</in>
+            <in alias="preset">ne_regs_preset/v/x</in>
+
+            <param alias="Kp">0.15</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-0.5</param>
+            <param alias="output_max">0.5</param>
+        </f>
+
+        <f name="pid_vel_north" by_spec="core.cont.pid">
+            <in alias="input">desired_vel_ne/v/x</in>
+            <in alias="feedback">inputs/vel/x</in>
+            <in alias="preset">ne_regs_preset/v/y</in>
+            <in alias="enable">pid_enable_cmd/output</in>
+
+            <param alias="Kp">0.15</param>
+            <param alias="Ki">0.03</param>
+            <param alias="Kd">0</param>
+            <param alias="integral_min">-0.3</param>
+            <param alias="integral_max">0.3</param>
+            <param alias="output_min">-0.5</param>
+            <param alias="output_max">0.5</param>
+        </f>
+
+        <f name="pid_vel_vert" by_spec="core.cont.pid">
+            <in alias="enable">pid_enable_cmd/output</in>
+            <in alias="input">inputs/desired_vel_body/z</in>
+            <in alias="feedback">inputs/vel/z</in>
+            <in alias="preset">inputs/preset_collective</in>
+
+            <param alias="Kp">0.15</param>
+            <param alias="Ki">0.07</param>
+            <param alias="integral_min">0.15</param>
+            <param alias="integral_max">0.8</param>
+            <param alias="output_min">0.15</param>
+            <param alias="output_max">1.0</param>
+        </f>
+
+        <f name="zero2" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="cont_vel_sol" by_spec="core.math.vector3f64">
+            <in alias="x">pid_vel_east/output</in>
+            <in alias="y">pid_vel_north/output</in>
+            <in alias="z">zero2/output</in>
+        </f>
+
+        <f name="desired_roll_pitch" by_spec="core.vector.qrotate">
+            <in alias="q">to_body_trn/q</in>
+            <in alias="v">cont_vel_sol/v</in>
+        </f>
+
+        <f name="desired_pitch" by_spec="core.math.neg">
+            <in alias="input">desired_roll_pitch/v/y</in>
+        </f>
+
+        <f name="desired_yaw_stub" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="desired_attitude_concat" by_spec="core.math.vector3f64">
+            <in alias="x">desired_roll_pitch/v/x</in>
+            <in alias="y">desired_pitch/output</in>
+            <in alias="z">desired_yaw_stub/output</in>
+        </f>
+
+        <f name="hold_yaw_cmd" by_spec="core.logical.false"/>
+    </functions>
+
+    <link_outputs>
+        <link alias="collective">pid_vel_vert/output</link>
+        <link alias="desired_attitude">desired_attitude_concat/v</link>
+        <link alias="hold_yaw_cmd">hold_yaw_cmd/output</link>
+        <link alias="vel_enabled">pid_enable_cmd/output</link>
+        <link alias="vel_body">inp_vel_frm_transform/v</link>
+    </link_outputs>
+</flow>

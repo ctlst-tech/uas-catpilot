@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="vel_pos_prop">
+        <inputs>
+            <i alias="q" type="core.type.quat"/>
+            <i alias="a" type="core.type.v3f64"/>
+            <i alias="vel" type="core.type.v3f64"/>
+            <i alias="pos" type="core.type.v3f64"/>
+            <i alias="vel_init" type="core.type.v3f64"/>
+            <i alias="pos_init" type="core.type.v3f64"/>
+            <i alias="vel_correction" type="core.type.v3f64"/>
+            <i alias="pos_correction" type="core.type.v3f64"/>
+            <i alias="init_cmd" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel" type="core.type.f64"/>
+            <o alias="pos" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="vel_compensated" by_spec="core.vector.sub">
+            <in alias="v2">inputs/vel_correction</in>
+            <in alias="v1">inputs/vel</in>
+        </f>
+
+        <f name="pos_compensated" by_spec="core.vector.sub">
+            <in alias="v2">inputs/pos_correction</in>
+            <in alias="v1">inputs/pos</in>
+        </f>
+
+        <f name="frame_transf_quat" by_spec="core.quat.conjugate">
+            <in alias="q">inputs/q</in>
+        </f>
+
+        <f name="g" by_spec="core.source.constant">
+            <param alias="value">9.81</param>
+        </f>
+
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="a_z_bias_quick_fix" by_spec="core.source.constant">
+            <param alias="value">0.1</param>
+        </f>
+
+        <f name="g_vector" by_spec="core.math.vector3f64">
+            <in alias="y">zero/output</in>
+            <in alias="x">zero/output</in>
+            <in alias="z">g/output</in>
+        </f>
+
+        <f name="frame_transformed_a" by_spec="core.vector.qrotate">
+            <in alias="q">inputs/q</in>
+            <in alias="v">inputs/a</in>
+        </f>
+
+        <f name="accel_n" by_spec="core.math.neg">
+            <in alias="input">frame_transformed_a/v/x</in>
+        </f>
+
+        <f name="accel_e" by_spec="core.math.neg">
+            <in alias="input">frame_transformed_a/v/y</in>
+        </f>
+
+        <f name="accel_z_biased" by_spec="core.math.add">
+            <in alias="input0">frame_transformed_a/v/z</in>
+            <in alias="input1">a_z_bias_quick_fix/output</in>
+        </f>
+
+        <f name="adjusted_signs" by_spec="core.math.vector3f64">
+            <in alias="x">accel_n/output</in>
+            <in alias="y">accel_e/output</in>
+            <in alias="z">accel_z_biased/output</in>
+        </f>
+
+        <f name="accel" by_spec="core.vector.sub">
+            <in alias="v1">adjusted_signs/v</in>
+            <in alias="v2">g_vector/v</in>
+        </f>
+
+        <f name="reset_level_0" by_spec="core.logical.false"/>
+        <f name="initial_reg" by_spec="core.logical.rs_trigger">
+            <in alias="r">reset_level_0/output</in>
+            <in alias="s">inputs/init_cmd</in>
+        </f>
+
+        <f name="prop_vel" by_spec="core.vector.propagate">
+            <in alias="v">vel_compensated/v</in>
+            <in alias="derivative">accel/v</in>
+            <in alias="v0">inputs/vel_init</in>
+            <in alias="enable">initial_reg/output</in>
+        </f>
+
+        <f name="lat_in_radians" by_spec="core.math.deg2rad">
+            <in alias="input">inputs/pos/x</in>
+        </f>
+
+        <f name="lon_correction_factor" by_spec="core.math.cos">
+            <in alias="input">lat_in_radians/output</in>
+        </f>
+
+        <f name="dv_lat_in_rad" by_spec="core.math.inverse_gain">
+            <in alias="input">prop_vel/v/x</in>
+
+            <param alias="inverse_gain">6378000</param>
+        </f>
+
+        <f name="dv_lat_in_rad_deg" by_spec="core.math.rad2deg">
+            <in alias="input">dv_lat_in_rad/output</in>
+        </f>
+
+        <f name="dv_lon_in_rad" by_spec="core.math.inverse_gain">
+            <in alias="input">prop_vel/v/y</in>
+
+            <param alias="inverse_gain">6378000</param>
+        </f>
+
+        <f name="lon_correction" by_spec="core.math.mul">
+            <in alias="input0">dv_lon_in_rad/output</in>
+            <in alias="input1">lon_correction_factor/output</in>
+        </f>
+
+        <f name="dv_lon_in_deg" by_spec="core.math.rad2deg">
+            <in alias="input">lon_correction/output</in>
+        </f>
+
+        <f name="delta_v_vect_conv" by_spec="core.math.vector3f64">
+            <in alias="x">dv_lat_in_rad_deg/output</in>
+            <in alias="y">dv_lon_in_deg/output</in>
+            <in alias="z">prop_vel/v/z</in>
+        </f>
+
+        <f name="prop_pos" by_spec="core.vector.propagate">
+            <in alias="v">pos_compensated/v</in>
+            <in alias="derivative">delta_v_vect_conv/v</in>
+            <in alias="v0">inputs/pos_init</in>
+            <in alias="enable">initial_reg/output</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="vel">prop_vel/v</link>
+        <link alias="pos">prop_pos/v</link>
+    </link_outputs>
+</flow>

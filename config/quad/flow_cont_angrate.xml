@@ -6,18 +6,22 @@
             <i alias="omega" type="core.type.v3f64"/>
             <i alias="desired_omega" type="core.type.v3f64"/>
             <i alias="collective" type="core.type.f64"/>
+            <i alias="collective_auto" type="core.type.f64"/>
             <i alias="direct" type="core.type.v3f64"/>
             <i alias="enable" type="core.type.bool"/>
+            <i alias="enable_auto_collective" type="core.type.bool"/>
             <i alias="arming" type="core.type.bool"/>
             <i alias="pids_gain" type="core.type.f64"/>
         </inputs>
 
         <outputs>
+            <o alias="armed" type="core.type.bool"/>
             <o alias="m1" type="core.type.f64"/>
             <o alias="m2" type="core.type.f64"/>
             <o alias="m3" type="core.type.f64"/>
             <o alias="m4" type="core.type.f64"/>
-            <o alias="armed" type="core.type.bool"/>
+            <o alias="sol" type="core.type.v3f64"/>
+            <o alias="sol_collective" type="core.type.f64"/>
         </outputs>
     </spec>
 
@@ -126,8 +130,14 @@
             <param alias="value">0.15</param>
         </f>
 
+        <f name="collective_auto_mux" by_spec="core.cont.mux">
+            <in alias="select">inputs/enable_auto_collective</in>
+            <in alias="input1">inputs/collective_auto</in>
+            <in alias="input0">inputs/collective</in>
+        </f>
+
         <f name="collective_input" by_spec="core.math.gain">
-            <in alias="input">inputs/collective</in>
+            <in alias="input">collective_auto_mux/output</in>
 
             <param alias="gain">0.85</param>
         </f>
@@ -195,10 +205,12 @@
     </functions>
 
     <link_outputs>
+        <link alias="sol">att_arm_mux/output</link>
+        <link alias="armed">arming_logic/output</link>
         <link alias="m1">mixer/m1</link>
         <link alias="m2">mixer/m2</link>
         <link alias="m3">mixer/m3</link>
         <link alias="m4">mixer/m4</link>
-        <link alias="armed">arming_logic/output</link>
+        <link alias="sol_collective">collective_arm_mux/output</link>
     </link_outputs>
 </flow>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="vel_pos_fusion">
+        <inputs>
+            <i alias="vel" type="core.type.v3f64"/>
+            <i alias="pos" type="core.type.v3f64"/>
+            <i alias="gnss_vel" type="core.type.v3f64"/>
+            <i alias="gnss_pos" type="core.type.v3f64"/>
+            <i alias="gnss_ready" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vel_correction" type="core.type.v3f64"/>
+            <o alias="pos_correction" type="core.type.v3f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="vel_gain" by_spec="core.source.constant">
+            <param alias="value">0.05</param>
+        </f>
+
+        <f name="vel_residual" by_spec="core.vector.sub">
+            <in alias="v1">inputs/vel</in>
+            <in alias="v2">inputs/gnss_vel</in>
+        </f>
+
+        <f name="vel_compensation" by_spec="core.vector.mul_scalar">
+            <in alias="scalar">vel_gain/output</in>
+            <in alias="v">vel_residual/v</in>
+        </f>
+
+        <f name="pos_residual" by_spec="core.vector.sub">
+            <in alias="v1">inputs/pos</in>
+            <in alias="v2">inputs/gnss_pos</in>
+        </f>
+
+        <f name="pos_gain" by_spec="core.source.constant">
+            <param alias="value">0.025</param>
+        </f>
+
+        <f name="pos_compensation" by_spec="core.vector.mul_scalar">
+            <in alias="scalar">pos_gain/output</in>
+            <in alias="v">pos_residual/v</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="vel_correction">vel_compensation/v</link>
+        <link alias="pos_correction">pos_compensation/v</link>
+    </link_outputs>
+</flow>

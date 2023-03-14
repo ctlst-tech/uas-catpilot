@@ -1,0 +1,105 @@
+<ibr>
+    <spec name="ubx_protocol">
+        <annotation>
+        </annotation>
+
+        <inputs>
+            <i alias="rx_frame" annotation="UBX Frame, synced" type="core.type.vector_u8"/>
+        </inputs>
+
+        <outputs>
+            <o alias="ubx_msgs" annotation="Ublox messages parsed" type="core.type.vector_u8"/> <!-- fixme placeholder type -->
+         </outputs>
+
+        <params>
+        </params>
+    </spec>
+
+    <protocol name="ubx">
+        <frame name="ubx">
+            <fs name="msg_id" type="uint16"/>
+            <fs name="length" type="uint16"/>
+            <payload size_field="length" resolve_field="msg_id">
+                <m name="posecef"/>
+                <m name="posllh"/>
+                <m name="velned"/>
+                <m name="relposned"/>
+            </payload>
+        </frame>
+
+        <src_msg name="posecef" id="0x0101">
+            <fs name="iTOW" type="uint32" scale="0.001" unit="s"/>
+            <fs name="ecefX" type="int32" scale="0.01" unit="m"/>
+            <fs name="ecefY" type="int32" scale="0.01" unit="m"/>
+            <fs name="ecefZ" type="int32" scale="0.01" unit="m"/>
+            <fs name="pAcc" type="uint32" scale="0.01" unit="m"/>
+        </src_msg>
+
+        <src_msg name="posllh" id="0x0201">
+            <fs name="iTOW" type="uint32" scale="0.001" unit="s"/>
+            <fs name="lon" type="int32" scale="0.0000001" unit="deg"/>
+            <fs name="lat" type="int32" scale="0.0000001" unit="deg"/>
+            <fs name="height" type="int32" scale="0.001" unit="m"/>
+            <fs name="hMSL" type="int32" scale="0.001" unit="m"/>
+            <fs name="hAcc" type="uint32" scale="0.001" unit="m"/>
+            <fs name="vAcc" type="uint32" scale="0.001" unit="m"/>
+        </src_msg>
+
+        <src_msg name="velned" id="0x1201">
+            <fs name="iTOW" type="uint32" scale="0.001" unit="s"/>
+            <fs name="velN" type="int32" scale="0.01" unit="m/s"/>
+            <fs name="velE" type="int32" scale="0.01" unit="m/s"/>
+            <fs name="velD" type="int32" scale="0.01" unit="m/s"/>
+            <fs name="speed" type="uint32" scale="0.01" unit="m/s"/>
+            <fs name="gSpeed" type="uint32" scale="0.01" unit="m/s"/>
+            <fs name="heading" type="int32" scale="0.00001" unit="deg"/>
+            <fs name="sAcc" type="uint32" scale="0.01" unit="m/s"/>
+            <fs name="cAcc" type="uint32" scale="0.00001" unit="deg"/>
+        </src_msg>
+
+        <src_msg name="relposned" id="0x3C01">
+            <fs name="version" type="uint8"/>
+            <fs name="reserved0" type="uint8"/>
+            <fs name="refStationId" type="uint16"/>
+            <fs name="iTOW" type="uint32" scale="0.001" unit="s"/>
+            <fs name="relPosN" type="int32" scale="0.01" unit="m"/>
+            <fs name="relPosE" type="int32" scale="0.01" unit="m"/>
+            <fs name="relPosD" type="int32" scale="0.01" unit="m"/>
+            <fs name="relPosLength" type="int32" scale="0.01" unit="m"/>
+            <fs name="relPosHeading" type="int32" scale="0.00001" unit="deg"/>
+            <fs name="reserved1" type="uint32"/>
+            <fs name="relPosHPN" type="int8" scale="0.0001" unit="m"/>
+            <fs name="relPosHPE" type="int8" scale="0.0001" unit="m"/>
+            <fs name="relPosHPD" type="int8" scale="0.0001" unit="m"/>
+            <fs name="relPosHPLength" type="int8" scale="0.0001" unit="m"/>
+            <fs name="accN" type="uint32" scale="0.0001" unit="m"/>
+            <fs name="accE" type="uint32" scale="0.0001" unit="m"/>
+            <fs name="accD" type="uint32" scale="0.0001" unit="m"/>
+            <fs name="accLength" type="uint32" scale="0.0001" unit="m"/>
+            <fs name="accHeading" type="uint32" scale="0.00001" unit="deg"/>
+            <fs name="reserved2" type="uint32"/>
+            <fbf name="flags" size="4">
+                <fl name=""/>
+                <fl name="gnssFixOK" offset="0"/>
+                <fl name="diffSoln" offset="1"/>
+                <fl name="relPosValid" offset="2"/>
+                <enb name="carrSoln" offset="3" size="2"/>
+                <fl name="isMoving" offset="5"/>
+                <fl name="refPosMiss" offset="6"/>
+                <fl name="refObsMiss" offset="7"/>
+                <fl name="relPosHeadingValid" offset="8"/>
+                <fl name="relPosNormalized" offset="9"/>
+            </fbf>
+
+        </src_msg>
+    </protocol>
+
+    <!--    <process name="test_udp2eswb" protocol="test" src_msg="msg_sample" src="udp://*:1111" dst="eswb://msg_out" />-->
+    <!--    <process name="test_eswb2udp" protocol="test" src_msg="msg_sample" src="eswb://msg_in" dst="udp://127.0.0.1:1112" />-->
+    <process type="frame" name="ubx" protocol="ubx" frame="ubx" src="func_vec://rx_frame" dst="func://ubx_msgs" />
+<!--    <process name="sens_nav" protocol="fg_interaction" src_msg="nav" src="udp://*:6010" dst="func://nav" />-->
+<!--    <process name="sens_engine" protocol="fg_interaction" src_msg="engine" src="udp://*:6011" dst="func://engine" />-->
+<!--    <process name="cnt_airplane" protocol="fg_interaction" src_msg="control" src="func_br://control" dst="udp://127.0.0.1:6000" />-->
+<!--    <process name="cnt_switches" protocol="fg_interaction" src_msg="switches" src="func_br://switches" dst="udp://127.0.0.1:6001" />-->
+
+</ibr>
