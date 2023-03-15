@@ -24,6 +24,12 @@
         <dir name="cont" eq_channel="16"/>
     </bus>
 
+    <bus name="tm_bus" eq_channel="0" max_topics="128">
+        <event_queue buffer_size="2000" size="32"/>
+
+        <dir name="nav" eq_channel="16"/>
+    </bus>
+
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
         <connect>
             <in alias="omega, a, azimuth">nav_bus/$alias</in>
@@ -182,10 +188,16 @@
         <channel_2_name value="downlink_sk"/>
     </service>
 
-    <service type="eqrb_file" name="service_name">
-        <event_queue_source value="gcu_bus"/>
-        <file_prefix value="gcu"/>
+    <bridge name="raw" priority="2" clk_method="timer" clk_period="2" to="tm_bus/nav">
+        <source alias="omega, a">nav_bus/$alias</source>
+        <source alias="ind_magnitude">nav_bus/magnitude</source>
+    </bridge>
+
+    <service type="eqrb_file_write" name="logger">
+        <event_queue_source value="tm_bus"/>
+        <file_prefix value="logger"/>
         <dst_dir value="/fs/logs"/>
+        <frame_separator value="ebdf"/>
     </service>
 
 </swsys>
