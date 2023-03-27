@@ -6,12 +6,10 @@
 #include "xml_inline.h"
 
 swsys_t core_sys;
-void *catpilot(void *param);
+int catpilot(void);
 
 // TODO: move to c-atom
 #include "swsys.h"
-
-#define CLI_MAX_CMD_LENGTH 128
 
 static char swsys_cmd[CLI_MAX_CMD_LENGTH];
 static char *swsys_cmd_offset;
@@ -48,38 +46,28 @@ int swsys_commander(int argc, char **argv) {
 }
 
 int main(void) {
-    board_start(catpilot, 8*1024);
+    board_start(catpilot, 8192, CLI_PORT, CLI_BAUDRATE);
     while (1) {
     }
 }
 
-void *catpilot(void *param) {
+int catpilot(void) {
     pthread_setname_np((char *)__func__);
-
-    board_init(CLI_PORT, CLI_BAUDRATE);
-
-#ifdef MAINTENANCE_MODE
-    board_debug_mode();
-#else
     xml_inline_mount("/cfg");
     cli_cmd_reg("swsys", swsys_commander);
-
     swsys_rv_t swsys_rv = swsys_load("/cfg/swsys.xml", "/cfg", &core_sys);
     if (swsys_rv == swsys_e_ok) {
-        printf("SWSYS \"%s\" loaded\n", core_sys.name != NULL ? core_sys.name : "no name" );
-
+        printf("SWSYS \"%s\" loaded\n",
+               core_sys.name != NULL ? core_sys.name : "no name");
         LOG_INFO("SYSTEM", "Configuration loading successful");
         swsys_rv = swsys_top_module_start(&core_sys);
         if (swsys_rv != swsys_e_ok) {
             LOG_ERROR("SYSTEM", "Module start error");
-            printf("SWSYS \"%s\" failed to start\n", core_sys.name != NULL ? core_sys.name : "no name");
+            printf("SWSYS \"%s\" failed to start\n",
+                   core_sys.name != NULL ? core_sys.name : "no name");
         }
     } else {
         LOG_ERROR("SYSTEM", "Configuration loading error");
     }
-#endif
-
-    board_fail();
-
-    return NULL;
+    return -1;
 }
