@@ -221,4 +221,12 @@
 
         <channel_2_name value="downlink_sk"/>
     </service>
+
+    <service type="eqrb_file_write" name="logger">
+        <event_queue_source value="gcu_bus"/>
+        <file_prefix value="logger"/>
+        <dst_dir value="/fs/logs"/>
+        <frame_separator value="ebdf"/>
+    </service>
+
 </swsys>

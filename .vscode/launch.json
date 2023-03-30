@@ -15,5 +15,22 @@
                 "catpilot/bsp/mcu/core/stm32/h753/stm32h753.cfg"
             ],
         },
+        {
+            "name": "eswbutil_convert_to_file",
+            "request": "launch",
+            "type": "cppdbg",
+            "cwd": "${workspaceRoot}",
+            "args": ["--convert_to_csv", "/tmp/sin_0.eqrb", "./sin_0.csv"],
+            "program": "${workspaceRoot}/catpilot/c-atom/eswb/build/eswbutil",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
     ]
 }

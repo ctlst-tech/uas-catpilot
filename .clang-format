@@ -3,3 +3,4 @@ IndentWidth: 4
 ColumnLimit: 80
 AlignAfterOpenBracket: Align
 AllowShortFunctionsOnASingleLine: Inline
+AccessModifierOffset: -4
