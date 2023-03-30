@@ -16,7 +16,7 @@
             ],
         },
         {
-            "name": "Host",
+            "name": "eswbutil",
             "request": "launch",
             "type": "cppdbg",
             "cwd": "${workspaceRoot}",
