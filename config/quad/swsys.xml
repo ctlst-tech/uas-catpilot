@@ -18,11 +18,17 @@
     </bus>
 
     <bus name="gcu_bus" eq_channel="0" max_topics="128">
-        <event_queue buffer_size="512" size="48"/>
+        <event_queue buffer_size="1500" size="64"/>
 
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
         <dir name="cont" eq_channel="16"/>
+    </bus>
+
+    <bus name="tm_bus" eq_channel="0" max_topics="128">
+        <event_queue buffer_size="2000" size="32"/>
+
+        <dir name="nav" eq_channel="16"/>
     </bus>
 
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
@@ -203,6 +209,11 @@
         <source alias="vel_body">control_bus/auto/vel_body</source>
     </bridge>
 
+    <bridge name="raw" priority="2" clk_method="timer" clk_period="2" to="tm_bus/nav">
+        <source alias="omega, a">nav_bus/$alias</source>
+        <source alias="ind_magnitude">nav_bus/magnitude</source>
+    </bridge>
+
     <service type="sdtl" name="gcu_link">
         <baudrate value="57600"/>
 
@@ -224,7 +235,7 @@
 
     <service type="eqrb_file_write" name="logger">
         <event_queue_source value="gcu_bus"/>
-        <file_prefix value="logger"/>
+        <file_prefix value="gcu_bus"/>
         <dst_dir value="/fs/logs"/>
         <frame_separator value="ebdf"/>
     </service>
