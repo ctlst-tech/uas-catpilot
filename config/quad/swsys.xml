@@ -29,6 +29,7 @@
         <event_queue buffer_size="2000" size="32"/>
 
         <dir name="nav" eq_channel="16"/>
+        <dir name="odrive" eq_channel="16"/>
     </bus>
 
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
@@ -177,6 +178,13 @@
             <out alias="Vbat_min">gcu_bus/hk/Vbat_min</out>
             <out alias="Vbat_max">gcu_bus/hk/Vbat_max</out>
             <out alias="Curr, Curr_min, Curr_max">gcu_bus/hk/$alias</out>
+        </connect>
+    </task>
+
+    <task type="flow" config="flow_cont_odrive.xml" name="odrive" priority="3" clk_method="freerun">
+        <connect>
+            <in alias="pos">control_bus/rc/direct_collective</in>
+            <out alias="cur, vol">tm_bus/odrive/$alias</out>
         </connect>
     </task>
 
