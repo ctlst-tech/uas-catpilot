@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="test"/>
+    <functions>
+        <f name="test" by_spec="ctlst.test"/>
+    </functions>
+</flow>

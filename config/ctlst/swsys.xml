@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<swsys name="target">
+
+    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="10"/>
+
+</swsys>

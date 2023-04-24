@@ -1,7 +1,7 @@
 {
     "cmake.setBuildTypeOnMultiConfig": true,
     "cmake.configureSettings": {
-        "BOARD": "cube",
+        "BOARD": "ctlst",
         "CLI_PORT": "TELEM2",
         "CLI_BAUDRATE": "57600",
         "OS_MONITOR": "ON",
