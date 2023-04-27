@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="sensors"/>
+    <functions>
+        <f name="imu" by_spec="ctlst.sensors.imu">
+            <param alias="freq">1</param>
+            <param alias="prio_delta">50</param>
+        <f/>
+    </functions>
+</flow>

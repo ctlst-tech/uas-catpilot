@@ -110,9 +110,8 @@ add_executable(catom-launcher
     ${ATOMICS_REG}
     # FIXME
     catpilot/c-atom/function/conv.c
-    catpilot/c-atom/function/error.c)
-
-target_link_libraries(catom-launcher PUBLIC c-atom-launcher-static ${ATOMICS_LIBS})
+    catpilot/c-atom/function/error.c
+)
 
 add_executable(${PROJECT_NAME}.elf
     main.c
@@ -122,6 +121,13 @@ add_executable(${PROJECT_NAME}.elf
     # FIXME
     catpilot/c-atom/function/error.c
     catpilot/c-atom/function/conv.c
+)
+
+target_link_libraries(catom-launcher PUBLIC 
+    os-static
+    bsp-static
+    c-atom-launcher-static 
+    ${ATOMICS_LIBS}
 )
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC

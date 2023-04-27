@@ -3,6 +3,6 @@
 <flow>
     <spec name="test"/>
     <functions>
-        <f name="test" by_spec="ctlst.test"/>
+        <f name="test" by_spec="ctlst.test.print"/>
     </functions>
 </flow>

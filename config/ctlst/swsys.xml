@@ -2,6 +2,7 @@
 
 <swsys name="target">
 
-    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="10"/>
+    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="1000"/>
+    <task type="flow" config="flow_sensors.xml" name="sensors" priority="4" clk_method="freerun"/>
 
 </swsys>
