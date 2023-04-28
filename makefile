@@ -6,7 +6,7 @@ atomics:
 
 xmlinline:
 	@echo Inlining XML configs
-	@./catpilot/c-atom/tools/xml2c_inliner.py --cfg_path config/test/ --out xml_inline_cfgs.c
+	@./catpilot/c-atom/tools/xml2c_inliner.py --cfg_path config/ctlst/ --out xml_inline_cfgs.c
 
 bblocks:
 	@./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --bbxml bblocks.xml --atomics_dirs catpilot:catpilot/atomics/ catom:catpilot/c-atom/atomics/

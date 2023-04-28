@@ -2,7 +2,16 @@
 
 <flow>
     <spec name="test"/>
+    <outputs>
+        <o alias="sine" type="core.type.f64"/>
+    </outputs>
     <functions>
         <f name="test" by_spec="ctlst.test.print"/>
+        <f name="sine" by_spec="core.source.sin">
+            <param alias="period">1.0</param>
+        </f>
     </functions>
+    <link_outputs>
+        <link alias="sine">sine/out</link>
+    </link_outputs>
 </flow>

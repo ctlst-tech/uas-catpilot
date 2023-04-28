@@ -128,6 +128,7 @@ target_link_libraries(catom-launcher PUBLIC
     bsp-static
     c-atom-launcher-static 
     ${ATOMICS_LIBS}
+    -lsocket
 )
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC

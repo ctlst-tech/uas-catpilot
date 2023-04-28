@@ -2,7 +2,37 @@
 
 <swsys name="target">
 
-    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="1000"/>
+    <bus name="gcu_bus" eq_channel="0" max_topics="128">
+        <event_queue buffer_size="1500" size="64"/>
+        <dir name="hk" eq_channel="16"/>
+    </bus>
+
+    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="1000">
+        <connect>
+            <out alias="sine">gcu_bus/hk/sin</out>
+        </connect>
+    </task>
+
     <task type="flow" config="flow_sensors.xml" name="sensors" priority="4" clk_method="freerun"/>
 
+    <service type="sdtl" name="gcu_link">
+        <type value="udp"/>
+
+        <ip value="192.168.1.2"/>
+        <port value="10000"/>
+        <server_ip value="0.0.0.0"/>
+        <server_port value="10001"/>
+
+        <channel id="1" name="downlink" type="rel"/>
+        <channel id="2" name="downlink_sk" type="unrel"/>
+    </service>
+
+    <!-- <service type="sdtl" name="gcu_link">
+        <baudrate value="57600"/>
+
+        <serial_port value="/dev/ttyS0"/>
+
+        <channel id="1" name="downlink" type="rel"/>
+        <channel id="2" name="downlink_sk" type="unrel"/>
+    </service> -->
 </swsys>
