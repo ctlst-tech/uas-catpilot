@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<swsys name="target">
-
+<swsys name="drone">
     <bus name="gcu_bus" eq_channel="0" max_topics="128">
-        <event_queue buffer_size="1500" size="64"/>
+        <event_queue buffer_size="512" size="48"/>
         <dir name="hk" eq_channel="16"/>
     </bus>
 
-    <task type="flow" config="flow_test.xml" name="test" priority="3" clk_method="timer" clk_period="1000">
+    <task type="flow" config="flow_test.xml" name="test" priority="10" clk_method="timer" clk_period="20">
         <connect>
-            <out alias="sine">gcu_bus/hk/sin</out>
+            <out alias="sin1, sin2">gcu_bus/hk/$alias</out>
         </connect>
     </task>
 
@@ -19,20 +18,19 @@
         <type value="udp"/>
 
         <ip value="192.168.1.2"/>
-        <port value="10000"/>
+        <port value="20001"/>
         <server_ip value="0.0.0.0"/>
-        <server_port value="10001"/>
+        <server_port value="20000"/>
 
         <channel id="1" name="downlink" type="rel"/>
         <channel id="2" name="downlink_sk" type="unrel"/>
+        <channel id="4" name="cmd" type="unrel"/>
     </service>
 
-    <!-- <service type="sdtl" name="gcu_link">
-        <baudrate value="57600"/>
-
-        <serial_port value="/dev/ttyS0"/>
-
-        <channel id="1" name="downlink" type="rel"/>
-        <channel id="2" name="downlink_sk" type="unrel"/>
-    </service> -->
+    <service type="eqrb_sdtl" name="debug_sdtl">
+        <event_queue_source value="gcu_bus"/>
+        <sdtl_service value="gcu_link"/>
+        <channel_1_name value="downlink"/>
+        <channel_2_name value="downlink_sk"/>
+    </service>
 </swsys>

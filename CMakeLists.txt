@@ -124,11 +124,11 @@ add_executable(${PROJECT_NAME}.elf
 )
 
 target_link_libraries(catom-launcher PUBLIC 
-    os-static
-    bsp-static
+    # os-static
+    # bsp-static
     c-atom-launcher-static 
     ${ATOMICS_LIBS}
-    -lsocket
+    socket
 )
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC
