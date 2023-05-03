@@ -35,11 +35,18 @@ mon.bridge_sdtl_udp(ip_in='0.0.0.0', port_in='20001',
                     bridge_to='telemetry', 
                     additional_channels=[cmd_sdtl_channel])
 
-hk_sin1 = EwChart([DataSourceEswbTopic('sin1', path=f'{basic_topics_root}/hk/sin1'),], data_range=(-1, +1))
-hk_sin2 = EwChart([DataSourceEswbTopic('sin2', path=f'{basic_topics_root}/hk/sin2'),], data_range=(-1, +1))
+sin = EwChart([DataSourceEswbTopic('sin1', path=f'{basic_topics_root}/hk/sin1'),
+               DataSourceEswbTopic('sin2', path=f'{basic_topics_root}/hk/sin2')])
+a = EwChart([DataSourceEswbTopic('ax', path=f'{basic_topics_root}/hk/ax'),
+             DataSourceEswbTopic('ay', path=f'{basic_topics_root}/hk/ay'),
+             DataSourceEswbTopic('az', path=f'{basic_topics_root}/hk/az')])
+omega = EwChart([DataSourceEswbTopic('wx', path=f'{basic_topics_root}/hk/wx', mult=57.32),
+                 DataSourceEswbTopic('wy', path=f'{basic_topics_root}/hk/wy', mult=57.32),
+                 DataSourceEswbTopic('wz', path=f'{basic_topics_root}/hk/wz', mult=57.32)])
 
-front_tab.add_widget(hk_sin1)
-front_tab.add_widget(hk_sin2)
+# front_tab.add_widget(sin)
+front_tab.add_widget(a)
+front_tab.add_widget(omega)
 sdtl_tab.add_widget(EwGroup([mon.get_stat_widget()]))
 
 mon.app_window.print_bus_tree()

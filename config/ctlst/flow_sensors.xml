@@ -2,19 +2,29 @@
 
 <flow>
     <spec name="sensors">
-        <inputs>
-        </inputs>
         <outputs>
+            <o alias="ax" type="core.type.f64"/>
+            <o alias="ay" type="core.type.f64"/>
+            <o alias="az" type="core.type.f64"/>
+            <o alias="wx" type="core.type.f64"/>
+            <o alias="wy" type="core.type.f64"/>
+            <o alias="wz" type="core.type.f64"/>
         </outputs>
     </spec>
 
     <functions>
         <f name="imu" by_spec="ctlst.sensors.imu">
-            <param alias="freq">1</param>
+            <param alias="freq">500</param>
             <param alias="prio_delta">50</param>
-        <f/>
+        </f>
     </functions>
 
     <link_outputs>
+        <link alias="ax">imu/ax</link>
+        <link alias="ay">imu/ay</link>
+        <link alias="az">imu/az</link>
+        <link alias="wx">imu/wx</link>
+        <link alias="wy">imu/wy</link>
+        <link alias="wz">imu/wz</link>
     </link_outputs>
 </flow>

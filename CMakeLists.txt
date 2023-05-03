@@ -45,6 +45,7 @@ elseif (BOARD STREQUAL "ctlst")
     set(MCU_MODEL 7020)
     set(OS "qnx")
     set(FS "qnx")
+    set(IC_CTLST "ON")
 
     set(ESWB_EQRB_NO_SOCKET "1")
     set(CATOM_NO_SOCKET "1")
