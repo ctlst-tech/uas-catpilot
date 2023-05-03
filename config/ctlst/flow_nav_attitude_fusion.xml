@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="nav_attitude_filter">
+        <inputs>
+            <i alias="q" type="core.type.quat"/>
+            <i alias="a" type="core.type.v3f64"/>
+            <i alias="azimuth" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="euler_correction" type="core.type.v3f64"/>
+            <o alias="roll" type="core.type.f64"/>
+            <o alias="pitch" type="core.type.f64"/>
+            <o alias="yaw" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="accel_horizon" by_spec="core.nav.att_from_accel">
+            <in alias="a">inputs/a</in>
+        </f>
+
+        <f name="to_euler" by_spec="core.quat.to_euler">
+            <in alias="q">inputs/q</in>
+        </f>
+
+        <f name="roll_err" by_spec="core.math.sub">
+            <in alias="input0">to_euler/roll</in>
+            <in alias="input1">accel_horizon/roll</in>
+        </f>
+
+        <f name="pitch_err" by_spec="core.math.sub">
+            <in alias="input0">to_euler/pitch</in>
+            <in alias="input1">accel_horizon/pitch</in>
+        </f>
+
+        <f name="yaw_err" by_spec="core.math.sub_rad_angle">
+            <in alias="input0">to_euler/yaw</in>
+            <in alias="input1">inputs/azimuth</in>
+        </f>
+
+        <f name="roll_adjustment" by_spec="core.math.gain">
+            <in alias="input">roll_err/output</in>
+
+            <param alias="gain">0.0005</param>
+        </f>
+
+        <f name="pitch_adjustment" by_spec="core.math.gain">
+            <in alias="input">pitch_err/output</in>
+
+            <param alias="gain">0.0005</param>
+        </f>
+
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="yaw_adjustment" by_spec="core.math.gain">
+            <!-- <in alias="input">yaw_err/output</in> -->
+            <in alias="input">zero/output</in>
+
+            <param alias="gain">0.0005</param>
+        </f>
+
+        <f name="to_euler_out" by_spec="core.quat.to_euler">
+            <in alias="q">inputs/q</in>
+        </f>
+
+        <f name="euler_corrections" by_spec="core.math.vector3f64">
+            <in alias="z">yaw_adjustment/output</in>
+            <in alias="y">pitch_adjustment/output</in>
+            <in alias="x">roll_adjustment/output</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="euler_correction">euler_corrections/v</link>
+        <link alias="roll">to_euler_out/roll</link>
+        <link alias="pitch">to_euler_out/pitch</link>
+        <link alias="yaw">to_euler_out/yaw</link>
+    </link_outputs>
+</flow>

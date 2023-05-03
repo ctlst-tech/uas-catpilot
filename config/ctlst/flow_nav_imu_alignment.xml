@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="nav_imu_alignment">
+        <inputs>
+            <i alias="omega" type="core.type.v3f64"/>
+            <i alias="a" type="core.type.v3f64"/>
+            <i alias="azimuth" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="omega_bias" type="core.type.v3f64"/>
+            <o alias="q0" type="core.type.quat"/>
+            <o alias="imu_reset" type="core.type.bool"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="bias_calib_proto" by_spec="core.filter.mvng_av">
+            <in alias="i1">inputs/omega/x</in>
+            <in alias="i2">inputs/omega/y</in>
+            <in alias="i3">inputs/omega/z</in>
+        </f>
+
+        <f name="omega_bias_concat" by_spec="core.math.vector3f64">
+            <in alias="x">bias_calib_proto/a1</in>
+            <in alias="y">bias_calib_proto/a2</in>
+            <in alias="z">bias_calib_proto/a3</in>
+        </f>
+
+        <f name="accel_horizon" by_spec="core.nav.att_from_accel">
+            <in alias="a">inputs/a</in>
+        </f>
+
+        <f name="initial_yaw" by_spec="core.source.constant">
+            <param alias="value">0.0</param>
+        </f>
+
+        <f name="initial_quat" by_spec="core.quat.from_euler">
+            <in alias="roll">accel_horizon/roll</in>
+            <in alias="pitch">accel_horizon/pitch</in>
+            <in alias="yaw">initial_yaw/output</in>
+        </f>
+
+        <f name="imu_reset" by_spec="core.logical.not">
+            <in alias="input">bias_calib_proto/filled</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="omega_bias">omega_bias_concat/v</link>
+        <link alias="q0">initial_quat/q</link>
+        <link alias="imu_reset">imu_reset/output</link>
+    </link_outputs>
+</flow>

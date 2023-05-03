@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="nav_attitude_prop">
+        <inputs>
+            <i alias="a_raw" type="core.type.v3f64"/>
+            <i alias="omega_raw" type="core.type.v3f64"/>
+            <i alias="roll" type="core.type.f64"/>
+            <i alias="euler_correction" type="core.type.v3f64"/>
+            <i alias="omega_bias" type="core.type.v3f64"/>
+            <i alias="q0" type="core.type.quat"/>
+            <i alias="q" type="core.type.quat"/>
+            <i alias="reset" type="core.type.bool"/>
+        </inputs>
+
+        <outputs>
+            <o alias="a" type="core.type.v3f64"/>
+            <o alias="omega" type="core.type.v3f64"/>
+            <o alias="q" type="core.type.quat"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="ax" by_spec="core.filter.moving_average">
+            <in alias="input">inputs/a_raw/x</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="ay" by_spec="core.filter.moving_average">
+            <in alias="input">inputs/a_raw/y</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="az" by_spec="core.filter.moving_average">
+            <in alias="input">inputs/a_raw/z</in>
+
+            <param alias="selection_size">5</param>
+        </f>
+
+        <f name="omega_x_biased" by_spec="core.math.sub">
+            <in alias="input0">inputs/omega_raw/x</in>
+            <in alias="input1">inputs/omega_bias/x</in>
+        </f>
+
+        <f name="omega_y_biased" by_spec="core.math.sub">
+            <in alias="input0">inputs/omega_raw/y</in>
+            <in alias="input1">inputs/omega_bias/y</in>
+        </f>
+
+        <f name="omega_z_biased" by_spec="core.math.sub">
+            <in alias="input0">inputs/omega_raw/z</in>
+            <in alias="input1">inputs/omega_bias/z</in>
+        </f>
+
+        <f name="omega_biased" by_spec="core.math.vector3f64">
+            <in alias="x">omega_x_biased/output</in>
+            <in alias="y">omega_y_biased/output</in>
+            <in alias="z">omega_z_biased/output</in>
+        </f>
+
+        <f name="correction" by_spec="core.quat.euler_correction">
+            <in alias="roll">inputs/roll</in>
+            <in alias="q">inputs/q</in>
+            <in alias="roll_err">inputs/euler_correction/x</in>
+            <in alias="pitch_err">inputs/euler_correction/y</in>
+            <in alias="yaw_err">inputs/euler_correction/z</in>
+        </f>
+
+        <f name="integrate_att" by_spec="core.quat.prop">
+            <in alias="q">correction/q</in>
+            <in alias="omega">omega_biased/v</in>
+            <in alias="q0">inputs/q0</in>
+            <in alias="reset">inputs/reset</in>
+        </f>
+
+        <f name="concat_accel" by_spec="core.math.vector3f64">
+            <in alias="x">ax/output</in>
+            <in alias="y">ay/output</in>
+            <in alias="z">az/output</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="a">concat_accel/v</link>
+        <link alias="omega">omega_biased/v</link>
+        <link alias="q">integrate_att/q</link>
+    </link_outputs>
+</flow>

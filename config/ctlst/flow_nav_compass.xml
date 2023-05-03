@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="nav_compass">
+        <inputs>
+            <i alias="q" type="core.type.quat"/>
+        </inputs>
+
+        <outputs>
+            <o alias="magnitude" type="core.type.f64"/>
+            <o alias="azimuth" type="core.type.f64"/>
+            <o alias="induction" type="core.type.v3f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="zero" by_spec="core.source.constant">
+            <param alias="value">0</param>
+        </f>
+
+        <f name="mag_concat" by_spec="core.math.vector3f64">
+            <in alias="z">zero/output</in>
+            <in alias="x">zero/output</in>
+            <in alias="y">zero/output</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="azimuth">zero/output</link>
+        <link alias="magnitude">zero/output</link>
+        <link alias="induction">mag_concat/v</link>
+    </link_outputs>
+</flow>
