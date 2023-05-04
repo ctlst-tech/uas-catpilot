@@ -64,22 +64,24 @@ tadc = DataSourceEswbTopic('tadc', path=f'{basic_topics_root}/dev/imu/t/tadc')
 sin = EwChart([DataSourceEswbTopic('sin1', path=f'{basic_topics_root}/hk/sin1'),
                DataSourceEswbTopic('sin2', path=f'{basic_topics_root}/hk/sin2')])
 
-accel = EwChart([ax, ay, az])
-gyro = EwChart([wx, wy, wz])
-roll_pitch = EwChart([roll, pitch])
-yaw = EwChart([yaw])
-accel_gyro_temp = EwChart([tax, tay, taz, twx, twy, twz])
+accel = EwChart([ax, ay, az], title="Accelerations", 
+                labels={'left': 'm/s²', 'bottom': 'time, s'})
+gyro = EwChart([wx, wy, wz], title="Angular rates", 
+               labels={'left': '1/s', 'bottom': 'time, s'})
+roll_pitch = EwChart([roll, pitch], title="Angles", 
+                     labels={'left': 'grad', 'bottom': 'time, s'})
+yaw = EwChart([yaw], title="Angles")
+accel_gyro_temp = EwChart([tax, tay, taz, twx, twy, twz], title="Sensor temperatures", labels={'left': '°C', 'bottom': 'time, s'})
 
-pstat_pdyn = EwChart([pstat, pdyn])
-pdiff = EwChart([pdiff])
-adc_temp = EwChart([tadc])
+pstat_pdyn = EwChart([pstat, pdyn], title="Static and dynamic pressure")
+pdiff = EwChart([pdiff], title="Differential pressure")
+adc_temp = EwChart([tadc], title="ADC temperature")
 
-altitude_bar = EwChart([altitude_bar])
-airspeed = EwChart([airspeed])
+altitude_bar = EwChart([altitude_bar], title="Barometric altitude")
+airspeed = EwChart([airspeed], title="Airspeed")
 
 main_tab.add_widget(EwGroup([accel, gyro, roll_pitch, accel_gyro_temp]))
-main_tab.add_widget(EwGroup([pstat_pdyn, pdiff, adc_temp]))
-main_tab.add_widget(EwGroup([altitude_bar, airspeed]))
+main_tab.add_widget(EwGroup([pstat_pdyn, pdiff, adc_temp, altitude_bar, airspeed]))
 
 hk_tab.add_widget(sin)
 
