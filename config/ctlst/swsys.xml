@@ -6,13 +6,14 @@
         <dir name="nav" eq_channel="16"/>
         <dir name="dev" eq_channel="16">
             <dir name="imu" eq_channel="16"/>
+            <dir name="adc" eq_channel="16"/>
         </dir>
     </bus>
 
     <bus name="gen_bus" eq_channel="1" max_topics="128"/>
     <bus name="nav_bus" eq_channel="1" max_topics="128"/>
-    <bus name="imu_bus" eq_channel="2" max_topics="128"/>
-    <bus name="adc_bus" eq_channel="2" max_topics="128"/>
+    <bus name="imu_bus" eq_channel="1" max_topics="128"/>
+    <bus name="adc_bus" eq_channel="1" max_topics="128"/>
 
     <task type="flow" config="flow_generators.xml" name="generators" priority="1" clk_method="timer" clk_period="10">
         <connect>
@@ -20,7 +21,7 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_sens_imu.xml" name="sensors" priority="11" clk_method="freerun">
+    <task type="flow" config="flow_imu.xml" name="sensors" priority="11" clk_method="freerun">
         <connect>
             <out alias="a_raw, omega_raw">nav_bus/$alias</out>
             <out alias="pdiff, pstat, pdyn">nav_bus/$alias</out>
@@ -65,9 +66,12 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_sens_adc.xml" name="sens_adc" priority="6" clk_method="timer" clk_period="20">
+    <task type="flow" config="flow_adc.xml" name="sens_adc" priority="6" clk_method="timer" clk_period="20">
         <connect>
-            <out alias="voltage">adc_bus/$alias</out>
+            <out alias="ch0, ch1, ch2, ch3">adc_bus/$alias</out>
+            <out alias="ch4, ch5, ch6, ch7">adc_bus/$alias</out>
+            <out alias="ch8, ch9, ch10, ch11">adc_bus/$alias</out>
+            <out alias="ch12, ch13, ch14, ch15">adc_bus/$alias</out>
         </connect>
     </task>
 
@@ -93,7 +97,10 @@
     </bridge>
 
     <bridge name="voltage" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/dev/adc">
-        <source alias="voltage">adc_bus/$alias</source>
+        <source alias="ch0, ch1, ch2, ch3">adc_bus/$alias</source>
+        <source alias="ch4, ch5, ch6, ch7">adc_bus/$alias</source>
+        <source alias="ch8, ch9, ch10, ch11">adc_bus/$alias</source>
+        <source alias="ch12, ch13, ch14, ch15">adc_bus/$alias</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

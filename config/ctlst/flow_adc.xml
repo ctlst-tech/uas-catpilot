@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="sens_adc">
+        <inputs>
+        </inputs>
+
+        <outputs>
+            <o alias="ch0" type="core.type.f64"/>
+            <o alias="ch1" type="core.type.f64"/>
+            <o alias="ch2" type="core.type.f64"/>
+            <o alias="ch3" type="core.type.f64"/>
+            <o alias="ch4" type="core.type.f64"/>
+            <o alias="ch5" type="core.type.f64"/>
+            <o alias="ch6" type="core.type.f64"/>
+            <o alias="ch7" type="core.type.f64"/>
+            <o alias="ch8" type="core.type.f64"/>
+            <o alias="ch9" type="core.type.f64"/>
+            <o alias="ch10" type="core.type.f64"/>
+            <o alias="ch11" type="core.type.f64"/>
+            <o alias="ch12" type="core.type.f64"/>
+            <o alias="ch13" type="core.type.f64"/>
+            <o alias="ch14" type="core.type.f64"/>
+            <o alias="ch15" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="adc_ch0" by_spec="ctlst.io.adc">
+            <param alias="channel">0</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch1" by_spec="ctlst.io.adc">
+            <param alias="channel">1</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch2" by_spec="ctlst.io.adc">
+            <param alias="channel">2</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch3" by_spec="ctlst.io.adc">
+            <param alias="channel">3</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch4" by_spec="ctlst.io.adc">
+            <param alias="channel">4</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch5" by_spec="ctlst.io.adc">
+            <param alias="channel">5</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch6" by_spec="ctlst.io.adc">
+            <param alias="channel">6</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch7" by_spec="ctlst.io.adc">
+            <param alias="channel">7</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch8" by_spec="ctlst.io.adc">
+            <param alias="channel">8</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch9" by_spec="ctlst.io.adc">
+            <param alias="channel">9</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch10" by_spec="ctlst.io.adc">
+            <param alias="channel">10</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch11" by_spec="ctlst.io.adc">
+            <param alias="channel">11</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch12" by_spec="ctlst.io.adc">
+            <param alias="channel">12</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch13" by_spec="ctlst.io.adc">
+            <param alias="channel">13</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch14" by_spec="ctlst.io.adc">
+            <param alias="channel">14</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+        <f name="adc_ch15" by_spec="ctlst.io.adc">
+            <param alias="channel">15</param>
+            <param alias="period">500</param>
+            <param alias="bias">0</param>
+            <param alias="scale">1</param>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="ch0">adc_ch0/output</link>
+        <link alias="ch1">adc_ch1/output</link>
+        <link alias="ch2">adc_ch2/output</link>
+        <link alias="ch3">adc_ch3/output</link>
+        <link alias="ch4">adc_ch4/output</link>
+        <link alias="ch5">adc_ch5/output</link>
+        <link alias="ch6">adc_ch6/output</link>
+        <link alias="ch7">adc_ch7/output</link>
+        <link alias="ch8">adc_ch8/output</link>
+        <link alias="ch9">adc_ch9/output</link>
+        <link alias="ch10">adc_ch10/output</link>
+        <link alias="ch11">adc_ch11/output</link>
+        <link alias="ch12">adc_ch12/output</link>
+        <link alias="ch13">adc_ch13/output</link>
+        <link alias="ch14">adc_ch14/output</link>
+        <link alias="ch15">adc_ch15/output</link>
+    </link_outputs>
+</flow>

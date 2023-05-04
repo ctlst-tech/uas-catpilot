@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="sensors">
+        <outputs>
+            <o alias="a_raw" type="core.type.v3f64"/>
+            <o alias="omega_raw" type="core.type.v3f64"/>
+            <o alias="pdiff" type="core.type.f64"/>
+            <o alias="pstat" type="core.type.f64"/>
+            <o alias="pdyn" type="core.type.f64"/>
+            <o alias="tadc" type="core.type.f64"/>
+            <o alias="ta" type="core.type.v3f64"/>
+            <o alias="tw" type="core.type.v3f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="imu1" by_spec="ctlst.sensors.imu">
+            <param alias="freq">500</param>
+        </f>
+
+        <f name="a" by_spec="core.math.vector3f64">
+            <in alias="x">imu1/ax</in>
+            <in alias="y">imu1/ay</in>
+            <in alias="z">imu1/az</in>
+        </f>
+
+        <f name="omega" by_spec="core.math.vector3f64">
+            <in alias="x">imu1/wx</in>
+            <in alias="y">imu1/wy</in>
+            <in alias="z">imu1/wz</in>
+        </f>
+
+        <f name="ta" by_spec="core.math.vector3f64">
+            <in alias="x">imu1/tax</in>
+            <in alias="y">imu1/tay</in>
+            <in alias="z">imu1/taz</in>
+        </f>
+
+        <f name="tw" by_spec="core.math.vector3f64">
+            <in alias="x">imu1/twx</in>
+            <in alias="y">imu1/twy</in>
+            <in alias="z">imu1/twz</in>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="a_raw">a/v</link>
+        <link alias="omega_raw">omega/v</link>
+        <link alias="pdiff">imu1/pdiff</link>
+        <link alias="pstat">imu1/pstat</link>
+        <link alias="pdyn">imu1/pdyn</link>
+        <link alias="tadc">imu1/tadc</link>
+        <link alias="ta">ta/v</link>
+        <link alias="tw">tw/v</link>
+    </link_outputs>
+</flow>
