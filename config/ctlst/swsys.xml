@@ -12,6 +12,7 @@
     <bus name="gen_bus" eq_channel="1" max_topics="128"/>
     <bus name="nav_bus" eq_channel="1" max_topics="128"/>
     <bus name="imu_bus" eq_channel="2" max_topics="128"/>
+    <bus name="adc_bus" eq_channel="2" max_topics="128"/>
 
     <task type="flow" config="flow_generators.xml" name="generators" priority="1" clk_method="timer" clk_period="10">
         <connect>
@@ -19,7 +20,7 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_sensors.xml" name="sensors" priority="11" clk_method="freerun">
+    <task type="flow" config="flow_sens_imu.xml" name="sensors" priority="11" clk_method="freerun">
         <connect>
             <out alias="a_raw, omega_raw">nav_bus/$alias</out>
             <out alias="pdiff, pstat, pdyn">nav_bus/$alias</out>
@@ -64,6 +65,12 @@
         </connect>
     </task>
 
+    <task type="flow" config="flow_sens_adc.xml" name="sens_adc" priority="6" clk_method="timer" clk_period="20">
+        <connect>
+            <out alias="voltage">adc_bus/$alias</out>
+        </connect>
+    </task>
+
     <bridge name="ang" priority="2" clk_method="timer" clk_period="20" to="gcu_bus/nav">
         <source alias="omega, a">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
@@ -83,6 +90,10 @@
 
     <bridge name="adc" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/dev/imu">
         <source alias="tadc, ta, tw">imu_bus/$alias</source>
+    </bridge>
+
+    <bridge name="voltage" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/dev/adc">
+        <source alias="voltage">adc_bus/$alias</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">
