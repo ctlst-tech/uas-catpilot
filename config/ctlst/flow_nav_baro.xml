@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="nav_baro">
+        <inputs>
+            <i alias="pstat" type="core.type.f64"/>
+            <i alias="pdyn" type="core.type.f64"/>
+            <i alias="pdiff" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="altitude_bar" type="core.type.f64"/>
+            <o alias="airspeed" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="ads_altitude" by_spec="core.math.polynomial">
+            <in alias="input">inputs/pstat</in>
+            <param alias="coeffs">
+                19632.26562,
+                -0.5092198253,
+                0.000006845520147,
+                -0.000000000054517124923,
+                0.00000000000000017473262377,
+            </param>
+        </f>
+
+        <f name="ads_airspeed" by_spec="core.math.polynomial">
+            <in alias="input">inputs/pdiff</in>
+            <param alias="coeffs">
+                0.0,
+                4.62458657,
+                -0.000553980185,
+                -0.00000468428233,
+            </param>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="altitude_bar">ads_altitude/output</link>
+        <link alias="airspeed">ads_airspeed/output</link>
+    </link_outputs>
+</flow>

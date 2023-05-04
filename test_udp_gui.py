@@ -21,8 +21,7 @@ args = args_parser.args
 
 mon = EswbMonitor(monitor_bus_name=mon_bus_name, argv=sys.argv, tabs=True, )
 
-imu_tab = mon.add_tab('IMU')
-pres_tab = mon.add_tab('Pressure')
+main_tab = mon.add_tab('Main')
 hk_tab = mon.add_tab('Houskeeping')
 sdtl_tab = mon.add_tab('SDTL')
 
@@ -37,43 +36,50 @@ mon.bridge_sdtl_udp(ip_in='0.0.0.0', port_in='20001',
                     bridge_to='telemetry', 
                     additional_channels=[cmd_sdtl_channel])
 
-# IMU
-a = EwChart([DataSourceEswbTopic('ax', path=f'{basic_topics_root}/nav/nav/a/x'),
-             DataSourceEswbTopic('ay', path=f'{basic_topics_root}/nav/nav/a/y'),
-             DataSourceEswbTopic('az', path=f'{basic_topics_root}/nav/nav/a/z')])
-omega = EwChart([DataSourceEswbTopic('wx', path=f'{basic_topics_root}/nav/nav/omega/x', mult=57.32),
-                 DataSourceEswbTopic('wy', path=f'{basic_topics_root}/nav/nav/omega/y', mult=57.32),
-                 DataSourceEswbTopic('wz', path=f'{basic_topics_root}/nav/nav/omega/z', mult=57.32)])
-roll_pitch = EwChart([DataSourceEswbTopic('roll', path=f'{basic_topics_root}/nav/nav/roll', mult=57.32),
-                 DataSourceEswbTopic('pitch', path=f'{basic_topics_root}/nav/nav/pitch', mult=57.32)])
-yaw = EwChart([DataSourceEswbTopic('yaw', path=f'{basic_topics_root}/nav/nav/yaw', mult=57.32)])
-temp = EwChart([DataSourceEswbTopic('tax', path=f'{basic_topics_root}/hk/hk/ta/x'),
-             DataSourceEswbTopic('tay', path=f'{basic_topics_root}/hk/hk/ta/y'),
-             DataSourceEswbTopic('taz', path=f'{basic_topics_root}/hk/hk/ta/z'),
-             DataSourceEswbTopic('twx', path=f'{basic_topics_root}/hk/hk/tw/x'),
-             DataSourceEswbTopic('twy', path=f'{basic_topics_root}/hk/hk/tw/y'),
-             DataSourceEswbTopic('twz', path=f'{basic_topics_root}/hk/hk/tw/z')])
+ax = DataSourceEswbTopic('ax', path=f'{basic_topics_root}/nav/ang/a/x')
+ay = DataSourceEswbTopic('ay', path=f'{basic_topics_root}/nav/ang/a/y')
+az = DataSourceEswbTopic('az', path=f'{basic_topics_root}/nav/ang/a/z')
+wx = DataSourceEswbTopic('wx', path=f'{basic_topics_root}/nav/ang/omega/x', mult=57.32)
+wy = DataSourceEswbTopic('wy', path=f'{basic_topics_root}/nav/ang/omega/y', mult=57.32)
+wz = DataSourceEswbTopic('wz', path=f'{basic_topics_root}/nav/ang/omega/z', mult=57.32)
+roll = DataSourceEswbTopic('roll', path=f'{basic_topics_root}/nav/ang/roll', mult=57.32)
+pitch = DataSourceEswbTopic('pitch', path=f'{basic_topics_root}/nav/ang/pitch', mult=57.32)
+yaw = DataSourceEswbTopic('yaw', path=f'{basic_topics_root}/nav/ang/yaw', mult=57.32)
 
-# Pressure
-p = EwChart([DataSourceEswbTopic('pstat', path=f'{basic_topics_root}/nav/nav/pstat'),
-             DataSourceEswbTopic('pdyn', path=f'{basic_topics_root}/nav/nav/pdyn')])
-p_diff = EwChart([DataSourceEswbTopic('pdiff', path=f'{basic_topics_root}/nav/nav/pdiff')])
-p_temp = EwChart([DataSourceEswbTopic('tadc', path=f'{basic_topics_root}/hk/hk/tadc')])
+pstat = DataSourceEswbTopic('pstat', path=f'{basic_topics_root}/nav/pres/pstat')
+pdyn = DataSourceEswbTopic('pdyn', path=f'{basic_topics_root}/nav/pres/pdyn')
+pdiff = DataSourceEswbTopic('pdiff', path=f'{basic_topics_root}/nav/pres/pdiff')
 
-# Housekeeping
+altitude_bar = DataSourceEswbTopic('altitude_bar', path=f'{basic_topics_root}/nav/air/altitude_bar')
+airspeed = DataSourceEswbTopic('airspeed', path=f'{basic_topics_root}/nav/air/airspeed')
+
+tax = DataSourceEswbTopic('tax', path=f'{basic_topics_root}/dev/imu/t/ta/x')
+tay = DataSourceEswbTopic('tay', path=f'{basic_topics_root}/dev/imu/t/ta/y')
+taz = DataSourceEswbTopic('taz', path=f'{basic_topics_root}/dev/imu/t/ta/z')
+twx = DataSourceEswbTopic('twx', path=f'{basic_topics_root}/dev/imu/t/tw/x')
+twy = DataSourceEswbTopic('twy', path=f'{basic_topics_root}/dev/imu/t/tw/y')
+twz = DataSourceEswbTopic('twz', path=f'{basic_topics_root}/dev/imu/t/tw/z')
+tadc = DataSourceEswbTopic('tadc', path=f'{basic_topics_root}/dev/imu/t/tadc')
+
 sin = EwChart([DataSourceEswbTopic('sin1', path=f'{basic_topics_root}/hk/sin1'),
                DataSourceEswbTopic('sin2', path=f'{basic_topics_root}/hk/sin2')])
 
+accel = EwChart([ax, ay, az])
+gyro = EwChart([wx, wy, wz])
+roll_pitch = EwChart([roll, pitch])
+yaw = EwChart([yaw])
+accel_gyro_temp = EwChart([tax, tay, taz, twx, twy, twz])
 
-imu_tab.add_widget(a)
-imu_tab.add_widget(omega)
-imu_tab.add_widget(roll_pitch)
-imu_tab.add_widget(yaw)
-imu_tab.add_widget(temp)
+pstat_pdyn = EwChart([pstat, pdyn])
+pdiff = EwChart([pdiff])
+adc_temp = EwChart([tadc])
 
-pres_tab.add_widget(p)
-pres_tab.add_widget(p_diff)
-pres_tab.add_widget(p_temp)
+altitude_bar = EwChart([altitude_bar])
+airspeed = EwChart([airspeed])
+
+main_tab.add_widget(EwGroup([accel, gyro, roll_pitch, accel_gyro_temp]))
+main_tab.add_widget(EwGroup([pstat_pdyn, pdiff, adc_temp]))
+main_tab.add_widget(EwGroup([altitude_bar, airspeed]))
 
 hk_tab.add_widget(sin)
 

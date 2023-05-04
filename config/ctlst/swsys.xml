@@ -3,19 +3,19 @@
 <swsys name="drone">
     <bus name="gcu_bus" eq_channel="0" max_topics="128">
         <event_queue buffer_size="512" size="48"/>
-        <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
+        <dir name="dev" eq_channel="16">
+            <dir name="imu" eq_channel="16"/>
+        </dir>
     </bus>
 
-    <bus name="nav_bus" eq_channel="1" max_topics="128">
-    </bus>
+    <bus name="gen_bus" eq_channel="1" max_topics="128"/>
+    <bus name="nav_bus" eq_channel="1" max_topics="128"/>
+    <bus name="imu_bus" eq_channel="2" max_topics="128"/>
 
-    <bus name="hk_bus" eq_channel="2" max_topics="128">
-    </bus>
-
-    <task type="flow" config="flow_telemetry.xml" name="telemetry" priority="10" clk_method="timer" clk_period="20">
+    <task type="flow" config="flow_generators.xml" name="generators" priority="1" clk_method="timer" clk_period="10">
         <connect>
-            <out alias="sin1, sin2">gcu_bus/hk/$alias</out>
+            <out alias="sin1, sin2, mean1, mean2">gen_bus/$alias</out>
         </connect>
     </task>
 
@@ -23,11 +23,11 @@
         <connect>
             <out alias="a_raw, omega_raw">nav_bus/$alias</out>
             <out alias="pdiff, pstat, pdyn">nav_bus/$alias</out>
-            <out alias="tadc, ta, tw">hk_bus/$alias</out>
+            <out alias="tadc, ta, tw">imu_bus/$alias</out>
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
+    <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="7" clk_method="timer" clk_period="100">
         <connect>
             <in alias="omega, a, azimuth">nav_bus/$alias</in>
             <out alias="omega_bias, q0, imu_reset">nav_bus/$alias</out>
@@ -43,10 +43,9 @@
         </connect>
     </task>
 
-    <task type="flow" config="flow_nav_compass.xml" name="nav_compass" priority="7" clk_method="freerun">
+    <task type="flow" config="flow_nav_compass.xml" name="nav_compass" priority="8" clk_method="inp_upd" clk_input_path="nav_bus/omega_raw">
         <connect>
             <in alias="q">nav_bus/q</in>
-
             <out alias="induction, azimuth, magnitude">nav_bus/$alias</out>
         </connect>
     </task>
@@ -58,14 +57,32 @@
         </connect>
     </task>
 
-    <bridge name="nav" priority="2" clk_method="timer" clk_period="10" to="gcu_bus/nav">
+    <task type="flow" config="flow_nav_baro.xml" name="nav_baro" priority="6" clk_method="timer" clk_period="100">
+        <connect>
+            <in alias="pstat, pdyn, pdiff">nav_bus/$alias</in>
+            <out alias="altitude_bar, airspeed">nav_bus/$alias</out>
+        </connect>
+    </task>
+
+    <bridge name="ang" priority="2" clk_method="timer" clk_period="20" to="gcu_bus/nav">
         <source alias="omega, a">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
+    </bridge>
+
+    <bridge name="pres" priority="2" clk_method="timer" clk_period="20" to="gcu_bus/nav">
         <source alias="pstat, pdiff, pdyn">nav_bus/$alias</source>
     </bridge>
 
-    <bridge name="hk" priority="2" clk_method="timer" clk_period="10" to="gcu_bus/hk">
-        <source alias="tadc, ta, tw">hk_bus/$alias</source>
+    <bridge name="air" priority="2" clk_method="timer" clk_period="20" to="gcu_bus/nav">
+        <source alias="altitude_bar, airspeed">nav_bus/$alias</source>
+    </bridge>
+
+    <bridge name="t" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/dev/imu">
+        <source alias="tadc, ta, tw">imu_bus/$alias</source>
+    </bridge>
+
+    <bridge name="adc" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/dev/imu">
+        <source alias="tadc, ta, tw">imu_bus/$alias</source>
     </bridge>
 
     <service type="sdtl" name="gcu_link">

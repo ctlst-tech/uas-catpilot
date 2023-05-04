@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="generators">
+        <inputs>
+        </inputs>
+        <outputs>
+            <o alias="sin1" type="core.type.f64"/>
+            <o alias="sin2" type="core.type.f64"/>
+            <o alias="mean1" type="core.type.f64"/>
+            <o alias="mean2" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="sin_gen_1" by_spec="core.source.sin">
+            <param alias="period">1.0</param>
+        </f>
+        <f name="sin_gen_2" by_spec="core.source.sin">
+            <param alias="period">0.1</param>
+        </f>
+        <f name="mean_gen_1" by_spec="core.source.meander">
+            <param alias="semi_period">10</param>
+        </f>
+        <f name="mean_gen_2" by_spec="core.source.meander">
+            <param alias="semi_period">10</param>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="sin1">sin_gen_1/output</link>
+        <link alias="sin2">sin_gen_2/output</link>
+        <link alias="mean1">mean_gen_1/output</link>
+        <link alias="mean2">mean_gen_2/output</link>
+    </link_outputs>
+</flow>
+
