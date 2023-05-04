@@ -116,8 +116,8 @@ add_executable(catom-launcher
 
 add_executable(${PROJECT_NAME}.elf
     main.c
-    xml_inline.c
-    xml_inline_cfgs.c
+    # xml_inline.c
+    # xml_inline_cfgs.c
     ${ATOMICS_REG}
     # FIXME
     catpilot/c-atom/function/error.c
