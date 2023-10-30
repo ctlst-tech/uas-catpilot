@@ -1907,7 +1907,7 @@
             }
         },
         "edges": {
-            "sine/out-->outputs/sine;": {
+            "sine/output-->outputs/sine;": {
                 "geometry": "{\"labels\":[{\"x\":252,\"y\":146.5}],\"junctionPoints\":[],\"sections\":[{\"bendPoints\":[],\"start\":{\"x\":192,\"y\":139.5},\"end\":{\"x\":312,\"y\":139.5}}]}"
             }
         }

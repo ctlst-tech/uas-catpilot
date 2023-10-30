@@ -223,6 +223,7 @@
     </bridge>
 
     <service type="sdtl" name="gcu_link">
+        <type value="serial"/>
         <baudrate value="57600"/>
 
         <serial_port value="/dev/ttyS0"/>
