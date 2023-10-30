@@ -23,6 +23,7 @@ elseif (BOARD STREQUAL "cube")
     set(FS "fatfs")
 
     set(ESWB_EQRB_NO_SOCKET "1")
+    set(ESWB_SDTL_NO_SOCKET "1")
     set(CATOM_NO_SOCKET "1")
     set(FAKE_PTHREAD "1")
 
@@ -116,8 +117,8 @@ add_executable(catom-launcher
 
 add_executable(${PROJECT_NAME}.elf
     main.c
-    # xml_inline.c
-    # xml_inline_cfgs.c
+    xml_inline.c
+    xml_inline_cfgs.c
     ${ATOMICS_REG}
     # FIXME
     catpilot/c-atom/function/error.c
@@ -125,11 +126,8 @@ add_executable(${PROJECT_NAME}.elf
 )
 
 target_link_libraries(catom-launcher PUBLIC 
-    # os-static
-    # bsp-static
     c-atom-launcher-static 
     ${ATOMICS_LIBS}
-    socket
 )
 
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC
