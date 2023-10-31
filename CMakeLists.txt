@@ -24,6 +24,7 @@ elseif (BOARD STREQUAL "cube")
 
     set(ESWB_EQRB_NO_SOCKET "1")
     set(ESWB_SDTL_NO_SOCKET "1")
+    set(ESWB_DEBUG "1")
     set(CATOM_NO_SOCKET "1")
     set(FAKE_PTHREAD "1")
 
