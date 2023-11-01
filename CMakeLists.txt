@@ -136,7 +136,7 @@ target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     bsp-static
     c-atom-static
     ${ATOMICS_LIBS}
-    -lc -lm -lnosys
+    -lm -lnosys
 )
 
 set(ELF_FILE ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.elf)
