@@ -1,8 +1,10 @@
 
-atomics:
+atomics_flight:
 	@echo Generating atomics functions code
-	@#./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --registry_c ./atomics_reg.c --atomics_dirs catpilot:catpilot/atomics/ublox catom:catpilot/c-atom/atomics
-	@./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --registry_c ./atomics_reg.c --atomics_dirs catpilot:catpilot/atomics/ catom:catpilot/c-atom/atomics
+	@./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --registry_c ./atomics_reg.c --atomics_dirs cube:catpilot/atomics/cube ublox:catpilot/atomics/ublox odrive:catpilot/atomics/odrive  catom:catpilot/c-atom/atomics
+
+atomics_ground:
+	@./catpilot/c-atom/tools/fspecgen.py --catom_path catpilot/c-atom --code --cmake --registry_c ./atomics_reg.c --atomics_dirs catpilot:catpilot/atomics/ublox catom:catpilot/c-atom/atomics
 
 xmlinline:
 	@echo Inlining XML configs
