@@ -29,7 +29,7 @@
     </functions>
 
     <link_outputs>
-        <link alias="sine">sine/out</link>
+        <link alias="sine">sine/output</link>
         <link alias="Vbat">voltage/output</link>
         <link alias="Vbat_min">voltage/min</link>
         <link alias="Vbat_max">voltage/max</link>

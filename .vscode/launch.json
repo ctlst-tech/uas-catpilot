@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+    {"name":"Python: Current File","type":"python","request":"launch","program":"${file}","console":"integratedTerminal","justMyCode":true},
         {
             "name": "Cube",
             "request": "launch",
@@ -14,6 +15,40 @@
             "configFiles": [
                 "catpilot/bsp/mcu/core/stm32/h753/stm32h753.cfg"
             ],
+        },
+        {
+            "name": "Host",
+            "request": "launch",
+            "type": "cppdbg",
+            "cwd": "${workspaceRoot}",
+            "args": ["config/ctlst/swsys.xml"],
+            "program": "${workspaceRoot}/build/firmware/catom-launcher",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "eswbutil_convert_to_file",
+            "request": "launch",
+            "type": "cppdbg",
+            "cwd": "${workspaceRoot}",
+            "args": ["--convert_to_csv", "/tmp/sin_0.eqrb", "./sin_0.csv"],
+            "program": "${workspaceRoot}/catpilot/c-atom/eswb/build/eswbutil",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         },
     ]
 }

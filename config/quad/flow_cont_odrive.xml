@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<flow>
+    <spec name="odrive">
+        <inputs>
+            <i alias="pos" type="core.type.f64"/>
+        </inputs>
+
+        <outputs>
+            <o alias="vol" type="core.type.f64"/>
+            <o alias="cur" type="core.type.f64"/>
+        </outputs>
+    </spec>
+
+    <functions>
+        <f name="odrive" by_spec="odrive.protocol">
+            <in alias="pos">inputs/pos</in>
+            <param alias="can_if">can1</param>
+            <param alias="axis">0</param>
+        </f>
+    </functions>
+
+    <link_outputs>
+        <link alias="vol">odrive/vol</link>
+        <link alias="cur">odrive/cur</link>
+    </link_outputs>
+</flow>

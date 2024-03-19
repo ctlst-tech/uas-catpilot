@@ -10,4 +10,8 @@
     "cortex-debug.armToolchainPath": "/usr/bin",
     "cortex-debug.openocdPath": "/usr/local/bin/openocd",
     "cortex-debug.gdbPath": "/usr/bin/arm-none-eabi-gdb",
+    "openocd_path": "/usr/local/share/openocd",
+    "python.analysis.extraPaths": [
+        "./catpilot/c-atom/eswb/pytools"
+    ],
 }

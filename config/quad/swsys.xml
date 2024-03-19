@@ -18,11 +18,18 @@
     </bus>
 
     <bus name="gcu_bus" eq_channel="0" max_topics="128">
-        <event_queue buffer_size="512" size="48"/>
+        <event_queue buffer_size="1500" size="64"/>
 
         <dir name="hk" eq_channel="16"/>
         <dir name="nav" eq_channel="16"/>
         <dir name="cont" eq_channel="16"/>
+    </bus>
+
+    <bus name="tm_bus" eq_channel="0" max_topics="128">
+        <event_queue buffer_size="2000" size="32"/>
+
+        <dir name="nav" eq_channel="16"/>
+        <dir name="odrive" eq_channel="16"/>
     </bus>
 
     <task type="flow" config="flow_nav_imu_alignment.xml" name="nav_imu_alignement" priority="4" clk_method="timer" clk_period="100">
@@ -174,6 +181,13 @@
         </connect>
     </task>
 
+    <task type="flow" config="flow_cont_odrive.xml" name="odrive" priority="3" clk_method="freerun">
+        <connect>
+            <in alias="pos">control_bus/rc/direct_collective</in>
+            <out alias="cur, vol">tm_bus/odrive/$alias</out>
+        </connect>
+    </task>
+
     <bridge name="nav" priority="2" clk_method="timer" clk_period="100" to="gcu_bus/nav">
         <source alias="omega, a, induction">nav_bus/$alias</source>
         <source alias="roll, pitch, yaw, azimuth">nav_bus/$alias</source>
@@ -203,7 +217,13 @@
         <source alias="vel_body">control_bus/auto/vel_body</source>
     </bridge>
 
+    <bridge name="raw" priority="2" clk_method="timer" clk_period="2" to="tm_bus/nav">
+        <source alias="omega, a">nav_bus/$alias</source>
+        <source alias="ind_magnitude">nav_bus/magnitude</source>
+    </bridge>
+
     <service type="sdtl" name="gcu_link">
+        <type value="serial"/>
         <baudrate value="57600"/>
 
         <serial_port value="/dev/ttyS0"/>
@@ -221,4 +241,19 @@
 
         <channel_2_name value="downlink_sk"/>
     </service>
+
+    <service type="eqrb_file_write" name="logger_1">
+        <event_queue_source value="tm_bus"/>
+        <file_prefix value="tm_bus"/>
+        <dst_dir value="/fs/logs"/>
+        <frame_separator value="ebdf"/>
+    </service>
+
+    <service type="eqrb_file_write" name="logger_2">
+        <event_queue_source value="gcu_bus"/>
+        <file_prefix value="gcu_bus"/>
+        <dst_dir value="/fs/logs"/>
+        <frame_separator value="ebdf"/>
+    </service>
+
 </swsys>

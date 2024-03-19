@@ -22,6 +22,12 @@ elseif (BOARD STREQUAL "cube")
     set(OS "freertos")
     set(FS "fatfs")
 
+    set(ESWB_EQRB_NO_SOCKET "1")
+    set(ESWB_SDTL_NO_SOCKET "1")
+    set(ESWB_DEBUG "1")
+    set(CATOM_NO_SOCKET "1")
+    set(FAKE_PTHREAD "1")
+
     if (NOT DEFINED CLI_PORT)
         set(CLI_PORT "TELEM2")
     endif()
@@ -36,6 +42,13 @@ elseif (BOARD STREQUAL "cube")
     endif()
     add_definitions(-DCLI_PORT="${CLI_PORT}")
     add_definitions(-DCLI_BAUDRATE="${CLI_BAUDRATE}")
+elseif (BOARD STREQUAL "ctlst")
+    set(MCU_FAMILY zynq)
+    set(MCU_MODEL 7020)
+    set(OS "qnx")
+    set(FS "qnx")
+    set(IC_CTLST "ON")
+
     set(ESWB_EQRB_NO_SOCKET "1")
     set(CATOM_NO_SOCKET "1")
     set(FAKE_PTHREAD "1")
@@ -99,9 +112,9 @@ include(atomics.cmake)
 add_executable(catom-launcher
     ${ATOMICS_REG}
     # FIXME
-    catpilot/c-atom/function/conv.c)
-
-target_link_libraries(catom-launcher PUBLIC c-atom-launcher-static ${ATOMICS_LIBS})
+    catpilot/c-atom/function/conv.c
+    catpilot/c-atom/function/error.c
+)
 
 add_executable(${PROJECT_NAME}.elf
     main.c
@@ -113,12 +126,17 @@ add_executable(${PROJECT_NAME}.elf
     catpilot/c-atom/function/conv.c
 )
 
+target_link_libraries(catom-launcher PUBLIC 
+    c-atom-launcher-static 
+    ${ATOMICS_LIBS}
+)
+
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC
     os-static
     bsp-static
     c-atom-static
     ${ATOMICS_LIBS}
-    -lc -lm -lnosys
+    -lm -lnosys
 )
 
 set(ELF_FILE ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}.elf)
